@@ -23,6 +23,9 @@
       },
       "style": {
         "useImportType": "off"
+      },
+      "complexity": {
+        "noStaticOnlyClass": "off"
       }
     }
   },
