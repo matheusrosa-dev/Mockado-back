@@ -1,6 +1,6 @@
 import { Notification } from "../notification";
 
-describe("Notification Unit Tests", () => {
+describe("Notification - Unit Tests", () => {
   let notification: Notification;
 
   beforeEach(() => {

@@ -1,6 +1,6 @@
 import { Either } from "../either";
 
-describe("Either Unit Tests", () => {
+describe("Either - Unit Tests", () => {
   describe("Either.ok", () => {
     it("should create an ok instance", () => {
       const result = Either.ok("value");

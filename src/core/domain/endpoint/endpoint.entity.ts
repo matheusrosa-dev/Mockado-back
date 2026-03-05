@@ -13,21 +13,10 @@ type ConstructorProps = {
   description?: string;
   statusCode: number;
   delay?: number;
-  responseBodyType: ResponseBodyType;
+  responseBodyType?: ResponseBodyType;
   responseJson?: string;
   responseText?: string;
   created_at?: Date;
-};
-
-type CreateCommandProps = {
-  method: HttpMethod;
-  title: string;
-  description?: string;
-  delay?: number;
-  statusCode: number;
-  responseBodyType: ResponseBodyType;
-  responseJson?: string;
-  responseText?: string;
 };
 
 export class Endpoint extends Entity {
@@ -37,7 +26,7 @@ export class Endpoint extends Entity {
   description?: string;
   delay?: number;
   statusCode: number;
-  responseBodyType: ResponseBodyType;
+  responseBodyType?: ResponseBodyType;
   responseJson?: string;
   responseText?: string;
   created_at: Date;
@@ -47,13 +36,24 @@ export class Endpoint extends Entity {
     this.endpoint_id = props.endpoint_id ?? new Uuid();
     this.method = props.method;
     this.title = props.title;
-    this.description = props.description;
-    this.delay = props.delay;
+    this.description = props.description ?? "";
+    this.delay = props.delay ?? 0;
     this.statusCode = props.statusCode;
-    this.responseBodyType = props.responseBodyType;
-    this.responseJson = props.responseJson;
-    this.responseText = props.responseText;
     this.created_at = props.created_at ?? new Date();
+
+    const hasBody = Endpoint.statusCodeHasBody(props.statusCode);
+
+    if (hasBody) {
+      this.responseBodyType = props.responseBodyType;
+
+      if (props.responseBodyType === ResponseBodyType.JSON) {
+        this.responseJson = props.responseJson ?? "{}";
+      }
+
+      if (props.responseBodyType === ResponseBodyType.TEXT) {
+        this.responseText = props.responseText ?? "";
+      }
+    }
   }
 
   changeMethod(method: HttpMethod) {
@@ -102,6 +102,17 @@ export class Endpoint extends Entity {
     return validator.validate(this.notification, this, fields);
   }
 
+  static statusCodeHasBody(statusCode: number) {
+    const statusCodesWithoutBody = [
+      ...Array.from({ length: 100 }, (_, i) => i + 100),
+      204,
+      205,
+      304,
+    ];
+
+    return !statusCodesWithoutBody.includes(statusCode);
+  }
+
   get entity_id() {
     return this.endpoint_id;
   }
@@ -112,14 +123,28 @@ export class Endpoint extends Entity {
       title: this.title,
       method: this.method,
       description: this.description,
+      statusCode: this.statusCode,
       delay: this.delay,
-      responseBodyType: this.responseBodyType,
-      responseJson: this.responseJson,
-      responseText: this.responseText,
+
+      ...(this.responseBodyType && { responseBodyType: this.responseBodyType }),
+      ...(this.responseJson && { responseJson: this.responseJson }),
+      ...(this.responseText && { responseText: this.responseText }),
+
       created_at: this.created_at,
     };
   }
 }
+
+type CreateCommandProps = {
+  method: HttpMethod;
+  title: string;
+  description?: string;
+  delay?: number;
+  statusCode: number;
+  responseBodyType: ResponseBodyType;
+  responseJson?: string;
+  responseText?: string;
+};
 
 export class EndpointFactory {
   static create(props: CreateCommandProps) {

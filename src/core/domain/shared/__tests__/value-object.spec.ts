@@ -15,7 +15,7 @@ class ComplexValueObject extends ValueObject {
   }
 }
 
-describe("ValueObject Unit Tests", () => {
+describe("ValueObject - Unit Tests", () => {
   test("should be equal", () => {
     const valueObject = new StringValueObject("test");
     const valueObject2 = new StringValueObject("test");
