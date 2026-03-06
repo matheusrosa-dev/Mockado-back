@@ -37,14 +37,12 @@ export class Endpoint extends Entity {
   constructor(props: ConstructorProps) {
     super();
 
-    this.registerHandler(
-      StatusCodeModifiedEvent.name,
-      this._onStatusCodeModified.bind(this),
+    this.registerHandler(StatusCodeModifiedEvent.name, (event) =>
+      this._onStatusCodeModified(event as StatusCodeModifiedEvent),
     );
 
-    this.registerHandler(
-      ResponseBodyTypeModifiedEvent.name,
-      this._onResponseBodyTypeModified.bind(this),
+    this.registerHandler(ResponseBodyTypeModifiedEvent.name, (event) =>
+      this._onResponseBodyTypeModified(event as ResponseBodyTypeModifiedEvent),
     );
 
     this._endpoint_id = props.endpoint_id ?? new Uuid();

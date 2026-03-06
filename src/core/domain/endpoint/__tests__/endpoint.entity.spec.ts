@@ -148,7 +148,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     });
   });
 
-  describe("entity_id", () => {
+  describe("endpoint_id", () => {
     it("should return endpoint_id", () => {
       const id = new Uuid();
       const endpoint = EndpointFactory.fake()
@@ -417,6 +417,42 @@ describe("Endpoint Entity - Unit Tests", () => {
         "Response body type must be TEXT to set responseText",
       );
       expect(endpoint.responseText).toBeUndefined();
+    });
+  });
+
+  describe("_onStatusCodeModified", () => {
+    it("should execute when status code is changed", () => {
+      const endpoint = EndpointFactory.fake()
+        .oneEndpoint()
+        .withStatusCode(200)
+        .build();
+
+      const spyOnStatusCodeModified = jest.spyOn(
+        endpoint as any,
+        "_onStatusCodeModified",
+      );
+
+      endpoint.changeStatusCode(204);
+
+      expect(spyOnStatusCodeModified).toHaveBeenCalled();
+    });
+  });
+
+  describe("_onResponseBodyTypeModified", () => {
+    it("should execute when response body type is changed", () => {
+      const endpoint = EndpointFactory.fake()
+        .oneEndpoint()
+        .withStatusCode(200)
+        .build();
+
+      const spyOnResponseBodyTypeModified = jest.spyOn(
+        endpoint as any,
+        "_onResponseBodyTypeModified",
+      );
+
+      endpoint.changeResponseBodyType(ResponseBodyType.JSON);
+
+      expect(spyOnResponseBodyTypeModified).toHaveBeenCalled();
     });
   });
 
