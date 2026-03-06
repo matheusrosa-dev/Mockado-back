@@ -29,37 +29,37 @@ export type EndpointValidationGroup = (typeof endpointValidationGroups)[number];
 class EndpointRules {
   @IsNotEmpty({ groups: ["title"] as EndpointValidationGroup[] })
   @MaxLength(50, { groups: ["title"] as EndpointValidationGroup[] })
-  title: string;
+  _title: string;
 
   @IsEnum(HttpMethod, { groups: ["method"] as EndpointValidationGroup[] })
-  method: HttpMethod;
+  _method: HttpMethod;
 
   @MaxLength(200, { groups: ["description"] as EndpointValidationGroup[] })
-  description?: string;
+  _description?: string;
 
   @IsInt({ groups: ["delay"] as EndpointValidationGroup[] })
   @Min(0, { groups: ["delay"] as EndpointValidationGroup[] })
   @Max(10, { groups: ["delay"] as EndpointValidationGroup[] })
-  delay?: number;
+  _delay?: number;
 
   @IsInt({ groups: ["statusCode"] as EndpointValidationGroup[] })
   @Min(100, { groups: ["statusCode"] as EndpointValidationGroup[] })
   @Max(511, { groups: ["statusCode"] as EndpointValidationGroup[] })
-  statusCode: number;
+  _statusCode: number;
 
   @IsOptional({ groups: ["responseBodyType"] as EndpointValidationGroup[] })
   @IsEnum(ResponseBodyType, {
     groups: ["responseBodyType"] as EndpointValidationGroup[],
   })
-  responseBodyType?: ResponseBodyType;
+  _responseBodyType?: ResponseBodyType;
 
   @IsOptional({ groups: ["responseJson"] as EndpointValidationGroup[] })
   @IsJSON({ groups: ["responseJson"] as EndpointValidationGroup[] })
-  responseJson?: string;
+  _responseJson?: string;
 
   @IsOptional({ groups: ["responseText"] as EndpointValidationGroup[] })
   @MaxLength(1000, { groups: ["responseText"] as EndpointValidationGroup[] })
-  responseText?: string;
+  _responseText?: string;
 
   constructor(entity: Endpoint) {
     Object.assign(this, entity);

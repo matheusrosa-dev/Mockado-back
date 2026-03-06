@@ -30,74 +30,33 @@ describe("Endpoint Entity - Unit Tests", () => {
   });
 
   describe("constructor", () => {
-    it("should instance a GET endpoint", () => {
+    it.each(
+      Object.values(HttpMethod),
+    )("should instance an endpoint with method %s", (method) => {
       const requiredProps = {
+        method,
+        title: "My Endpoint",
+        statusCode: 100,
+      };
+
+      const endpoint = new Endpoint(requiredProps);
+
+      expect(endpoint.method).toBe(requiredProps.method);
+      expect(endpoint.title).toBe(requiredProps.title);
+      expect(endpoint.statusCode).toBe(requiredProps.statusCode);
+    });
+
+    it.each(
+      Object.values(ResponseBodyType),
+    )("should instance an endpoint with response body type %s", (responseBodyType) => {
+      const endpoint = new Endpoint({
         method: HttpMethod.GET,
         title: "My Endpoint",
-        statusCode: 100,
-      };
+        statusCode: 200,
+        responseBodyType,
+      });
 
-      const endpoint = new Endpoint(requiredProps);
-
-      expect(endpoint.method).toBe(requiredProps.method);
-      expect(endpoint.title).toBe(requiredProps.title);
-      expect(endpoint.statusCode).toBe(requiredProps.statusCode);
-    });
-
-    it("should instance a POST endpoint", () => {
-      const requiredProps = {
-        method: HttpMethod.POST,
-        title: "My Endpoint",
-        statusCode: 100,
-      };
-
-      const endpoint = new Endpoint(requiredProps);
-
-      expect(endpoint.method).toBe(requiredProps.method);
-      expect(endpoint.title).toBe(requiredProps.title);
-      expect(endpoint.statusCode).toBe(requiredProps.statusCode);
-    });
-
-    it("should instance a PUT endpoint", () => {
-      const requiredProps = {
-        method: HttpMethod.PUT,
-        title: "My Endpoint",
-        statusCode: 100,
-      };
-
-      const endpoint = new Endpoint(requiredProps);
-
-      expect(endpoint.method).toBe(requiredProps.method);
-      expect(endpoint.title).toBe(requiredProps.title);
-      expect(endpoint.statusCode).toBe(requiredProps.statusCode);
-    });
-
-    it("should instance a DELETE endpoint", () => {
-      const requiredProps = {
-        method: HttpMethod.DELETE,
-        title: "My Endpoint",
-        statusCode: 100,
-      };
-
-      const endpoint = new Endpoint(requiredProps);
-
-      expect(endpoint.method).toBe(requiredProps.method);
-      expect(endpoint.title).toBe(requiredProps.title);
-      expect(endpoint.statusCode).toBe(requiredProps.statusCode);
-    });
-
-    it("should instance a PATCH endpoint", () => {
-      const requiredProps = {
-        method: HttpMethod.PATCH,
-        title: "My Endpoint",
-        statusCode: 100,
-      };
-
-      const endpoint = new Endpoint(requiredProps);
-
-      expect(endpoint.method).toBe(requiredProps.method);
-      expect(endpoint.title).toBe(requiredProps.title);
-      expect(endpoint.statusCode).toBe(requiredProps.statusCode);
+      expect(endpoint.responseBodyType).toBe(responseBodyType);
     });
 
     it("should ignore body on provide it to an endpoint which does not allow body", () => {
@@ -130,7 +89,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         responseBodyType: ResponseBodyType.JSON,
       });
 
-      expect(endpoint1.endpoint_id).toBeInstanceOf(Uuid);
+      expect(endpoint1.entity_id).toBeInstanceOf(Uuid);
       expect(endpoint1.description).toBe("");
       expect(endpoint1.delay).toBe(0);
       expect(endpoint1.responseJson).toEqual("{}");
@@ -158,7 +117,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         created_at: date,
       });
 
-      expect(endpoint.endpoint_id.equals(id)).toBeTruthy();
+      expect(endpoint.entity_id.equals(id)).toBeTruthy();
       expect(endpoint.created_at).toBe(date);
     });
 
@@ -470,7 +429,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         .build();
 
       expect(endpointWithoutBody.toJSON()).toEqual({
-        endpoint_id: endpointWithoutBody.endpoint_id.toString(),
+        endpoint_id: endpointWithoutBody.entity_id.id,
         title: endpointWithoutBody.title,
         method: endpointWithoutBody.method,
         description: endpointWithoutBody.description,
@@ -488,7 +447,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         .build();
 
       expect(endpointWithJson.toJSON()).toEqual({
-        endpoint_id: endpointWithJson.endpoint_id.toString(),
+        endpoint_id: endpointWithJson.entity_id.id,
         title: endpointWithJson.title,
         method: endpointWithJson.method,
         description: endpointWithJson.description,
@@ -512,7 +471,7 @@ describe("Endpoint Entity - Unit Tests", () => {
       });
 
       expect(endpointWithText.toJSON()).toEqual({
-        endpoint_id: endpointWithText.endpoint_id.toString(),
+        endpoint_id: endpointWithText.entity_id.id,
         title: endpointWithText.title,
         method: endpointWithText.method,
         description: endpointWithText.description,

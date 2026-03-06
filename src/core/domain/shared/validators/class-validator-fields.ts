@@ -10,9 +10,11 @@ export abstract class ClassValidatorFields implements IValidatorFields {
 
     if (errors.length) {
       for (const error of errors) {
-        const field = error.property;
         Object.values(error.constraints!).forEach((message) => {
-          notification.addError(message, field);
+          const field = error.property.replace(/^_/, ""); // Removes leading underscore if present
+          const formattedMessage = message.replace(/_/, ""); // Removes underscore from the message if present
+
+          notification.addError(formattedMessage, field);
         });
       }
     }

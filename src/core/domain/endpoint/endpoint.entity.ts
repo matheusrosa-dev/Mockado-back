@@ -6,6 +6,8 @@ import {
   EndpointValidationGroup,
   EndpointValidator,
 } from "./endpoint.validator";
+import { ResponseBodyTypeModifiedEvent } from "./events/response-body-type-modified.event";
+import { StatusCodeModifiedEvent } from "./events/status-code-modified.event";
 
 type ConstructorProps = {
   endpoint_id?: Uuid;
@@ -21,91 +23,85 @@ type ConstructorProps = {
 };
 
 export class Endpoint extends Entity {
-  endpoint_id: Uuid;
-  method: HttpMethod;
-  title: string;
-  description: string;
-  delay?: number;
-  statusCode: number;
-  responseBodyType?: ResponseBodyType;
-  responseJson?: string;
-  responseText?: string;
-  created_at: Date;
+  private _endpoint_id: Uuid;
+  private _method: HttpMethod;
+  private _title: string;
+  private _description: string;
+  private _delay?: number;
+  private _statusCode: number;
+  private _responseBodyType?: ResponseBodyType;
+  private _responseJson?: string;
+  private _responseText?: string;
+  private _created_at: Date;
 
   constructor(props: ConstructorProps) {
     super();
 
-    this.endpoint_id = props.endpoint_id ?? new Uuid();
-    this.method = props.method;
-    this.title = props.title;
-    this.description = props.description ?? "";
-    this.delay = props.delay ?? 0;
-    this.statusCode = props.statusCode;
-    this.created_at = props.created_at ?? new Date();
+    this.registerHandler(
+      StatusCodeModifiedEvent.name,
+      this._onStatusCodeModified.bind(this),
+    );
+
+    this.registerHandler(
+      ResponseBodyTypeModifiedEvent.name,
+      this._onResponseBodyTypeModified.bind(this),
+    );
+
+    this._endpoint_id = props.endpoint_id ?? new Uuid();
+    this._method = props.method;
+    this._title = props.title;
+    this._description = props.description ?? "";
+    this._delay = props.delay ?? 0;
+    this._statusCode = props.statusCode;
+    this._created_at = props.created_at ?? new Date();
 
     const allowBody = Endpoint.statusCodeAllowsBody(props.statusCode);
 
     if (allowBody) {
-      this.responseBodyType = props.responseBodyType;
+      this._responseBodyType = props.responseBodyType;
 
       if (props.responseBodyType === ResponseBodyType.JSON) {
-        this.responseJson = props.responseJson ?? "{}";
+        this._responseJson = props.responseJson ?? "{}";
       }
 
       if (props.responseBodyType === ResponseBodyType.TEXT) {
-        this.responseText = props.responseText ?? "";
+        this._responseText = props.responseText ?? "";
       }
     }
   }
 
   changeMethod(method: HttpMethod) {
-    this.method = method;
+    this._method = method;
     this.validate(["method"]);
   }
 
   changeTitle(title: string) {
-    this.title = title;
+    this._title = title;
     this.validate(["title"]);
   }
 
   changeDescription(description?: string) {
-    this.description = description ?? "";
+    this._description = description ?? "";
     this.validate(["description"]);
   }
 
   changeDelay(delay?: number) {
-    this.delay = delay;
+    this._delay = delay;
     this.validate(["delay"]);
   }
 
   changeStatusCode(statusCode: number) {
-    // TODO: IMPLEMENTAR EVENT EMITTER
-    this.statusCode = statusCode;
+    this._statusCode = statusCode;
 
     this.validate(["statusCode"]);
 
-    const hadBody = !!this.responseBodyType;
-    const allowBody = Endpoint.statusCodeAllowsBody(statusCode);
-
-    if (hadBody && !allowBody) {
-      this.responseBodyType = undefined;
-      this.responseJson = undefined;
-      this.responseText = undefined;
-
-      this.validate(["responseBodyType", "responseJson", "responseText"]);
-      return;
-    }
-
-    if (!hadBody && allowBody) {
-      this.responseBodyType = ResponseBodyType.EMPTY;
-      this.validate(["responseBodyType"]);
-      return;
-    }
+    this.applyEvent(new StatusCodeModifiedEvent());
   }
 
   changeResponseBodyType(responseBodyType: ResponseBodyType) {
-    // TODO: IMPLEMENTAR EVENT EMITTER
-    const statusCodeAllowsBody = Endpoint.statusCodeAllowsBody(this.statusCode);
+    const statusCodeAllowsBody = Endpoint.statusCodeAllowsBody(
+      this._statusCode,
+    );
 
     if (!statusCodeAllowsBody) {
       throw new Error(
@@ -113,51 +109,75 @@ export class Endpoint extends Entity {
       );
     }
 
-    this.responseBodyType = responseBodyType;
+    this._responseBodyType = responseBodyType;
 
     this.validate(["responseBodyType"]);
 
-    switch (responseBodyType) {
-      case ResponseBodyType.JSON:
-        this.responseText = undefined;
-        this.responseJson = this.responseJson ?? "{}";
-        break;
-
-      case ResponseBodyType.TEXT:
-        this.responseJson = undefined;
-        this.responseText = this.responseText ?? "";
-        break;
-
-      case ResponseBodyType.NULL:
-        this.responseJson = undefined;
-        this.responseText = undefined;
-        break;
-      case ResponseBodyType.EMPTY:
-        this.responseJson = undefined;
-        this.responseText = undefined;
-        break;
-    }
-
-    this.validate(["responseJson", "responseText"]);
+    this.applyEvent(new ResponseBodyTypeModifiedEvent());
   }
 
   changeResponseJson(responseJson?: string) {
-    if (this.responseBodyType !== ResponseBodyType.JSON) {
+    if (this._responseBodyType !== ResponseBodyType.JSON) {
       throw new Error("Response body type must be JSON to set responseJson");
     }
 
-    this.responseJson = responseJson ?? "{}";
+    this._responseJson = responseJson ?? "{}";
 
     this.validate(["responseJson"]);
   }
 
   changeResponseText(responseText?: string) {
-    if (this.responseBodyType !== ResponseBodyType.TEXT) {
+    if (this._responseBodyType !== ResponseBodyType.TEXT) {
       throw new Error("Response body type must be TEXT to set responseText");
     }
 
-    this.responseText = responseText ?? "";
+    this._responseText = responseText ?? "";
     this.validate(["responseText"]);
+  }
+
+  private _onStatusCodeModified(_event: StatusCodeModifiedEvent) {
+    const hadBody = !!this._responseBodyType;
+    const allowBody = Endpoint.statusCodeAllowsBody(this._statusCode);
+
+    if (hadBody && !allowBody) {
+      this._responseBodyType = undefined;
+      this._responseJson = undefined;
+      this._responseText = undefined;
+
+      this.validate(["responseBodyType", "responseJson", "responseText"]);
+      return;
+    }
+
+    if (!hadBody && allowBody) {
+      this._responseBodyType = ResponseBodyType.EMPTY;
+      this.validate(["responseBodyType"]);
+      return;
+    }
+  }
+
+  private _onResponseBodyTypeModified(_event: ResponseBodyTypeModifiedEvent) {
+    switch (this._responseBodyType) {
+      case ResponseBodyType.JSON:
+        this._responseText = undefined;
+        this._responseJson = this._responseJson ?? "{}";
+        break;
+
+      case ResponseBodyType.TEXT:
+        this._responseJson = undefined;
+        this._responseText = this._responseText ?? "";
+        break;
+
+      case ResponseBodyType.NULL:
+        this._responseJson = undefined;
+        this._responseText = undefined;
+        break;
+      case ResponseBodyType.EMPTY:
+        this._responseJson = undefined;
+        this._responseText = undefined;
+        break;
+    }
+
+    this.validate(["responseJson", "responseText"]);
   }
 
   validate(fields?: EndpointValidationGroup[]) {
@@ -178,23 +198,61 @@ export class Endpoint extends Entity {
   }
 
   get entity_id() {
-    return this.endpoint_id;
+    return this._endpoint_id;
+  }
+
+  get method() {
+    return this._method;
+  }
+
+  get title() {
+    return this._title;
+  }
+
+  get description() {
+    return this._description;
+  }
+
+  get delay() {
+    return this._delay;
+  }
+
+  get statusCode() {
+    return this._statusCode;
+  }
+
+  get responseBodyType() {
+    return this._responseBodyType;
+  }
+
+  get responseJson() {
+    return this._responseJson;
+  }
+
+  get responseText() {
+    return this._responseText;
+  }
+
+  get created_at() {
+    return this._created_at;
   }
 
   toJSON() {
     return {
-      endpoint_id: this.endpoint_id.toString(),
-      title: this.title,
-      method: this.method,
-      description: this.description,
-      statusCode: this.statusCode,
-      delay: this.delay,
+      endpoint_id: this._endpoint_id.id,
+      title: this._title,
+      method: this._method,
+      description: this._description,
+      statusCode: this._statusCode,
+      delay: this._delay,
 
-      ...(this.responseBodyType && { responseBodyType: this.responseBodyType }),
-      ...(this.responseJson && { responseJson: this.responseJson }),
-      ...(this.responseText && { responseText: this.responseText }),
+      ...(this._responseBodyType && {
+        responseBodyType: this._responseBodyType,
+      }),
+      ...(this._responseJson && { responseJson: this._responseJson }),
+      ...(this._responseText && { responseText: this._responseText }),
 
-      created_at: this.created_at,
+      created_at: this._created_at,
     };
   }
 }
