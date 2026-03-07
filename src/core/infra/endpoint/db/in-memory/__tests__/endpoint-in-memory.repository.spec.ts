@@ -33,20 +33,6 @@ describe("Endpoint In Memory Repository - Unit Tests", () => {
     });
   });
 
-  describe("bulkInsert()", () => {
-    it("should insert multiple endpoints", async () => {
-      const endpoints = [
-        EndpointFactory.fake().oneEndpoint().build(),
-        EndpointFactory.fake().oneEndpoint().build(),
-      ];
-      await repository.bulkInsert(endpoints);
-
-      expect(repository.items).toHaveLength(2);
-      expect(repository.items[0]).toBe(endpoints[0]);
-      expect(repository.items[1]).toBe(endpoints[1]);
-    });
-  });
-
   describe("findById()", () => {
     it("should return an endpoint by id", async () => {
       const endpoint = EndpointFactory.fake().oneEndpoint().build();
@@ -68,7 +54,10 @@ describe("Endpoint In Memory Repository - Unit Tests", () => {
         EndpointFactory.fake().oneEndpoint().build(),
         EndpointFactory.fake().oneEndpoint().build(),
       ];
-      await repository.bulkInsert(endpoints);
+
+      await Promise.all(
+        endpoints.map((endpoint) => repository.insert(endpoint)),
+      );
 
       const result = await repository.findAll();
       expect(result).toHaveLength(2);
@@ -88,7 +77,10 @@ describe("Endpoint In Memory Repository - Unit Tests", () => {
         EndpointFactory.fake().oneEndpoint().build(),
         EndpointFactory.fake().oneEndpoint().build(),
       ];
-      await repository.bulkInsert(endpoints);
+
+      await Promise.all(
+        endpoints.map((endpoint) => repository.insert(endpoint)),
+      );
 
       const result = await repository.findByIds([
         endpoints[0].entity_id as Uuid,
@@ -192,7 +184,10 @@ describe("Endpoint In Memory Repository - Unit Tests", () => {
         endpoint.changeMethod(method);
         return endpoint;
       });
-      await repository.bulkInsert(endpoints);
+
+      await Promise.all(
+        endpoints.map((endpoint) => repository.insert(endpoint)),
+      );
 
       const all = await repository.findAll();
       const storedMethods = all.map((e) => e.method);

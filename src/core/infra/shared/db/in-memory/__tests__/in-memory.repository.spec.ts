@@ -37,10 +37,10 @@ class StubInMemoryRepository extends InMemoryRepository<StubEntity, Uuid> {
 }
 
 describe("In Memory Repository - Unit Tests", () => {
-  let repo: StubInMemoryRepository;
+  let repository: StubInMemoryRepository;
 
   beforeEach(() => {
-    repo = new StubInMemoryRepository();
+    repository = new StubInMemoryRepository();
   });
 
   it("should insert a new entity", async () => {
@@ -50,70 +50,49 @@ describe("In Memory Repository - Unit Tests", () => {
       price: 100,
     });
 
-    await repo.insert(entity);
+    await repository.insert(entity);
 
-    expect(repo.items.length).toBe(1);
-    expect(repo.items[0]).toBe(entity);
-  });
-
-  it("should bulk insert entities", async () => {
-    const entities = [
-      new StubEntity({
-        entity_id: new Uuid(),
-        name: "First",
-        price: 100,
-      }),
-      new StubEntity({
-        entity_id: new Uuid(),
-        name: "Second",
-        price: 200,
-      }),
-    ];
-
-    await repo.bulkInsert(entities);
-
-    expect(repo.items.length).toBe(2);
-    expect(repo.items[0]).toBe(entities[0]);
-    expect(repo.items[1]).toBe(entities[1]);
+    expect(repository.items.length).toBe(1);
+    expect(repository.items[0]).toBe(entity);
   });
 
   it("should return all entities", async () => {
     const entity = new StubEntity({ name: "name value", price: 5 });
-    await repo.insert(entity);
+    await repository.insert(entity);
 
-    const entities = await repo.findAll();
+    const entities = await repository.findAll();
 
     expect(entities).toStrictEqual([entity]);
   });
 
   it("should throw an error on update when entity not found", async () => {
     const entity = new StubEntity({ name: "name value", price: 5 });
-    await expect(repo.update(entity)).rejects.toThrow(
+    await expect(repository.update(entity)).rejects.toThrow(
       new NotFoundError(entity.entity_id, StubEntity),
     );
   });
 
   it("should update an entity", async () => {
     const entity = new StubEntity({ name: "name value", price: 5 });
-    await repo.insert(entity);
+    await repository.insert(entity);
 
     const entityUpdated = new StubEntity({
       entity_id: entity.entity_id,
       name: "updated",
       price: 1,
     });
-    await repo.update(entityUpdated);
-    expect(entityUpdated.toJSON()).toStrictEqual(repo.items[0].toJSON());
+    await repository.update(entityUpdated);
+    expect(entityUpdated.toJSON()).toStrictEqual(repository.items[0].toJSON());
   });
 
   it("should throw an error on delete when entity not found", async () => {
     const uuid = new Uuid();
-    await expect(repo.delete(uuid)).rejects.toThrow(
+    await expect(repository.delete(uuid)).rejects.toThrow(
       new NotFoundError(uuid, StubEntity),
     );
 
     await expect(
-      repo.delete(new Uuid("9366b7dc-2d71-4799-b91c-c64adb205104")),
+      repository.delete(new Uuid("9366b7dc-2d71-4799-b91c-c64adb205104")),
     ).rejects.toThrow(
       new NotFoundError(
         new Uuid("9366b7dc-2d71-4799-b91c-c64adb205104"),
@@ -124,22 +103,22 @@ describe("In Memory Repository - Unit Tests", () => {
 
   it("should delete an entity", async () => {
     const entity = new StubEntity({ name: "name value", price: 5 });
-    await repo.insert(entity);
+    await repository.insert(entity);
 
-    await repo.delete(entity.entity_id);
-    expect(repo.items).toHaveLength(0);
+    await repository.delete(entity.entity_id);
+    expect(repository.items).toHaveLength(0);
   });
 
   it("should return an entity by id", async () => {
     const entity = new StubEntity({ name: "name value", price: 5 });
-    await repo.insert(entity);
+    await repository.insert(entity);
 
-    const found = await repo.findById(entity.entity_id);
+    const found = await repository.findById(entity.entity_id);
     expect(found).toBe(entity);
   });
 
   it("should return null when entity is not found by id", async () => {
-    const found = await repo.findById(new Uuid());
+    const found = await repository.findById(new Uuid());
     expect(found).toBeNull();
   });
 
@@ -149,9 +128,10 @@ describe("In Memory Repository - Unit Tests", () => {
       new StubEntity({ name: "Second", price: 20 }),
       new StubEntity({ name: "Third", price: 30 }),
     ];
-    await repo.bulkInsert(entities);
 
-    const found = await repo.findByIds([
+    await Promise.all(entities.map((entity) => repository.insert(entity)));
+
+    const found = await repository.findByIds([
       entities[0].entity_id,
       entities[2].entity_id,
     ]);
@@ -162,9 +142,9 @@ describe("In Memory Repository - Unit Tests", () => {
 
   it("should return only existing entities when some ids are not found", async () => {
     const entity = new StubEntity({ name: "name value", price: 5 });
-    await repo.insert(entity);
+    await repository.insert(entity);
 
-    const found = await repo.findByIds([entity.entity_id, new Uuid()]);
+    const found = await repository.findByIds([entity.entity_id, new Uuid()]);
     expect(found).toHaveLength(1);
     expect(found[0]).toBe(entity);
   });
