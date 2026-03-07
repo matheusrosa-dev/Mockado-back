@@ -9,7 +9,7 @@ import {
 import {
   HttpMethod,
   ResponseBodyType,
-} from "../../domain/endpoint/endpoint.types";
+} from "../../../domain/endpoint/endpoint.types";
 
 type ConstructorProps = {
   title: string;

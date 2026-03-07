@@ -11,6 +11,4 @@ export enum ResponseBodyType {
   TEXT = "text",
   NULL = "null",
   EMPTY = "empty",
-  // HTML = "html",
-  // XML = "xml",
 }
