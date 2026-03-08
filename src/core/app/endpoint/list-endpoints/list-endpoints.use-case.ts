@@ -1,5 +1,5 @@
 import { IUseCase } from "../../shared/use-case.interface";
-import { IEndpointRepository } from "../../../domain/endpoint/endpoint.repository";
+import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
 import {
   EndpointOutput,
   EndpointOutputMapper,

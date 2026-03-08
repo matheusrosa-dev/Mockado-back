@@ -1,11 +1,8 @@
-import { EndpointInMemoryRepository } from "../../../../infra/endpoint/db/in-memory/endpoint-in-memory.repository";
-import { IEndpointRepository } from "../../../../domain/endpoint/endpoint.repository";
+import { EndpointInMemoryRepository } from "@infra/endpoint/db/in-memory/endpoint-in-memory.repository";
+import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
 import { CreateEndpointUseCase } from "../create-endpoint.use-case";
-import {
-  HttpMethod,
-  ResponseBodyType,
-} from "../../../../domain/endpoint/endpoint.types";
-import { EntityValidationError } from "../../../../domain/shared/validators/validation.error";
+import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
+import { EntityValidationError } from "@domain/shared/validators/validation.error";
 
 describe("Create Endpoint Use Case - Unit Tests", () => {
   let useCase: CreateEndpointUseCase;

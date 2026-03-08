@@ -8,7 +8,12 @@
       "dynamicImport": true
     },
     "baseUrl": "./",
-    "keepClassNames": true
+    "keepClassNames": true,
+    "paths": {
+      "@domain/*": ["./src/core/domain/*"],
+      "@infra/*": ["./src/core/infra/*"],
+      "@app/*": ["./src/core/app/*"]
+    }
   },
   "minify": false
 }

@@ -1,8 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
-import {
-  HttpMethod,
-  ResponseBodyType,
-} from "../../../../domain/endpoint/endpoint.types";
+import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
 
 @Entity({ name: "endpoints" })
 export class EndpointModel {

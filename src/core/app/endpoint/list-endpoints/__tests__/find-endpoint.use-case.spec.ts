@@ -1,7 +1,7 @@
-import { EndpointInMemoryRepository } from "../../../../infra/endpoint/db/in-memory/endpoint-in-memory.repository";
-import { IEndpointRepository } from "../../../../domain/endpoint/endpoint.repository";
+import { EndpointInMemoryRepository } from "@infra/endpoint/db/in-memory/endpoint-in-memory.repository";
+import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
 import { ListEndpointsUseCase } from "../list-endpoints.use-case";
-import { EndpointFactory } from "../../../../domain/endpoint/endpoint.entity";
+import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
 
 describe("List Endpoints Use Case - Unit Tests", () => {
   let useCase: ListEndpointsUseCase;

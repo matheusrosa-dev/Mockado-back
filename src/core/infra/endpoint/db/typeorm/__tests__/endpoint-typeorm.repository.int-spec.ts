@@ -1,7 +1,7 @@
-import { NotFoundError } from "../../../../../domain/shared/errors/not-found.error";
-import { Uuid } from "../../../../../domain/shared/value-objects/uuid.vo";
-import { EndpointFactory } from "../../../../../domain/endpoint/endpoint.entity";
-import { ResponseBodyType } from "../../../../../domain/endpoint/endpoint.types";
+import { NotFoundError } from "@domain/shared/errors/not-found.error";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
+import { ResponseBodyType } from "@domain/endpoint/endpoint.types";
 import { setupTypeOrm } from "../../../../shared/testing/helpers";
 import { EndpointModel } from "../endpoint-typeorm.model";
 import { EndpointTypeOrmRepository } from "../endpoint-typeorm.repository";

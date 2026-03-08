@@ -1,10 +1,10 @@
 import { DataSource, Repository } from "typeorm";
-import { Endpoint } from "../../../../domain/endpoint/endpoint.entity";
-import { IEndpointRepository } from "../../../../domain/endpoint/endpoint.repository";
+import { Endpoint } from "@domain/endpoint/endpoint.entity";
+import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
 import { EndpointModel } from "./endpoint-typeorm.model";
 import { EndpointModelMapper } from "./endpoint-model-mapper";
-import { Uuid } from "../../../../domain/shared/value-objects/uuid.vo";
-import { NotFoundError } from "../../../../domain/shared/errors/not-found.error";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { NotFoundError } from "@domain/shared/errors/not-found.error";
 
 type ConstructorProps = {
   dataSource: DataSource;

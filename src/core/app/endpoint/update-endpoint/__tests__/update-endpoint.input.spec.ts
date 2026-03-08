@@ -1,10 +1,7 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <It has to allow any in tests> */
 import { validateSync } from "class-validator";
 import { UpdateEndpointInput } from "../update-endpoint.input";
-import {
-  HttpMethod,
-  ResponseBodyType,
-} from "../../../../domain/endpoint/endpoint.types";
+import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
 
 const validId = "550e8400-e29b-41d4-a716-446655440000";
 

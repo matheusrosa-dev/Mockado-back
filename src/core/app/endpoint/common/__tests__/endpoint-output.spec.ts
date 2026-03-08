@@ -1,9 +1,6 @@
-import { Endpoint } from "../../../../domain/endpoint/endpoint.entity";
-import {
-  HttpMethod,
-  ResponseBodyType,
-} from "../../../../domain/endpoint/endpoint.types";
-import { Uuid } from "../../../../domain/shared/value-objects/uuid.vo";
+import { Endpoint } from "@domain/endpoint/endpoint.entity";
+import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import { EndpointOutputMapper } from "../endpoint-output";
 
 const baseProps = {

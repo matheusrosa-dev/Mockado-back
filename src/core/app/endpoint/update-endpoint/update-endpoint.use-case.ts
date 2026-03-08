@@ -1,14 +1,14 @@
-import { EntityValidationError } from "../../../domain/shared/validators/validation.error";
-import { Endpoint } from "../../../domain/endpoint/endpoint.entity";
+import { EntityValidationError } from "@domain/shared/validators/validation.error";
+import { Endpoint } from "@domain/endpoint/endpoint.entity";
 import { IUseCase } from "../../shared/use-case.interface";
 import {
   EndpointOutput,
   EndpointOutputMapper,
 } from "../common/endpoint-output";
 import { UpdateEndpointInput } from "./update-endpoint.input";
-import { IEndpointRepository } from "../../../domain/endpoint/endpoint.repository";
-import { Uuid } from "../../../domain/shared/value-objects/uuid.vo";
-import { NotFoundError } from "../../../domain/shared/errors/not-found.error";
+import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { NotFoundError } from "@domain/shared/errors/not-found.error";
 
 export class UpdateEndpointUseCase
   implements IUseCase<UpdateEndpointInput, EndpointOutput>

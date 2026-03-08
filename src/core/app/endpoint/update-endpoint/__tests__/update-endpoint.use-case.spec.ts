@@ -1,14 +1,11 @@
-import { EndpointInMemoryRepository } from "../../../../infra/endpoint/db/in-memory/endpoint-in-memory.repository";
-import { IEndpointRepository } from "../../../../domain/endpoint/endpoint.repository";
+import { EndpointInMemoryRepository } from "@infra/endpoint/db/in-memory/endpoint-in-memory.repository";
+import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
 import { UpdateEndpointUseCase } from "../update-endpoint.use-case";
-import { EndpointFakeBuilder } from "../../../../domain/endpoint/endpoint-fake.builder";
-import {
-  HttpMethod,
-  ResponseBodyType,
-} from "../../../../domain/endpoint/endpoint.types";
-import { EntityValidationError } from "../../../../domain/shared/validators/validation.error";
-import { NotFoundError } from "../../../../domain/shared/errors/not-found.error";
-import { Uuid } from "../../../../domain/shared/value-objects/uuid.vo";
+import { EndpointFakeBuilder } from "@domain/endpoint/endpoint-fake.builder";
+import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
+import { EntityValidationError } from "@domain/shared/validators/validation.error";
+import { NotFoundError } from "@domain/shared/errors/not-found.error";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 
 describe("Update Endpoint Use Case - Unit Tests", () => {
   let useCase: UpdateEndpointUseCase;

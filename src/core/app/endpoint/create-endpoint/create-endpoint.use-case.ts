@@ -1,12 +1,12 @@
-import { EntityValidationError } from "../../../domain/shared/validators/validation.error";
-import { EndpointFactory } from "../../../domain/endpoint/endpoint.entity";
+import { EntityValidationError } from "@domain/shared/validators/validation.error";
+import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
 import { IUseCase } from "../../shared/use-case.interface";
 import {
   EndpointOutput,
   EndpointOutputMapper,
 } from "../common/endpoint-output";
 import { CreateEndpointInput } from "./create-endpoint.input";
-import { IEndpointRepository } from "../../../domain/endpoint/endpoint.repository";
+import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
 
 export class CreateEndpointUseCase
   implements IUseCase<CreateEndpointInput, EndpointOutput>

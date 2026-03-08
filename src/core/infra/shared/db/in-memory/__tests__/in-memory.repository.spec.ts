@@ -1,6 +1,6 @@
-import { NotFoundError } from "../../../../../domain/shared/errors/not-found.error";
-import { Entity } from "../../../../../domain/shared/entity";
-import { Uuid } from "../../../../../domain/shared/value-objects/uuid.vo";
+import { NotFoundError } from "@domain/shared/errors/not-found.error";
+import { Entity } from "@domain/shared/entity";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import { InMemoryRepository } from "../in-memory.repository";
 
 type ConstructorProps = {

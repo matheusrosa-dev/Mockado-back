@@ -1,7 +1,7 @@
-import { LoadEntityError } from "../../../../domain/shared/validators/validation.error";
-import { Endpoint } from "../../../../domain/endpoint/endpoint.entity";
+import { LoadEntityError } from "@domain/shared/validators/validation.error";
+import { Endpoint } from "@domain/endpoint/endpoint.entity";
 import { EndpointModel } from "./endpoint-typeorm.model";
-import { Uuid } from "../../../../domain/shared/value-objects/uuid.vo";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 
 export class EndpointModelMapper {
   static toModel(entity: Endpoint): EndpointModel {

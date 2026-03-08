@@ -1,14 +1,8 @@
-import {
-  Endpoint,
-  EndpointFactory,
-} from "../../../../../domain/endpoint/endpoint.entity";
-import { NotFoundError } from "../../../../../domain/shared/errors/not-found.error";
-import { Uuid } from "../../../../../domain/shared/value-objects/uuid.vo";
+import { Endpoint, EndpointFactory } from "@domain/endpoint/endpoint.entity";
+import { NotFoundError } from "@domain/shared/errors/not-found.error";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import { EndpointInMemoryRepository } from "../endpoint-in-memory.repository";
-import {
-  HttpMethod,
-  ResponseBodyType,
-} from "../../../../../domain/endpoint/endpoint.types";
+import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
 
 describe("Endpoint In Memory Repository - Unit Tests", () => {
   let repository: EndpointInMemoryRepository;

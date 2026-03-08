@@ -6,10 +6,7 @@ import {
   IsOptional,
   IsString,
 } from "class-validator";
-import {
-  HttpMethod,
-  ResponseBodyType,
-} from "../../../domain/endpoint/endpoint.types";
+import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
 
 type ConstructorProps = {
   title: string;

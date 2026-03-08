@@ -1,9 +1,9 @@
-import { EndpointInMemoryRepository } from "../../../../infra/endpoint/db/in-memory/endpoint-in-memory.repository";
-import { IEndpointRepository } from "../../../../domain/endpoint/endpoint.repository";
+import { EndpointInMemoryRepository } from "@infra/endpoint/db/in-memory/endpoint-in-memory.repository";
+import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
 import { FindEndpointUseCase } from "../find-endpoint.use-case";
-import { EndpointFactory } from "../../../../domain/endpoint/endpoint.entity";
-import { Uuid } from "../../../../domain/shared/value-objects/uuid.vo";
-import { NotFoundError } from "../../../../domain/shared/errors/not-found.error";
+import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { NotFoundError } from "@domain/shared/errors/not-found.error";
 
 describe("Find Endpoint Use Case - Unit Tests", () => {
   let useCase: FindEndpointUseCase;

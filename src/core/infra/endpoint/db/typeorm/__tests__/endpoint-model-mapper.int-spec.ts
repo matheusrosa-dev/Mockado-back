@@ -1,4 +1,4 @@
-import { EndpointFactory } from "../../../../../domain/endpoint/endpoint.entity";
+import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
 import { EndpointModelMapper } from "../endpoint-model-mapper";
 
 describe("Endpoint Model Mapper - Integration ", () => {

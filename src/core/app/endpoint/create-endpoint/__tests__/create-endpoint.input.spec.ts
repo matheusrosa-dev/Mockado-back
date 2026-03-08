@@ -1,10 +1,7 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <It has to allow any in tests> */
 import { validateSync } from "class-validator";
 import { CreateEndpointInput } from "../create-endpoint.input";
-import {
-  HttpMethod,
-  ResponseBodyType,
-} from "../../../../domain/endpoint/endpoint.types";
+import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
 
 const validProps = {
   title: "My Endpoint",

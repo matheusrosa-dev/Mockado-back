@@ -1,8 +1,5 @@
-import { Endpoint } from "../../../domain/endpoint/endpoint.entity";
-import {
-  HttpMethod,
-  ResponseBodyType,
-} from "../../../domain/endpoint/endpoint.types";
+import { Endpoint } from "@domain/endpoint/endpoint.entity";
+import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
 
 export type EndpointOutput = {
   id: string;

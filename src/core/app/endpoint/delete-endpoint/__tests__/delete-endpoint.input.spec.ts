@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <It has to allow any in tests> */
 import { validateSync } from "class-validator";
 import { DeleteEndpointInput } from "../delete-endpoint.input";
-import { Uuid } from "../../../../domain/shared/value-objects/uuid.vo";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 
 function validate(props: object) {
   const input = new DeleteEndpointInput(props as any);

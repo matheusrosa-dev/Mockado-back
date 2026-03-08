@@ -1,7 +1,4 @@
-import {
-  HttpMethod,
-  ResponseBodyType,
-} from "../../../../../domain/endpoint/endpoint.types";
+import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
 import { setupTypeOrm } from "../../../../shared/testing/helpers";
 import { EndpointModel } from "../endpoint-typeorm.model";
 
