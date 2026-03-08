@@ -274,6 +274,8 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
     });
 
     it("should return formatted output", async () => {
+      const outputSpy = jest.spyOn(EndpointOutputMapper, "toOutput");
+
       const endpoint = EndpointFactory.fake().oneEndpoint().build();
 
       const inMemoryRepository = repository as EndpointInMemoryRepository;
@@ -285,6 +287,8 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
         delay: 3,
         description: "Updated description",
       });
+
+      expect(outputSpy).toHaveBeenCalledTimes(1);
 
       const outputMapped = EndpointOutputMapper.toOutput(endpoint);
 

@@ -56,6 +56,8 @@ describe("Find Endpoint Use Case - Integration Tests", () => {
     });
 
     it("should return formatted output", async () => {
+      const outputSpy = jest.spyOn(EndpointOutputMapper, "toOutput");
+
       const endpoint = EndpointFactory.fake().oneEndpoint().build();
 
       await repository.insert(endpoint);
@@ -63,6 +65,8 @@ describe("Find Endpoint Use Case - Integration Tests", () => {
       const output = await useCase.execute({
         id: endpoint.entity_id.id,
       });
+
+      expect(outputSpy).toHaveBeenCalledTimes(1);
 
       const outputMapped = EndpointOutputMapper.toOutput(endpoint);
 

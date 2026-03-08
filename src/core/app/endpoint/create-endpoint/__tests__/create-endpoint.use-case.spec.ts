@@ -132,9 +132,13 @@ describe("Create Endpoint Use Case - Unit Tests", () => {
     });
 
     it("should return formatted output", async () => {
+      const outputSpy = jest.spyOn(EndpointOutputMapper, "toOutput");
+
       const endpoint = EndpointFactory.fake().oneEndpoint().build();
 
       const output = await useCase.execute(endpoint);
+
+      expect(outputSpy).toHaveBeenCalledTimes(1);
 
       const outputMapped = EndpointOutputMapper.toOutput(endpoint);
 

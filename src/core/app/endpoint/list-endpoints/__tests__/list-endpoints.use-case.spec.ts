@@ -45,6 +45,8 @@ describe("List Endpoints Use Case - Unit Tests", () => {
     });
 
     it("should return formatted output", async () => {
+      const outputSpy = jest.spyOn(EndpointOutputMapper, "toOutput");
+
       const endpoint = EndpointFactory.fake().oneEndpoint().build();
 
       const inMemoryRepository = repository as EndpointInMemoryRepository;
@@ -52,6 +54,8 @@ describe("List Endpoints Use Case - Unit Tests", () => {
       inMemoryRepository.items = [endpoint];
 
       const output = await useCase.execute();
+
+      expect(outputSpy).toHaveBeenCalledTimes(1);
 
       const outputMapped = EndpointOutputMapper.toOutput(endpoint);
 
