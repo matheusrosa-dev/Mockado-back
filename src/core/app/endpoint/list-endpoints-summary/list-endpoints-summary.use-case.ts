@@ -6,12 +6,12 @@ type Output = {
   id: string;
   title: string;
   method: HttpMethod;
-};
+}[];
 
-export class ListEndpointsSummaryUseCase implements IUseCase<void, Output[]> {
+export class ListEndpointsSummaryUseCase implements IUseCase<void, Output> {
   constructor(private readonly repository: IEndpointRepository) {}
 
-  async execute(): Promise<Output[]> {
+  async execute(): Promise<Output> {
     const endpoints = await this.repository.findAllSummary();
 
     return endpoints.map((endpoint) => ({
