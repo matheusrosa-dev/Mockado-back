@@ -27,6 +27,9 @@
       },
       "complexity": {
         "noStaticOnlyClass": "off"
+      },
+      "suspicious": {
+        "noThenProperty": "off"
       }
     }
   },

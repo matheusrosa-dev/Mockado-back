@@ -11,8 +11,6 @@ async function bootstrap() {
 
   applyGlobalConfig(app);
 
-  console.log(`API is running on port ${port}`);
-
   await app.listen(port);
 }
 bootstrap();

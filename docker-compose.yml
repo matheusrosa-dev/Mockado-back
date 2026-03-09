@@ -1,0 +1,13 @@
+services:
+
+  db:
+    container_name: mockado_dev-db
+    image: postgres:18
+    environment:
+      - POSTGRES_DB=mockado
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.docker/postgres:/var/lib/postgresql:delegated
