@@ -2,16 +2,16 @@ import { CreateEndpointUseCase } from "@app/endpoint/create-endpoint/create-endp
 import { UpdateEndpointUseCase } from "@app/endpoint/update-endpoint/update-endpoint.use-case";
 import { FindEndpointUseCase } from "@app/endpoint/find-endpoint/find-endpoint.use-case";
 import { DeleteEndpointUseCase } from "@app/endpoint/delete-endpoint/delete-endpoint.use-case";
-import { ListEndpointsUseCase } from "@app/endpoint/list-endpoints/list-endpoints.use-case";
 import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
 import { CreateEndpointDto } from "./dtos/create-endpoint.dto";
 import { DeleteEndpointDto } from "./dtos/delete-endpoint.dto";
 import { FindEndpointDto } from "./dtos/find-endpoint.dto";
+import { ListEndpointsSummaryUseCase } from "@app/endpoint/list-endpoints-summary/list-endpoints-summary.use-case";
 
 @Controller("endpoints")
 export class EndpointsController {
   constructor(
-    private listEndpointsUseCase: ListEndpointsUseCase,
+    private listEndpointsSummaryUseCase: ListEndpointsSummaryUseCase,
     private createEndpointUseCase: CreateEndpointUseCase,
     private updateEndpointUseCase: UpdateEndpointUseCase,
     private findEndpointUseCase: FindEndpointUseCase,
@@ -23,9 +23,9 @@ export class EndpointsController {
     return this.createEndpointUseCase.execute(createEndpointDto);
   }
 
-  @Get()
-  async listEndpoints() {
-    return this.listEndpointsUseCase.execute();
+  @Get("summary")
+  async listEndpointsSummary() {
+    return this.listEndpointsSummaryUseCase.execute();
   }
 
   @Get(":endpointId")

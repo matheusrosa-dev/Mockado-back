@@ -7,6 +7,16 @@ export class EndpointInMemoryRepository
   extends InMemoryRepository<Endpoint, Uuid>
   implements IEndpointRepository
 {
+  async findAllSummary() {
+    const endpoints = this.items.map((endpoint) => ({
+      entity_id: endpoint.entity_id,
+      title: endpoint.title,
+      method: endpoint.method,
+    }));
+
+    return endpoints;
+  }
+
   getEntity() {
     return Endpoint;
   }

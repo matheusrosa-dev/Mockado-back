@@ -56,6 +56,20 @@ export class EndpointTypeOrmRepository implements IEndpointRepository {
     return models.map((model) => EndpointModelMapper.toEntity(model));
   }
 
+  async findAllSummary(): Promise<Endpoint[]> {
+    const models = await this.repository.find({
+      order: { createdAt: "ASC" },
+      select: {
+        endpoint_id: true,
+        title: true,
+        method: true,
+        statusCode: true,
+      },
+    });
+
+    return models.map((model) => EndpointModelMapper.toEntity(model));
+  }
+
   getEntity() {
     return Endpoint;
   }

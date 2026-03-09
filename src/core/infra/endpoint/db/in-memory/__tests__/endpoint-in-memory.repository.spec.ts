@@ -61,6 +61,35 @@ describe("Endpoint In Memory Repository - Unit Tests", () => {
     });
   });
 
+  describe("findAllSummary()", () => {
+    it("should return summary of all endpoints", async () => {
+      const endpoints = EndpointFactory.fake().manyEndpoints(2).build();
+
+      await Promise.all(
+        endpoints.map((endpoint) => repository.insert(endpoint)),
+      );
+
+      const summaries = await repository.findAllSummary();
+
+      expect(summaries).toHaveLength(2);
+      expect(summaries[0]).toEqual({
+        entity_id: endpoints[0].entity_id,
+        title: endpoints[0].title,
+        method: endpoints[0].method,
+      });
+      expect(summaries[1]).toEqual({
+        entity_id: endpoints[1].entity_id,
+        title: endpoints[1].title,
+        method: endpoints[1].method,
+      });
+    });
+
+    it("should return empty array when there are no endpoints", async () => {
+      const summaries = await repository.findAllSummary();
+      expect(summaries).toHaveLength(0);
+    });
+  });
+
   describe("update()", () => {
     it("should update an existing endpoint", async () => {
       const endpoint = EndpointFactory.fake().oneEndpoint().build();

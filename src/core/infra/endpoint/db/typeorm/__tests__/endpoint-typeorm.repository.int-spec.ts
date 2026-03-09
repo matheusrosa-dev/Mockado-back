@@ -100,22 +100,63 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
     });
 
     it("should return all inserted endpoints", async () => {
-      const [e1, e2, e3] = EndpointFactory.fake()
+      const [endpoint1, endpoint2, endpoint3] = EndpointFactory.fake()
         .manyEndpoints(3)
         .withStatusCode(204)
         .build();
 
-      await repository.insert(e1);
-      await repository.insert(e2);
-      await repository.insert(e3);
+      await repository.insert(endpoint1);
+      await repository.insert(endpoint2);
+      await repository.insert(endpoint3);
 
-      const all = await repository.findAll();
+      const allEndpoints = await repository.findAll();
 
-      expect(all).toHaveLength(3);
-      const ids = all.map((e) => e.entity_id.id);
-      expect(ids).toContain(e1.entity_id.id);
-      expect(ids).toContain(e2.entity_id.id);
-      expect(ids).toContain(e3.entity_id.id);
+      expect(allEndpoints).toHaveLength(3);
+      const ids = allEndpoints.map((e) => e.entity_id.id);
+      expect(ids).toContain(endpoint1.entity_id.id);
+      expect(ids).toContain(endpoint2.entity_id.id);
+      expect(ids).toContain(endpoint3.entity_id.id);
+    });
+  });
+
+  describe("findAllSummary()", () => {
+    it("should return empty array when no endpoints exist", async () => {
+      const endpoints = await repository.findAllSummary();
+
+      expect(endpoints).toHaveLength(0);
+    });
+
+    it("should return all inserted endpoints with summary fields", async () => {
+      const [endpoint1, endpoint2] = EndpointFactory.fake()
+        .manyEndpoints(2)
+        .withStatusCode(204)
+        .build();
+
+      await repository.insert(endpoint1);
+      await repository.insert(endpoint2);
+
+      const allEndpoints = await repository.findAllSummary();
+
+      expect(allEndpoints).toHaveLength(2);
+      expect(allEndpoints[0].entity_id.id).toBe(endpoint1.entity_id.id);
+      expect(allEndpoints[0].title).toBe(endpoint1.title);
+      expect(allEndpoints[0].method).toBe(endpoint1.method);
+      expect(allEndpoints[0].statusCode).toBe(endpoint1.statusCode);
+      expect(allEndpoints[0].description).toBe("");
+      expect(allEndpoints[0].delay).toBe(0);
+      expect(allEndpoints[0].responseBodyType).toBeUndefined();
+      expect(allEndpoints[0].responseJson).toBeUndefined();
+      expect(allEndpoints[0].responseText).toBeUndefined();
+
+      expect(allEndpoints[1].entity_id.id).toBe(endpoint2.entity_id.id);
+      expect(allEndpoints[1].title).toBe(endpoint2.title);
+      expect(allEndpoints[1].method).toBe(endpoint2.method);
+      expect(allEndpoints[1].statusCode).toBe(endpoint2.statusCode);
+      expect(allEndpoints[1].description).toBe("");
+      expect(allEndpoints[1].delay).toBe(0);
+      expect(allEndpoints[1].responseBodyType).toBeUndefined();
+      expect(allEndpoints[1].responseJson).toBeUndefined();
+      expect(allEndpoints[1].responseText).toBeUndefined();
     });
   });
 

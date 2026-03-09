@@ -1,13 +1,12 @@
 import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
-import { ListEndpointsUseCase } from "../list-endpoints.use-case";
+import { ListEndpointsSummaryUseCase } from "../list-endpoints-summary.use-case";
 import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
 import { setupTypeOrm } from "@infra/shared/testing/helpers";
 import { EndpointTypeOrmRepository } from "@infra/endpoint/db/typeorm/endpoint-typeorm.repository";
 import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
-import { EndpointOutputMapper } from "@app/endpoint/common/endpoint-output";
 
-describe("List Endpoints Use Case - Integration Tests", () => {
-  let useCase: ListEndpointsUseCase;
+describe("List Endpoints Summary Use Case - Integration Tests", () => {
+  let useCase: ListEndpointsSummaryUseCase;
   let repository: IEndpointRepository;
 
   const { dataSource } = setupTypeOrm({
@@ -16,11 +15,11 @@ describe("List Endpoints Use Case - Integration Tests", () => {
 
   beforeEach(() => {
     repository = new EndpointTypeOrmRepository(dataSource);
-    useCase = new ListEndpointsUseCase(repository);
+    useCase = new ListEndpointsSummaryUseCase(repository);
   });
 
   describe("execute()", () => {
-    it("should list all endpoints", async () => {
+    it("should list all endpoints summary", async () => {
       const endpoints = [
         EndpointFactory.fake().oneEndpoint().withStatusCode(204).build(),
         EndpointFactory.fake().oneEndpoint().withStatusCode(204).build(),
@@ -37,10 +36,6 @@ describe("List Endpoints Use Case - Integration Tests", () => {
           id: endpoint.entity_id.id,
           title: endpoint.title,
           method: endpoint.method,
-          description: endpoint.description,
-          statusCode: endpoint.statusCode,
-          delay: endpoint.delay,
-          createdAt: endpoint.createdAt,
         })),
       );
     });
@@ -48,28 +43,6 @@ describe("List Endpoints Use Case - Integration Tests", () => {
     it("should return an empty array if no endpoints found", async () => {
       const endpointsList = await useCase.execute();
       expect(endpointsList).toEqual([]);
-    });
-
-    it("should return formatted output", async () => {
-      const outputSpy = jest.spyOn(EndpointOutputMapper, "toOutput");
-
-      const endpoint = EndpointFactory.fake().oneEndpoint().build();
-
-      await repository.insert(endpoint);
-
-      const output = await useCase.execute();
-
-      expect(outputSpy).toHaveBeenCalledTimes(1);
-
-      const outputMapped = EndpointOutputMapper.toOutput(endpoint);
-
-      expect(output).toStrictEqual([
-        {
-          ...outputMapped,
-          id: output[0].id,
-          createdAt: output[0].createdAt,
-        },
-      ]);
     });
   });
 });

@@ -14,8 +14,8 @@ Content-Type: application/json
 ###
 @endpointId = {{createEndpoint.response.body.data.id}}
 
-### List endpoints
-GET {{baseUrl}}/endpoints
+### List endpoints summary
+GET {{baseUrl}}/endpoints/summary
 
 ### Find endpoint by id
 GET {{baseUrl}}/endpoints/{{endpointId}}
