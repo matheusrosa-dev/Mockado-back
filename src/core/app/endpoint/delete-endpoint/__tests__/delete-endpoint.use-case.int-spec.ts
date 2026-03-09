@@ -27,7 +27,7 @@ describe("Delete Endpoint Use Case - Integration Tests", () => {
       await repository.insert(endpoint);
 
       await useCase.execute({
-        id: endpoint.entity_id.id,
+        endpointId: endpoint.entity_id.id,
       });
 
       const found = await repository.findById(endpoint.entity_id);
@@ -40,7 +40,7 @@ describe("Delete Endpoint Use Case - Integration Tests", () => {
 
       await expect(
         useCase.execute({
-          id: id.id,
+          endpointId: id.id,
         }),
       ).rejects.toThrow(NotFoundError);
     });

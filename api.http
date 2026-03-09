@@ -1,0 +1,24 @@
+@baseUrl = http://localhost:3333
+
+### Create endpoint
+# @name createEndpoint
+POST {{baseUrl}}/endpoints
+Content-Type: application/json
+
+{
+    "title": "Categoria atualizada",
+    "method": "GET",
+    "statusCode": 204
+}
+
+###
+@endpointId = {{createEndpoint.response.body.data.id}}
+
+### List endpoints
+GET {{baseUrl}}/endpoints
+
+### Find endpoint by id
+GET {{baseUrl}}/endpoints/{{endpointId}}
+
+### Delete endpoint
+DELETE {{baseUrl}}/endpoints/{{endpointId}}

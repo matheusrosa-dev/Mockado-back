@@ -9,7 +9,7 @@ export class DeleteEndpointUseCase
   constructor(private readonly repository: IEndpointRepository) {}
 
   async execute(input: DeleteEndpointInput): Promise<void> {
-    const endpointId = new Uuid(input.id);
+    const endpointId = new Uuid(input.endpointId);
 
     await this.repository.delete(endpointId);
   }

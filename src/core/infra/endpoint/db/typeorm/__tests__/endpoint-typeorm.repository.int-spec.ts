@@ -145,7 +145,7 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
 
       await expect(repository.update(endpoint)).rejects.toThrow(NotFoundError);
       await expect(repository.update(endpoint)).rejects.toThrow(
-        `Endpoint Not Found using IDs: ${endpoint.entity_id.id}`,
+        `Endpoint Not Found using ID: ${endpoint.entity_id.id}`,
       );
     });
   });
@@ -170,7 +170,7 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
 
       await expect(repository.delete(id)).rejects.toThrow(NotFoundError);
       await expect(repository.delete(id)).rejects.toThrow(
-        `Endpoint Not Found using IDs: ${id.id}`,
+        `Endpoint Not Found using ID: ${id.id}`,
       );
     });
   });

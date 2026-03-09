@@ -17,7 +17,7 @@ describe("Not Found Error - Unit Tests", () => {
     const error = new NotFoundError(entity.entity_id, StubEntity);
     expect(error).toBeInstanceOf(NotFoundError);
     expect(error.message).toBe(
-      `StubEntity Not Found using IDs: ${entity.entity_id.id}`,
+      `StubEntity Not Found using ID: ${entity.entity_id.id}`,
     );
     expect(error.name).toBe("NotFoundError");
   });

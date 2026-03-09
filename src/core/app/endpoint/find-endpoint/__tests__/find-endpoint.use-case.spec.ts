@@ -27,7 +27,7 @@ describe("Find Endpoint Use Case - Unit Tests", () => {
       inMemoryRepository.items = [endpoint];
 
       const foundEndpoint = await useCase.execute({
-        id: endpoint.entity_id.id,
+        endpointId: endpoint.entity_id.id,
       });
 
       expect(foundEndpoint).toEqual({
@@ -46,7 +46,7 @@ describe("Find Endpoint Use Case - Unit Tests", () => {
 
       await expect(
         useCase.execute({
-          id: id.id,
+          endpointId: id.id,
         }),
       ).rejects.toThrow(NotFoundError);
     });
@@ -61,7 +61,7 @@ describe("Find Endpoint Use Case - Unit Tests", () => {
       inMemoryRepository.items = [endpoint];
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        endpointId: endpoint.entity_id.id,
       });
 
       expect(outputSpy).toHaveBeenCalledTimes(1);

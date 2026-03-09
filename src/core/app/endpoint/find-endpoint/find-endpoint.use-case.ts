@@ -15,7 +15,7 @@ export class FindEndpointUseCase
   constructor(private readonly repository: IEndpointRepository) {}
 
   async execute(input: FindEndpointInput): Promise<EndpointOutput> {
-    const endpointId = new Uuid(input.id);
+    const endpointId = new Uuid(input.endpointId);
 
     const endpoint = await this.repository.findById(endpointId);
 
