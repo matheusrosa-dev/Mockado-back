@@ -1,23 +1,18 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./nest-modules/app.module";
-import { ValidationPipe } from "@nestjs/common";
-import { NotFoundErrorFilter } from "./nest-modules/shared/filters/not-found-error.filter";
-import { WrapperDataInterceptor } from "./nest-modules/shared/interceptors/wrapper-data/wrapper-data.interceptor";
+import { applyGlobalConfig } from "./nest-modules/config/global-config";
+import { ConfigService } from "@nestjs/config";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      errorHttpStatusCode: 422,
-      transform: true,
-    }),
-  );
+  const config = app.get<ConfigService>(ConfigService);
+  const port = config.get<number>("api.port")!;
 
-  app.useGlobalInterceptors(new WrapperDataInterceptor());
+  applyGlobalConfig(app);
 
-  app.useGlobalFilters(new NotFoundErrorFilter());
+  console.log(`API is running on port ${port}`);
 
-  await app.listen(process.env.PORT ?? 3333);
+  await app.listen(port);
 }
 bootstrap();
