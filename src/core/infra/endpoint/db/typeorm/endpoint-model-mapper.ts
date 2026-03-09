@@ -2,6 +2,7 @@ import { LoadEntityError } from "@domain/shared/validators/validation.error";
 import { Endpoint } from "@domain/endpoint/endpoint.entity";
 import { EndpointModel } from "./endpoint-typeorm.model";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
 
 export class EndpointModelMapper {
   static toModel(entity: Endpoint): EndpointModel {
@@ -12,7 +13,7 @@ export class EndpointModelMapper {
     model.method = entity.method;
     model.description = entity.description;
     model.delay = entity.delay;
-    model.statusCode = entity.statusCode;
+    model.statusCode = entity.statusCode.statusCode;
     model.responseBodyType = entity.responseBodyType ?? null;
     model.responseJson = entity.responseJson ?? null;
     model.responseText = entity.responseText ?? null;
@@ -28,7 +29,7 @@ export class EndpointModelMapper {
       method: model.method,
       description: model.description,
       delay: model.delay,
-      statusCode: model.statusCode,
+      statusCode: new StatusCode(model.statusCode),
       createdAt: model.createdAt,
 
       ...(model?.responseBodyType && {

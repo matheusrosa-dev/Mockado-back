@@ -5,6 +5,8 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Max,
+  Min,
 } from "class-validator";
 import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
 
@@ -36,6 +38,8 @@ export class CreateEndpointInput {
   delay?: number;
 
   @IsInt()
+  @Min(100)
+  @Max(511)
   statusCode: number;
 
   @IsOptional()

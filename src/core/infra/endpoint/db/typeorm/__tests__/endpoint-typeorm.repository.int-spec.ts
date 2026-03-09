@@ -5,6 +5,7 @@ import { ResponseBodyType } from "@domain/endpoint/endpoint.types";
 import { setupTypeOrm } from "../../../../shared/testing/helpers";
 import { EndpointModel } from "../endpoint-typeorm.model";
 import { EndpointTypeOrmRepository } from "../endpoint-typeorm.repository";
+import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
 
 describe("EndpointTypeOrmRepository - Integration Tests", () => {
   const { dataSource } = setupTypeOrm({ entities: [EndpointModel] });
@@ -19,7 +20,7 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
     it("should insert an endpoint without body", async () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(204)
+        .withStatusCode(new StatusCode(204))
         .build();
 
       await repository.insert(endpoint);
@@ -30,14 +31,14 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
       expect(found!.entity_id.id).toBe(endpoint.entity_id.id);
       expect(found!.title).toBe(endpoint.title);
       expect(found!.method).toBe(endpoint.method);
-      expect(found!.statusCode).toBe(204);
+      expect(found!.statusCode.statusCode).toBe(204);
       expect(found!.responseBodyType).toBeUndefined();
     });
 
     it("should insert an endpoint with JSON body", async () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.JSON)
         .withResponseJson('{"key":"value"}')
         .build();
@@ -54,7 +55,7 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
     it("should insert an endpoint with TEXT body", async () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.TEXT)
         .withResponseText("hello world")
         .build();
@@ -79,7 +80,7 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
     it("should return the endpoint when it exists", async () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(204)
+        .withStatusCode(new StatusCode(204))
         .build();
 
       await repository.insert(endpoint);
@@ -102,7 +103,7 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
     it("should return all inserted endpoints", async () => {
       const [endpoint1, endpoint2, endpoint3] = EndpointFactory.fake()
         .manyEndpoints(3)
-        .withStatusCode(204)
+        .withStatusCode(new StatusCode(204))
         .build();
 
       await repository.insert(endpoint1);
@@ -129,7 +130,6 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
     it("should return all inserted endpoints with summary fields", async () => {
       const [endpoint1, endpoint2] = EndpointFactory.fake()
         .manyEndpoints(2)
-        .withStatusCode(204)
         .build();
 
       await repository.insert(endpoint1);
@@ -138,25 +138,18 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
       const allEndpoints = await repository.findAllSummary();
 
       expect(allEndpoints).toHaveLength(2);
-      expect(allEndpoints[0].entity_id.id).toBe(endpoint1.entity_id.id);
-      expect(allEndpoints[0].title).toBe(endpoint1.title);
-      expect(allEndpoints[0].method).toBe(endpoint1.method);
-      expect(allEndpoints[0].statusCode).toBe(endpoint1.statusCode);
-      expect(allEndpoints[0].description).toBe("");
-      expect(allEndpoints[0].delay).toBe(0);
-      expect(allEndpoints[0].responseBodyType).toBeUndefined();
-      expect(allEndpoints[0].responseJson).toBeUndefined();
-      expect(allEndpoints[0].responseText).toBeUndefined();
 
-      expect(allEndpoints[1].entity_id.id).toBe(endpoint2.entity_id.id);
-      expect(allEndpoints[1].title).toBe(endpoint2.title);
-      expect(allEndpoints[1].method).toBe(endpoint2.method);
-      expect(allEndpoints[1].statusCode).toBe(endpoint2.statusCode);
-      expect(allEndpoints[1].description).toBe("");
-      expect(allEndpoints[1].delay).toBe(0);
-      expect(allEndpoints[1].responseBodyType).toBeUndefined();
-      expect(allEndpoints[1].responseJson).toBeUndefined();
-      expect(allEndpoints[1].responseText).toBeUndefined();
+      expect(allEndpoints[0]).toEqual({
+        entity_id: new Uuid(endpoint1.entity_id.id),
+        title: endpoint1.title,
+        method: endpoint1.method,
+      });
+
+      expect(allEndpoints[1]).toEqual({
+        entity_id: new Uuid(endpoint2.entity_id.id),
+        title: endpoint2.title,
+        method: endpoint2.method,
+      });
     });
   });
 
@@ -164,7 +157,7 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
     it("should update an existing endpoint", async () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(204)
+        .withStatusCode(new StatusCode(204))
         .withTitle("original title")
         .build();
 
@@ -181,7 +174,7 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
     it("should throw NotFoundError when updating non-existent endpoint", async () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(204)
+        .withStatusCode(new StatusCode(204))
         .build();
 
       await expect(repository.update(endpoint)).rejects.toThrow(NotFoundError);
@@ -195,7 +188,7 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
     it("should delete an existing endpoint", async () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(204)
+        .withStatusCode(new StatusCode(204))
         .build();
 
       await repository.insert(endpoint);

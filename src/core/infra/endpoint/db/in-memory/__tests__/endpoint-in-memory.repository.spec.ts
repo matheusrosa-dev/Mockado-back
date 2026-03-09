@@ -3,6 +3,7 @@ import { NotFoundError } from "@domain/shared/errors/not-found.error";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import { EndpointInMemoryRepository } from "../endpoint-in-memory.repository";
 import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
+import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
 
 describe("Endpoint In Memory Repository - Unit Tests", () => {
   let repository: EndpointInMemoryRepository;
@@ -134,7 +135,7 @@ describe("Endpoint In Memory Repository - Unit Tests", () => {
     it("should handle endpoints with responseBodyType JSON", async () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.JSON)
         .withResponseJson('{"key":"value"}')
         .build();
@@ -149,7 +150,7 @@ describe("Endpoint In Memory Repository - Unit Tests", () => {
     it("should handle endpoints with responseBodyType TEXT", async () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.TEXT)
         .withResponseText("hello")
         .build();

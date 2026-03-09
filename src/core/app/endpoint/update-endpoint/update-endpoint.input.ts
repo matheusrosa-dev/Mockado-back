@@ -6,6 +6,8 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  Max,
+  Min,
 } from "class-validator";
 import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
 
@@ -44,6 +46,8 @@ export class UpdateEndpointInput {
 
   @IsOptional()
   @IsInt()
+  @Min(100)
+  @Max(511)
   statusCode?: number;
 
   @IsOptional()

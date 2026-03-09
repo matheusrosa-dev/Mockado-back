@@ -15,7 +15,7 @@ export class ListEndpointsSummaryUseCase implements IUseCase<void, Output[]> {
     const endpoints = await this.repository.findAllSummary();
 
     return endpoints.map((endpoint) => ({
-      id: endpoint.entity_id.toString(),
+      id: endpoint.entity_id.id,
       title: endpoint.title,
       method: endpoint.method,
     }));

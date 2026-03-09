@@ -2,6 +2,7 @@ import { Chance } from "chance";
 import { Uuid } from "../shared/value-objects/uuid.vo";
 import { Endpoint } from "./endpoint.entity";
 import { HttpMethod, ResponseBodyType } from "./endpoint.types";
+import { StatusCode } from "./value-objects/status-code.vo";
 
 type PropOrFactory<T> = T | (() => T);
 
@@ -16,8 +17,10 @@ export class EndpointFakeBuilder<TBuild = Endpoint | Endpoint[]> {
     this.chance.paragraph({ sentences: 1 });
   private _delay: PropOrFactory<number | undefined> = () =>
     this.chance.integer({ min: 0, max: 10 });
-  private _statusCode: PropOrFactory<number> = () =>
-    this.chance.pickone([200, 201, 204, 400, 401, 403, 404, 500, 502, 503]);
+  private _statusCode: PropOrFactory<StatusCode> = () =>
+    new StatusCode(
+      this.chance.pickone([200, 201, 204, 400, 401, 403, 404, 500, 502, 503]),
+    );
   private _responseBodyType: PropOrFactory<ResponseBodyType> = () =>
     this.chance.pickone(Object.values(ResponseBodyType));
   private _responseJson: PropOrFactory<string> = () =>
@@ -60,7 +63,7 @@ export class EndpointFakeBuilder<TBuild = Endpoint | Endpoint[]> {
     return this;
   }
 
-  withStatusCode(valueOrFactory: PropOrFactory<number>) {
+  withStatusCode(valueOrFactory: PropOrFactory<StatusCode>) {
     this._statusCode = valueOrFactory;
     return this;
   }

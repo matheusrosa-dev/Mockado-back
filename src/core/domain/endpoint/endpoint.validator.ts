@@ -42,11 +42,6 @@ class EndpointRules {
   @Max(10, { groups: ["delay"] as EndpointValidationGroup[] })
   _delay?: number;
 
-  @IsInt({ groups: ["statusCode"] as EndpointValidationGroup[] })
-  @Min(100, { groups: ["statusCode"] as EndpointValidationGroup[] })
-  @Max(511, { groups: ["statusCode"] as EndpointValidationGroup[] })
-  _statusCode: number;
-
   @IsOptional({ groups: ["responseBodyType"] as EndpointValidationGroup[] })
   @IsEnum(ResponseBodyType, {
     groups: ["responseBodyType"] as EndpointValidationGroup[],

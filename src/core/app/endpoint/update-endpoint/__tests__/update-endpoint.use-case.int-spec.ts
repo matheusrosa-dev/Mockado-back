@@ -9,6 +9,7 @@ import { EndpointOutputMapper } from "@app/endpoint/common/endpoint-output";
 import { setupTypeOrm } from "@infra/shared/testing/helpers";
 import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
 import { EndpointTypeOrmRepository } from "@infra/endpoint/db/typeorm/endpoint-typeorm.repository";
+import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
 
 describe("Update Endpoint Use Case - Integration Tests", () => {
   let useCase: UpdateEndpointUseCase;
@@ -28,7 +29,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
         .withMethod(HttpMethod.GET)
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .build();
 
       await repository.insert(endpoint);
@@ -44,7 +45,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       expect(updatedEndpoint?.entity_id.id).toBe(output.id);
       expect(updatedEndpoint?.title).toBe(output.title);
       expect(updatedEndpoint?.method).toBe(output.method);
-      expect(updatedEndpoint?.statusCode).toBe(output.statusCode);
+      expect(updatedEndpoint?.statusCode.statusCode).toBe(output.statusCode);
       expect(updatedEndpoint?.description).toBe(output.description);
       expect(updatedEndpoint?.delay).toBe(output.delay);
       expect(updatedEndpoint?.responseBodyType).toBe(output.responseBodyType);
@@ -57,7 +58,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
         .withMethod(HttpMethod.GET)
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .build();
 
       await repository.insert(endpoint);
@@ -73,7 +74,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       expect(updatedEndpoint?.entity_id.id).toBe(output.id);
       expect(updatedEndpoint?.title).toBe(output.title);
       expect(updatedEndpoint?.method).toBe(output.method);
-      expect(updatedEndpoint?.statusCode).toBe(output.statusCode);
+      expect(updatedEndpoint?.statusCode.statusCode).toBe(output.statusCode);
       expect(updatedEndpoint?.description).toBe(output.description);
       expect(updatedEndpoint?.delay).toBe(output.delay);
       expect(updatedEndpoint?.responseBodyType).toBe(output.responseBodyType);
@@ -86,7 +87,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
         .withMethod(HttpMethod.GET)
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .build();
 
       await repository.insert(endpoint);
@@ -102,7 +103,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       expect(updatedEndpoint?.entity_id.id).toBe(output.id);
       expect(updatedEndpoint?.title).toBe(output.title);
       expect(updatedEndpoint?.method).toBe(output.method);
-      expect(updatedEndpoint?.statusCode).toBe(output.statusCode);
+      expect(updatedEndpoint?.statusCode.statusCode).toBe(output.statusCode);
       expect(updatedEndpoint?.description).toBe(output.description);
       expect(updatedEndpoint?.delay).toBe(output.delay);
       expect(updatedEndpoint?.responseBodyType).toBe(output.responseBodyType);
@@ -127,7 +128,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       expect(updatedEndpoint?.entity_id.id).toBe(output.id);
       expect(updatedEndpoint?.title).toBe(output.title);
       expect(updatedEndpoint?.method).toBe(output.method);
-      expect(updatedEndpoint?.statusCode).toBe(output.statusCode);
+      expect(updatedEndpoint?.statusCode.statusCode).toBe(output.statusCode);
       expect(updatedEndpoint?.description).toBe(output.description);
       expect(updatedEndpoint?.delay).toBe(output.delay);
       expect(updatedEndpoint?.responseBodyType).toBe(output.responseBodyType);
@@ -152,7 +153,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       expect(updatedEndpoint?.entity_id.id).toBe(output.id);
       expect(updatedEndpoint?.title).toBe(output.title);
       expect(updatedEndpoint?.method).toBe(output.method);
-      expect(updatedEndpoint?.statusCode).toBe(output.statusCode);
+      expect(updatedEndpoint?.statusCode.statusCode).toBe(output.statusCode);
       expect(updatedEndpoint?.description).toBe(output.description);
       expect(updatedEndpoint?.delay).toBe(output.delay);
       expect(updatedEndpoint?.responseBodyType).toBe(output.responseBodyType);
@@ -164,7 +165,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
     it("should update the responseBodyType to JSON and set responseJson", async () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.TEXT)
         .build();
 
@@ -182,7 +183,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       expect(updatedEndpoint?.entity_id.id).toBe(output.id);
       expect(updatedEndpoint?.title).toBe(output.title);
       expect(updatedEndpoint?.method).toBe(output.method);
-      expect(updatedEndpoint?.statusCode).toBe(output.statusCode);
+      expect(updatedEndpoint?.statusCode.statusCode).toBe(output.statusCode);
       expect(updatedEndpoint?.description).toBe(output.description);
       expect(updatedEndpoint?.delay).toBe(output.delay);
       expect(updatedEndpoint?.responseBodyType).toBe(output.responseBodyType);
@@ -194,7 +195,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
     it("should update the responseBodyType to TEXT and set responseText", async () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.JSON)
         .build();
 
@@ -212,7 +213,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       expect(updatedEndpoint?.entity_id.id).toBe(output.id);
       expect(updatedEndpoint?.title).toBe(output.title);
       expect(updatedEndpoint?.method).toBe(output.method);
-      expect(updatedEndpoint?.statusCode).toBe(output.statusCode);
+      expect(updatedEndpoint?.statusCode.statusCode).toBe(output.statusCode);
       expect(updatedEndpoint?.description).toBe(output.description);
       expect(updatedEndpoint?.delay).toBe(output.delay);
       expect(updatedEndpoint?.responseBodyType).toBe(output.responseBodyType);
@@ -225,7 +226,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
         .withMethod(HttpMethod.GET)
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .build();
 
       await repository.insert(endpoint);
@@ -250,7 +251,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
         .withMethod(HttpMethod.GET)
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .build();
 
       await repository.insert(endpoint);
@@ -279,7 +280,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
         .withMethod(HttpMethod.GET)
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .build();
 
       await repository.insert(endpoint);

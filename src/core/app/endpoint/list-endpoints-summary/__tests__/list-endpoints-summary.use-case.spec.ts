@@ -15,8 +15,8 @@ describe("List Endpoints Summary Use Case - Unit Tests", () => {
   describe("execute()", () => {
     it("should list all endpoints summary", async () => {
       const endpoints = [
-        EndpointFactory.fake().oneEndpoint().withStatusCode(204).build(),
-        EndpointFactory.fake().oneEndpoint().withStatusCode(204).build(),
+        EndpointFactory.fake().oneEndpoint().build(),
+        EndpointFactory.fake().oneEndpoint().build(),
       ];
 
       const inMemoryRepository = repository as EndpointInMemoryRepository;

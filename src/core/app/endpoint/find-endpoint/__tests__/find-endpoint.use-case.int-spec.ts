@@ -7,6 +7,7 @@ import { setupTypeOrm } from "@infra/shared/testing/helpers";
 import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
 import { EndpointTypeOrmRepository } from "@infra/endpoint/db/typeorm/endpoint-typeorm.repository";
 import { EndpointOutputMapper } from "@app/endpoint/common/endpoint-output";
+import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
 
 describe("Find Endpoint Use Case - Integration Tests", () => {
   let useCase: FindEndpointUseCase;
@@ -25,7 +26,7 @@ describe("Find Endpoint Use Case - Integration Tests", () => {
     it("should find an endpoint", async () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(204)
+        .withStatusCode(new StatusCode(204))
         .build();
 
       await repository.insert(endpoint);
@@ -38,7 +39,7 @@ describe("Find Endpoint Use Case - Integration Tests", () => {
         id: endpoint.entity_id.id,
         title: endpoint.title,
         method: endpoint.method,
-        statusCode: endpoint.statusCode,
+        statusCode: endpoint.statusCode.statusCode,
         description: endpoint.description,
         delay: endpoint.delay,
         createdAt: endpoint.createdAt,

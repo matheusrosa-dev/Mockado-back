@@ -2,12 +2,13 @@ import { Endpoint } from "@domain/endpoint/endpoint.entity";
 import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import { EndpointOutputMapper } from "../endpoint-output";
+import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
 
 const baseProps = {
   endpoint_id: new Uuid(),
   title: "My Endpoint",
   method: HttpMethod.GET,
-  statusCode: 200,
+  statusCode: new StatusCode(200),
   description: "A description",
   delay: 100,
   createdAt: new Date("2024-01-01T00:00:00.000Z"),
@@ -29,7 +30,7 @@ describe("Endpoint Output Mapper - Unit Tests", () => {
       expect(output.title).toBe(baseProps.title);
       expect(output.method).toBe(baseProps.method);
       expect(output.description).toBe(baseProps.description);
-      expect(output.statusCode).toBe(baseProps.statusCode);
+      expect(output.statusCode).toBe(baseProps.statusCode.statusCode);
       expect(output.delay).toBe(baseProps.delay);
       expect(output.createdAt).toEqual(baseProps.createdAt);
     });
@@ -94,7 +95,7 @@ describe("Endpoint Output Mapper - Unit Tests", () => {
     it("should not include responseBodyType when statusCode does not allow body", () => {
       const entity = new Endpoint({
         ...baseProps,
-        statusCode: 204,
+        statusCode: new StatusCode(204),
         responseBodyType: ResponseBodyType.JSON,
       });
       const output = EndpointOutputMapper.toOutput(entity);

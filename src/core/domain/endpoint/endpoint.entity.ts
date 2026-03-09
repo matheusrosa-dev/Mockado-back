@@ -8,13 +8,14 @@ import {
 } from "./endpoint.validator";
 import { ResponseBodyTypeModifiedEvent } from "./events/response-body-type-modified.event";
 import { StatusCodeModifiedEvent } from "./events/status-code-modified.event";
+import { StatusCode } from "./value-objects/status-code.vo";
 
 type ConstructorProps = {
   endpoint_id?: Uuid;
   method: HttpMethod;
   title: string;
   description?: string;
-  statusCode: number;
+  statusCode: StatusCode;
   delay?: number;
   responseBodyType?: ResponseBodyType;
   responseJson?: string;
@@ -28,7 +29,7 @@ export class Endpoint extends Entity {
   private _title: string;
   private _description: string;
   private _delay: number;
-  private _statusCode: number;
+  private _statusCode: StatusCode;
   private _responseBodyType?: ResponseBodyType;
   private _responseJson?: string;
   private _responseText?: string;
@@ -53,9 +54,9 @@ export class Endpoint extends Entity {
     this._statusCode = props.statusCode;
     this._createdAt = props.createdAt ?? new Date();
 
-    const allowBody = Endpoint.statusCodeAllowsBody(props.statusCode);
+    const allowsBody = props.statusCode.allowsBody();
 
-    if (allowBody) {
+    if (allowsBody) {
       this._responseBodyType = props.responseBodyType;
 
       if (props.responseBodyType === ResponseBodyType.JSON) {
@@ -88,18 +89,14 @@ export class Endpoint extends Entity {
     this.validate(["delay"]);
   }
 
-  changeStatusCode(statusCode: number) {
+  changeStatusCode(statusCode: StatusCode) {
     this._statusCode = statusCode;
-
-    this.validate(["statusCode"]);
 
     this.applyEvent(new StatusCodeModifiedEvent());
   }
 
   changeResponseBodyType(responseBodyType: ResponseBodyType) {
-    const statusCodeAllowsBody = Endpoint.statusCodeAllowsBody(
-      this._statusCode,
-    );
+    const statusCodeAllowsBody = this._statusCode.allowsBody();
 
     if (!statusCodeAllowsBody) {
       throw new Error(
@@ -135,7 +132,7 @@ export class Endpoint extends Entity {
 
   private _onStatusCodeModified(_event: StatusCodeModifiedEvent) {
     const hadBody = !!this._responseBodyType;
-    const allowBody = Endpoint.statusCodeAllowsBody(this._statusCode);
+    const allowBody = this._statusCode.allowsBody();
 
     if (hadBody && !allowBody) {
       this._responseBodyType = undefined;
@@ -184,17 +181,6 @@ export class Endpoint extends Entity {
     return validator.validate(this.notification, this, fields);
   }
 
-  static statusCodeAllowsBody(statusCode: number) {
-    const statusCodesWithoutBody = [
-      ...Array.from({ length: 100 }, (_, i) => i + 100),
-      204,
-      205,
-      304,
-    ];
-
-    return !statusCodesWithoutBody.includes(statusCode);
-  }
-
   get entity_id() {
     return this._endpoint_id;
   }
@@ -241,7 +227,7 @@ export class Endpoint extends Entity {
       title: this._title,
       method: this._method,
       description: this._description,
-      statusCode: this._statusCode,
+      statusCode: this._statusCode.statusCode,
       delay: this._delay,
 
       ...(this._responseBodyType && {
@@ -260,7 +246,7 @@ type CreateCommandProps = {
   title: string;
   description?: string;
   delay?: number;
-  statusCode: number;
+  statusCode: StatusCode;
   responseBodyType?: ResponseBodyType;
   responseJson?: string;
   responseText?: string;

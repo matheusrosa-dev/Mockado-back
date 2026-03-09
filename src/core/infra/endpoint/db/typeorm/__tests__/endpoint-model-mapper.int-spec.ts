@@ -1,12 +1,13 @@
 import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
 import { EndpointModelMapper } from "../endpoint-model-mapper";
+import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
 
 describe("Endpoint Model Mapper - Integration ", () => {
   describe("toModel()", () => {
     it("should map Endpoint entity to EndpointModel", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(204)
+        .withStatusCode(new StatusCode(204))
         .build();
 
       const endpointModel = EndpointModelMapper.toModel(endpoint);
@@ -17,7 +18,7 @@ describe("Endpoint Model Mapper - Integration ", () => {
       expect(endpointModel.method).toBe(endpoint.method);
       expect(endpointModel.description).toBe(endpoint.description);
       expect(endpointModel.delay).toBe(endpoint.delay);
-      expect(endpointModel.statusCode).toBe(endpoint.statusCode);
+      expect(endpointModel.statusCode).toBe(endpoint.statusCode.statusCode);
       expect(endpointModel.responseBodyType).toBeNull();
       expect(endpointModel.responseJson).toBeNull();
       expect(endpointModel.responseText).toBeNull();
@@ -29,7 +30,7 @@ describe("Endpoint Model Mapper - Integration ", () => {
     it("should map EndpointModel to Endpoint entity", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(204)
+        .withStatusCode(new StatusCode(204))
         .build();
 
       const endpointModel = EndpointModelMapper.toModel(endpoint);
@@ -42,7 +43,7 @@ describe("Endpoint Model Mapper - Integration ", () => {
       expect(mappedEndpoint.method).toBe(endpoint.method);
       expect(mappedEndpoint.description).toBe(endpoint.description);
       expect(mappedEndpoint.delay).toBe(endpoint.delay);
-      expect(mappedEndpoint.statusCode).toBe(endpoint.statusCode);
+      expect(mappedEndpoint.statusCode.equals(endpoint.statusCode)).toBe(true);
       expect(mappedEndpoint.responseBodyType).toBeUndefined();
       expect(mappedEndpoint.responseJson).toBeUndefined();
       expect(mappedEndpoint.responseText).toBeUndefined();

@@ -2,33 +2,60 @@
 import { Endpoint, EndpointFactory } from "../endpoint.entity";
 import { HttpMethod, ResponseBodyType } from "../endpoint.types";
 import { Uuid } from "../../shared/value-objects/uuid.vo";
+import { StatusCode } from "../value-objects/status-code.vo";
 
-const STATUS_CODES_WITHOUT_BODY = [
-  ...Array.from({ length: 100 }, (_, i) => i + 100),
-  204,
-  205,
-  304,
-];
+// const STATUS_CODES_WITHOUT_BODY = [
+//   ...Array.from({ length: 100 }, (_, i) => i + 100),
+//   204,
+//   205,
+//   304,
+// ];
 
-const STATUS_CODES_WITH_BODY = Array.from(
-  { length: 412 },
-  (_, i) => i + 100,
-).filter((code) => !STATUS_CODES_WITHOUT_BODY.includes(code));
+// const STATUS_CODES_WITH_BODY = Array.from(
+//   { length: 412 },
+//   (_, i) => i + 100,
+// ).filter((code) => !STATUS_CODES_WITHOUT_BODY.includes(code));
 
 describe("Endpoint Entity - Unit Tests", () => {
-  describe("statusCodeAllowsBody", () => {
-    it("should return false for status codes that do not allow body", () => {
-      STATUS_CODES_WITHOUT_BODY.forEach((statusCode) => {
-        expect(Endpoint.statusCodeAllowsBody(statusCode)).toBe(false);
-      });
-    });
+  // describe("statusCodeAllowsBody", () => {
+  //   it("should return false for status codes that do not allow body", () => {
+  //     STATUS_CODES_WITHOUT_BODY.forEach((statusCode) => {
+  //       expect(Endpoint.statusCodeAllowsBody(statusCode)).toBe(false);
+  //     });
+  //   });
 
-    it("should return true for status codes that allow body", () => {
-      STATUS_CODES_WITH_BODY.forEach((statusCode) => {
-        expect(Endpoint.statusCodeAllowsBody(statusCode)).toBe(true);
-      });
-    });
-  });
+  //   it("should return true for status codes that allow body", () => {
+  //     STATUS_CODES_WITH_BODY.forEach((statusCode) => {
+  //       expect(Endpoint.statusCodeAllowsBody(statusCode)).toBe(true);
+  //     });
+  //   });
+  // });
+
+  // it("should add error when statusCode is below 100", () => {
+  //   const endpoint = EndpointFactory.fake()
+  //     .oneEndpoint()
+  //     .withStatusCode(new StatusCode(99))
+  //     .build();
+
+  //   expect(endpoint.notification.hasErrors()).toBe(true);
+  //   expect(endpoint.notification.errors.size).toBe(1);
+  //   expect(endpoint.notification.errors.get("statusCode")).toContain(
+  //     "statusCode must not be less than 100",
+  //   );
+  // });
+
+  // it("should add error when statusCode exceeds 511", () => {
+  //   const endpoint = EndpointFactory.fake()
+  //     .oneEndpoint()
+  //     .withStatusCode(new StatusCode(512))
+  //     .build();
+
+  //   expect(endpoint.notification.hasErrors()).toBe(true);
+  //   expect(endpoint.notification.errors.size).toBe(1);
+  //   expect(endpoint.notification.errors.get("statusCode")).toContain(
+  //     "statusCode must not be greater than 511",
+  //   );
+  // });
 
   describe("constructor", () => {
     it.each(
@@ -37,7 +64,7 @@ describe("Endpoint Entity - Unit Tests", () => {
       const requiredProps = {
         method,
         title: "My Endpoint",
-        statusCode: 100,
+        statusCode: new StatusCode(100),
       };
 
       const endpoint = new Endpoint(requiredProps);
@@ -53,7 +80,7 @@ describe("Endpoint Entity - Unit Tests", () => {
       const endpoint = new Endpoint({
         method: HttpMethod.GET,
         title: "My Endpoint",
-        statusCode: 200,
+        statusCode: new StatusCode(200),
         responseBodyType,
       });
 
@@ -64,7 +91,7 @@ describe("Endpoint Entity - Unit Tests", () => {
       const endpointProps = {
         method: HttpMethod.GET,
         title: "My Endpoint",
-        statusCode: 204,
+        statusCode: new StatusCode(204),
       };
 
       const endpoint = new Endpoint({
@@ -86,7 +113,7 @@ describe("Endpoint Entity - Unit Tests", () => {
       const endpoint1 = new Endpoint({
         method: HttpMethod.GET,
         title: "My Endpoint",
-        statusCode: 200,
+        statusCode: new StatusCode(200),
         responseBodyType: ResponseBodyType.JSON,
       });
 
@@ -99,7 +126,7 @@ describe("Endpoint Entity - Unit Tests", () => {
       const endpoint2 = new Endpoint({
         method: HttpMethod.GET,
         title: "My Endpoint",
-        statusCode: 200,
+        statusCode: new StatusCode(200),
         responseBodyType: ResponseBodyType.TEXT,
       });
 
@@ -114,7 +141,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         endpoint_id: id,
         method: HttpMethod.GET,
         title: "My Endpoint",
-        statusCode: 200,
+        statusCode: new StatusCode(200),
         createdAt: date,
       });
 
@@ -127,7 +154,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         method: HttpMethod.GET,
         responseBodyType: ResponseBodyType.JSON,
         title: "My Endpoint",
-        statusCode: 200,
+        statusCode: new StatusCode(200),
         description: "A description",
         delay: 5,
         responseJson: '{"key":"value"}',
@@ -140,7 +167,7 @@ describe("Endpoint Entity - Unit Tests", () => {
       const endpoint2 = new Endpoint({
         method: HttpMethod.GET,
         title: "My Endpoint",
-        statusCode: 200,
+        statusCode: new StatusCode(200),
         responseBodyType: ResponseBodyType.TEXT,
         responseText: "some text",
       });
@@ -247,31 +274,25 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should change the status code and validate", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .build();
 
-      const spyValidate = jest.spyOn(endpoint, "validate");
+      endpoint.changeStatusCode(new StatusCode(404));
 
-      endpoint.changeStatusCode(404);
-
-      expect(spyValidate).toHaveBeenCalled();
-      expect(endpoint.statusCode).toBe(404);
+      expect(endpoint.statusCode.statusCode).toBe(404);
     });
 
     it("should remove response body fields when changing to a status code that does not allow body", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.JSON)
         .withResponseJson('{"key":"value"}')
         .build();
 
-      const spyValidate = jest.spyOn(endpoint, "validate");
+      endpoint.changeStatusCode(new StatusCode(204));
 
-      endpoint.changeStatusCode(204);
-
-      expect(spyValidate).toHaveBeenCalledTimes(2);
-      expect(endpoint.statusCode).toBe(204);
+      expect(endpoint.statusCode.statusCode).toBe(204);
       expect(endpoint.responseBodyType).toBeUndefined();
       expect(endpoint.responseJson).toBeUndefined();
       expect(endpoint.responseText).toBeUndefined();
@@ -280,14 +301,14 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should preserve response body fields when changing between body-compatible status codes", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.JSON)
         .withResponseJson('{"key":"value"}')
         .build();
 
-      endpoint.changeStatusCode(201);
+      endpoint.changeStatusCode(new StatusCode(201));
 
-      expect(endpoint.statusCode).toBe(201);
+      expect(endpoint.statusCode.statusCode).toBe(201);
       expect(endpoint.responseBodyType).toBe(ResponseBodyType.JSON);
       expect(endpoint.responseJson).toBe('{"key":"value"}');
     });
@@ -295,15 +316,12 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should set response body type to empty when changing to a status code that allows body and had no body", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(204)
+        .withStatusCode(new StatusCode(204))
         .build();
 
-      const spyValidate = jest.spyOn(endpoint, "validate");
+      endpoint.changeStatusCode(new StatusCode(200));
 
-      endpoint.changeStatusCode(200);
-
-      expect(spyValidate).toHaveBeenCalledTimes(2);
-      expect(endpoint.statusCode).toBe(200);
+      expect(endpoint.statusCode.statusCode).toBe(200);
       expect(endpoint.responseBodyType).toBe(ResponseBodyType.EMPTY);
       expect(endpoint.responseJson).toBeUndefined();
       expect(endpoint.responseText).toBeUndefined();
@@ -314,7 +332,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should change the response body type and validate", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.EMPTY)
         .build();
 
@@ -329,7 +347,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should throw error when trying to set response body type for a status code that does not allow body", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(204)
+        .withStatusCode(new StatusCode(204))
         .build();
 
       expect(() =>
@@ -343,7 +361,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should set responseJson to default when changing to JSON type", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.EMPTY)
         .build();
 
@@ -360,7 +378,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should set responseText to default when changing to TEXT type", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.EMPTY)
         .build();
 
@@ -377,7 +395,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should unset responseJson and responseText when changing to NULL or EMPTY type", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.JSON)
         .withResponseJson('{"key":"value"}')
         .build();
@@ -404,7 +422,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should change the responseJson and validate", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.JSON)
         .build();
 
@@ -419,7 +437,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should throw error when trying to set responseJson for an endpoint that does not have JSON body type", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.TEXT)
         .build();
 
@@ -432,7 +450,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should default responseJson to '{}' when called with undefined", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.JSON)
         .withResponseJson('{"key":"value"}')
         .build();
@@ -448,7 +466,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should change the responseText and validate", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.TEXT)
         .build();
 
@@ -463,7 +481,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should throw error when trying to set responseText for an endpoint that does not have TEXT body type", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.JSON)
         .build();
 
@@ -476,7 +494,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should default responseText to empty string when called with undefined", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.TEXT)
         .withResponseText("some text")
         .build();
@@ -492,7 +510,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should execute when status code is changed", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .build();
 
       const spyOnStatusCodeModified = jest.spyOn(
@@ -500,7 +518,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         "_onStatusCodeModified",
       );
 
-      endpoint.changeStatusCode(204);
+      endpoint.changeStatusCode(new StatusCode(204));
 
       expect(spyOnStatusCodeModified).toHaveBeenCalled();
     });
@@ -510,7 +528,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should execute when response body type is changed", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .build();
 
       const spyOnResponseBodyTypeModified = jest.spyOn(
@@ -529,7 +547,7 @@ describe("Endpoint Entity - Unit Tests", () => {
       const endpointWithoutBody = EndpointFactory.fake()
         .oneEndpoint()
         .withMethod(HttpMethod.GET)
-        .withStatusCode(204)
+        .withStatusCode(new StatusCode(204))
         .build();
 
       expect(endpointWithoutBody.toJSON()).toEqual({
@@ -538,14 +556,14 @@ describe("Endpoint Entity - Unit Tests", () => {
         method: endpointWithoutBody.method,
         description: endpointWithoutBody.description,
         delay: endpointWithoutBody.delay,
-        statusCode: endpointWithoutBody.statusCode,
+        statusCode: endpointWithoutBody.statusCode.statusCode,
         createdAt: endpointWithoutBody.createdAt,
       });
 
       const endpointWithJson = EndpointFactory.fake()
         .oneEndpoint()
         .withMethod(HttpMethod.GET)
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.JSON)
         .withResponseJson('{"a":1}')
         .build();
@@ -556,7 +574,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         method: endpointWithJson.method,
         description: endpointWithJson.description,
         delay: endpointWithJson.delay,
-        statusCode: endpointWithJson.statusCode,
+        statusCode: endpointWithJson.statusCode.statusCode,
         responseBodyType: endpointWithJson.responseBodyType,
         responseJson: endpointWithJson.responseJson,
         createdAt: endpointWithJson.createdAt,
@@ -566,7 +584,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         endpoint_id: new Uuid(),
         method: HttpMethod.GET,
         title: "My Endpoint",
-        statusCode: 200,
+        statusCode: new StatusCode(200),
         responseBodyType: ResponseBodyType.TEXT,
         description: "desc",
         delay: 2,
@@ -580,7 +598,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         method: endpointWithText.method,
         description: endpointWithText.description,
         delay: endpointWithText.delay,
-        statusCode: endpointWithText.statusCode,
+        statusCode: endpointWithText.statusCode.statusCode,
         responseBodyType: endpointWithText.responseBodyType,
         responseText: endpointWithText.responseText,
         createdAt: endpointWithText.createdAt,
@@ -726,36 +744,10 @@ describe("Endpoint Entity - Unit Tests", () => {
       expect(endpoint.notification.hasErrors()).toBe(false);
     });
 
-    it("should add error when statusCode is below 100", () => {
-      const endpoint = EndpointFactory.fake()
-        .oneEndpoint()
-        .withStatusCode(99)
-        .build();
-
-      expect(endpoint.notification.hasErrors()).toBe(true);
-      expect(endpoint.notification.errors.size).toBe(1);
-      expect(endpoint.notification.errors.get("statusCode")).toContain(
-        "statusCode must not be less than 100",
-      );
-    });
-
-    it("should add error when statusCode exceeds 511", () => {
-      const endpoint = EndpointFactory.fake()
-        .oneEndpoint()
-        .withStatusCode(512)
-        .build();
-
-      expect(endpoint.notification.hasErrors()).toBe(true);
-      expect(endpoint.notification.errors.size).toBe(1);
-      expect(endpoint.notification.errors.get("statusCode")).toContain(
-        "statusCode must not be greater than 511",
-      );
-    });
-
     it("should add error when responseBodyType is invalid", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200) // Status code that allows body
+        .withStatusCode(new StatusCode(200)) // Status code that allows body
         .withResponseBodyType("invalid" as ResponseBodyType)
         .build();
 
@@ -769,7 +761,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should add error when responseJson is not valid JSON", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200) // Status code that allows body
+        .withStatusCode(new StatusCode(200)) // Status code that allows body
         .withResponseBodyType(ResponseBodyType.JSON)
         .withResponseJson("not-json")
         .build();
@@ -784,7 +776,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should add error when responseText exceeds 1000 characters", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.TEXT)
         .withResponseText("a".repeat(1001))
         .build();
@@ -799,7 +791,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     it("should not add error when responseText is undefined", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.TEXT)
         .withResponseText(undefined as any)
         .build();

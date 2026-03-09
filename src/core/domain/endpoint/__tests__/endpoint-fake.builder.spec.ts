@@ -1,6 +1,7 @@
 import { Uuid } from "../../shared/value-objects/uuid.vo";
 import { EndpointFactory } from "../endpoint.entity";
 import { HttpMethod, ResponseBodyType } from "../endpoint.types";
+import { StatusCode } from "../value-objects/status-code.vo";
 
 describe("Endpoint Fake Builder - Unit Tests", () => {
   describe("one endpoint", () => {
@@ -24,7 +25,7 @@ describe("Endpoint Fake Builder - Unit Tests", () => {
         .withTitle("Custom Title")
         .withMethod(HttpMethod.POST)
         .withDescription("Custom Description")
-        .withStatusCode(204)
+        .withStatusCode(new StatusCode(204))
         .withDelay(2)
         .withCreatedAt(new Date("2024-01-01"))
         .build();
@@ -33,14 +34,14 @@ describe("Endpoint Fake Builder - Unit Tests", () => {
       expect(fakeEndpoint.title).toBe("Custom Title");
       expect(fakeEndpoint.method).toBe(HttpMethod.POST);
       expect(fakeEndpoint.description).toBe("Custom Description");
-      expect(fakeEndpoint.statusCode).toBe(204);
+      expect(fakeEndpoint.statusCode.statusCode).toBe(204);
       expect(fakeEndpoint.delay).toBe(2);
       expect(fakeEndpoint.createdAt).toEqual(new Date("2024-01-01"));
 
       // JSON response
       const fakeEndpointWithJson = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200) // Status code that allows body
+        .withStatusCode(new StatusCode(200)) // Status code that allows body
         .withResponseBodyType(ResponseBodyType.JSON)
         .withResponseJson(JSON.stringify({ message: "Hello, World!" }))
         .build();
@@ -53,7 +54,7 @@ describe("Endpoint Fake Builder - Unit Tests", () => {
       // Text response
       const fakeEndpointWithText = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200) // Status code that allows body
+        .withStatusCode(new StatusCode(200)) // Status code that allows body
         .withResponseBodyType(ResponseBodyType.TEXT)
         .withResponseText("Hello, World!")
         .build();
@@ -64,7 +65,7 @@ describe("Endpoint Fake Builder - Unit Tests", () => {
       // Empty response
       const fakeEndpointWithEmpty = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200) // Status code that allows body
+        .withStatusCode(new StatusCode(200)) // Status code that allows body
         .withResponseBodyType(ResponseBodyType.EMPTY)
         .build();
 
@@ -77,7 +78,7 @@ describe("Endpoint Fake Builder - Unit Tests", () => {
       // Null response
       const fakeEndpointWithNull = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200) // Status code that allows body
+        .withStatusCode(new StatusCode(200)) // Status code that allows body
         .withResponseBodyType(ResponseBodyType.NULL)
         .build();
 
@@ -115,7 +116,7 @@ describe("Endpoint Fake Builder - Unit Tests", () => {
         .withTitle("Custom Title")
         .withMethod(HttpMethod.POST)
         .withDescription("Custom Description")
-        .withStatusCode(204)
+        .withStatusCode(new StatusCode(204))
         .withDelay(2)
         .withCreatedAt(new Date("2024-01-01"))
         .build();
@@ -126,7 +127,7 @@ describe("Endpoint Fake Builder - Unit Tests", () => {
         expect(endpoint.title).toBe("Custom Title");
         expect(endpoint.method).toBe(HttpMethod.POST);
         expect(endpoint.description).toBe("Custom Description");
-        expect(endpoint.statusCode).toBe(204);
+        expect(endpoint.statusCode.statusCode).toBe(204);
         expect(endpoint.delay).toBe(2);
         expect(endpoint.createdAt).toEqual(new Date("2024-01-01"));
       });
@@ -134,7 +135,7 @@ describe("Endpoint Fake Builder - Unit Tests", () => {
       // JSON response
       const fakeEndpointsWithJson = EndpointFactory.fake()
         .manyEndpoints(amount)
-        .withStatusCode(200) // Status code that allows body
+        .withStatusCode(new StatusCode(200)) // Status code that allows body
         .withResponseBodyType(ResponseBodyType.JSON)
         .withResponseJson(JSON.stringify({ message: "Hello, World!" }))
         .build();
@@ -150,7 +151,7 @@ describe("Endpoint Fake Builder - Unit Tests", () => {
       // Text response
       const fakeEndpointsWithText = EndpointFactory.fake()
         .manyEndpoints(amount)
-        .withStatusCode(200) // Status code that allows body
+        .withStatusCode(new StatusCode(200)) // Status code that allows body
         .withResponseBodyType(ResponseBodyType.TEXT)
         .withResponseText("Hello, World!")
         .build();
@@ -164,7 +165,7 @@ describe("Endpoint Fake Builder - Unit Tests", () => {
       // Empty response
       const fakeEndpointsWithEmpty = EndpointFactory.fake()
         .manyEndpoints(amount)
-        .withStatusCode(200) // Status code that allows body
+        .withStatusCode(new StatusCode(200)) // Status code that allows body
         .withResponseBodyType(ResponseBodyType.EMPTY)
         .build();
 
@@ -178,7 +179,7 @@ describe("Endpoint Fake Builder - Unit Tests", () => {
       // Null response
       const fakeEndpointsWithNull = EndpointFactory.fake()
         .manyEndpoints(amount)
-        .withStatusCode(200) // Status code that allows body
+        .withStatusCode(new StatusCode(200)) // Status code that allows body
         .withResponseBodyType(ResponseBodyType.NULL)
         .build();
 

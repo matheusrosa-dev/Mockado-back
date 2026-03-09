@@ -6,6 +6,7 @@ import { EntityValidationError } from "@domain/shared/validators/validation.erro
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import { EndpointOutputMapper } from "@app/endpoint/common/endpoint-output";
 import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
+import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
 
 describe("Create Endpoint Use Case - Unit Tests", () => {
   let useCase: CreateEndpointUseCase;
@@ -34,7 +35,7 @@ describe("Create Endpoint Use Case - Unit Tests", () => {
       expect(createdEndpoint?.entity_id.id).toBe(output.id);
       expect(createdEndpoint?.title).toBe(input.title);
       expect(createdEndpoint?.method).toBe(input.method);
-      expect(createdEndpoint?.statusCode).toBe(input.statusCode);
+      expect(createdEndpoint?.statusCode.statusCode).toBe(input.statusCode);
       expect(createdEndpoint?.description).toBe("");
       expect(createdEndpoint?.delay).toBe(0);
       expect(createdEndpoint?.responseBodyType).toBe(input.responseBodyType);
@@ -60,7 +61,7 @@ describe("Create Endpoint Use Case - Unit Tests", () => {
       expect(createdEndpoint?.entity_id.id).toBe(output.id);
       expect(createdEndpoint?.title).toBe(input.title);
       expect(createdEndpoint?.method).toBe(input.method);
-      expect(createdEndpoint?.statusCode).toBe(input.statusCode);
+      expect(createdEndpoint?.statusCode.statusCode).toBe(input.statusCode);
       expect(createdEndpoint?.description).toBe("");
       expect(createdEndpoint?.delay).toBe(0);
       expect(createdEndpoint?.responseBodyType).toBe(input.responseBodyType);
@@ -84,7 +85,7 @@ describe("Create Endpoint Use Case - Unit Tests", () => {
       expect(createdEndpoint?.entity_id.id).toBe(output.id);
       expect(createdEndpoint?.title).toBe(input.title);
       expect(createdEndpoint?.method).toBe(input.method);
-      expect(createdEndpoint?.statusCode).toBe(input.statusCode);
+      expect(createdEndpoint?.statusCode.statusCode).toBe(input.statusCode);
       expect(createdEndpoint?.description).toBe("");
       expect(createdEndpoint?.delay).toBe(0);
       expect(createdEndpoint?.responseBodyType).toBeUndefined();
@@ -110,7 +111,7 @@ describe("Create Endpoint Use Case - Unit Tests", () => {
       expect(createdEndpoint?.entity_id.id).toBe(output.id);
       expect(createdEndpoint?.title).toBe(input.title);
       expect(createdEndpoint?.method).toBe(input.method);
-      expect(createdEndpoint?.statusCode).toBe(input.statusCode);
+      expect(createdEndpoint?.statusCode.statusCode).toBe(input.statusCode);
       expect(createdEndpoint?.description).toBe(input.description);
       expect(createdEndpoint?.delay).toBe(input.delay);
       expect(createdEndpoint?.responseBodyType).toBeUndefined();
@@ -134,9 +135,18 @@ describe("Create Endpoint Use Case - Unit Tests", () => {
     it("should return formatted output", async () => {
       const outputSpy = jest.spyOn(EndpointOutputMapper, "toOutput");
 
-      const endpoint = EndpointFactory.fake().oneEndpoint().build();
+      const endpoint = EndpointFactory.fake()
+        .oneEndpoint()
+        .withStatusCode(new StatusCode(204))
+        .build();
 
-      const output = await useCase.execute(endpoint);
+      const output = await useCase.execute({
+        title: endpoint.title,
+        method: endpoint.method,
+        statusCode: endpoint.statusCode.statusCode,
+        description: endpoint.description,
+        delay: endpoint.delay,
+      });
 
       expect(outputSpy).toHaveBeenCalledTimes(1);
 

@@ -21,8 +21,8 @@ describe("List Endpoints Summary Use Case - Integration Tests", () => {
   describe("execute()", () => {
     it("should list all endpoints summary", async () => {
       const endpoints = [
-        EndpointFactory.fake().oneEndpoint().withStatusCode(204).build(),
-        EndpointFactory.fake().oneEndpoint().withStatusCode(204).build(),
+        EndpointFactory.fake().oneEndpoint().build(),
+        EndpointFactory.fake().oneEndpoint().build(),
       ];
 
       for (const endpoint of endpoints) {

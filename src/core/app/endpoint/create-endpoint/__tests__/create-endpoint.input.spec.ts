@@ -97,6 +97,18 @@ describe("Create Endpoint Input - Unit Tests", () => {
       expect(fields).toContain("statusCode");
     });
 
+    it("should fail when statusCode is less than 100", () => {
+      const errors = validate({ ...validProps, statusCode: 99 });
+      const fields = errors.map((e) => e.property);
+      expect(fields).toContain("statusCode");
+    });
+
+    it("should fail when statusCode is greater than 511", () => {
+      const errors = validate({ ...validProps, statusCode: 512 });
+      const fields = errors.map((e) => e.property);
+      expect(fields).toContain("statusCode");
+    });
+
     it("should fail when statusCode is missing", () => {
       const { statusCode: _, ...rest } = validProps;
       const errors = validate(rest);

@@ -1,2 +1,3 @@
 [test]
 preload = ["./src/core/infra/shared/testing/bun-setup.ts"]
+exclude = ["dist/**"]

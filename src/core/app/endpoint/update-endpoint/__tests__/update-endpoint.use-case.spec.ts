@@ -7,6 +7,7 @@ import { EntityValidationError } from "@domain/shared/validators/validation.erro
 import { NotFoundError } from "@domain/shared/errors/not-found.error";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import { EndpointOutputMapper } from "@app/endpoint/common/endpoint-output";
+import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
 
 describe("Update Endpoint Use Case - Unit Tests", () => {
   let useCase: UpdateEndpointUseCase;
@@ -22,7 +23,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
         .withMethod(HttpMethod.GET)
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .build();
 
       const inMemoryRepository = repository as EndpointInMemoryRepository;
@@ -36,7 +37,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       expect(output.id).toBe(endpoint.entity_id.id);
       expect(output.title).toBe("Updated Title");
       expect(output.method).toBe(endpoint.method);
-      expect(output.statusCode).toBe(endpoint.statusCode);
+      expect(output.statusCode).toBe(endpoint.statusCode.statusCode);
       expect(output.description).toBe(endpoint.description);
       expect(output.delay).toBe(endpoint.delay);
       expect(output.responseBodyType).toBe(endpoint.responseBodyType);
@@ -49,7 +50,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
         .withMethod(HttpMethod.GET)
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .build();
 
       const inMemoryRepository = repository as EndpointInMemoryRepository;
@@ -63,7 +64,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       expect(output.id).toBe(endpoint.entity_id.id);
       expect(output.title).toBe(endpoint.title);
       expect(output.method).toBe(HttpMethod.POST);
-      expect(output.statusCode).toBe(endpoint.statusCode);
+      expect(output.statusCode).toBe(endpoint.statusCode.statusCode);
       expect(output.description).toBe(endpoint.description);
       expect(output.delay).toBe(endpoint.delay);
       expect(output.responseBodyType).toBe(endpoint.responseBodyType);
@@ -76,7 +77,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
         .withMethod(HttpMethod.GET)
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .build();
 
       const inMemoryRepository = repository as EndpointInMemoryRepository;
@@ -113,7 +114,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       expect(output.id).toBe(endpoint.entity_id.id);
       expect(output.title).toBe(endpoint.title);
       expect(output.method).toBe(endpoint.method);
-      expect(output.statusCode).toBe(endpoint.statusCode);
+      expect(output.statusCode).toBe(endpoint.statusCode.statusCode);
       expect(output.description).toBe("A new description");
       expect(output.delay).toBe(endpoint.delay);
       expect(output.responseBodyType).toBe(endpoint.responseBodyType);
@@ -136,7 +137,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       expect(output.id).toBe(endpoint.entity_id.id);
       expect(output.title).toBe(endpoint.title);
       expect(output.method).toBe(endpoint.method);
-      expect(output.statusCode).toBe(endpoint.statusCode);
+      expect(output.statusCode).toBe(endpoint.statusCode.statusCode);
       expect(output.description).toBe(endpoint.description);
       expect(output.delay).toBe(7);
       expect(output.responseBodyType).toBe(endpoint.responseBodyType);
@@ -148,7 +149,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
     it("should update the responseBodyType to JSON and set responseJson", async () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.TEXT)
         .build();
 
@@ -164,7 +165,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       expect(output.id).toBe(endpoint.entity_id.id);
       expect(output.title).toBe(endpoint.title);
       expect(output.method).toBe(endpoint.method);
-      expect(output.statusCode).toBe(endpoint.statusCode);
+      expect(output.statusCode).toBe(endpoint.statusCode.statusCode);
       expect(output.description).toBe(endpoint.description);
       expect(output.delay).toBe(endpoint.delay);
       expect(output.responseBodyType).toBe(ResponseBodyType.JSON);
@@ -176,7 +177,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
     it("should update the responseBodyType to TEXT and set responseText", async () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.JSON)
         .build();
 
@@ -192,7 +193,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       expect(output.id).toBe(endpoint.entity_id.id);
       expect(output.title).toBe(endpoint.title);
       expect(output.method).toBe(endpoint.method);
-      expect(output.statusCode).toBe(endpoint.statusCode);
+      expect(output.statusCode).toBe(endpoint.statusCode.statusCode);
       expect(output.description).toBe(endpoint.description);
       expect(output.delay).toBe(endpoint.delay);
       expect(output.responseBodyType).toBe(ResponseBodyType.TEXT);
@@ -205,7 +206,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
         .withMethod(HttpMethod.GET)
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .build();
 
       const inMemoryRepository = repository as EndpointInMemoryRepository;
@@ -231,7 +232,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
         .withMethod(HttpMethod.GET)
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .build();
 
       const inMemoryRepository = repository as EndpointInMemoryRepository;
@@ -259,7 +260,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
         .withMethod(HttpMethod.GET)
-        .withStatusCode(200)
+        .withStatusCode(new StatusCode(200))
         .build();
 
       const inMemoryRepository = repository as EndpointInMemoryRepository;

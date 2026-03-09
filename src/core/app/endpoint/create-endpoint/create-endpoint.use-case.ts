@@ -7,6 +7,7 @@ import {
 } from "../common/endpoint-output";
 import { CreateEndpointInput } from "./create-endpoint.input";
 import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
+import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
 
 export class CreateEndpointUseCase
   implements IUseCase<CreateEndpointInput, EndpointOutput>
@@ -14,7 +15,12 @@ export class CreateEndpointUseCase
   constructor(private readonly repository: IEndpointRepository) {}
 
   async execute(input: CreateEndpointInput): Promise<EndpointOutput> {
-    const endpoint = EndpointFactory.create(input);
+    const statusCode = new StatusCode(input.statusCode);
+
+    const endpoint = EndpointFactory.create({
+      ...input,
+      statusCode,
+    });
 
     if (endpoint.notification.hasErrors()) {
       throw new EntityValidationError(endpoint.notification.toJSON());

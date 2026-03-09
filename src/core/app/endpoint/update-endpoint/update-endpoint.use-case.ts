@@ -9,6 +9,7 @@ import { UpdateEndpointInput } from "./update-endpoint.input";
 import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import { NotFoundError } from "@domain/shared/errors/not-found.error";
+import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
 
 export class UpdateEndpointUseCase
   implements IUseCase<UpdateEndpointInput, EndpointOutput>
@@ -41,7 +42,7 @@ export class UpdateEndpointUseCase
     }
 
     if (input.statusCode) {
-      endpoint.changeStatusCode(input.statusCode);
+      endpoint.changeStatusCode(new StatusCode(input.statusCode));
     }
 
     if (input.responseBodyType) {
