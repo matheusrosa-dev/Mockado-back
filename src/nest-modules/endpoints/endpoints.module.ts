@@ -6,7 +6,8 @@ import { ENDPOINT_PROVIDERS } from "./endpoints.provider";
 @Module({
   controllers: [EndpointsController],
   providers: [
-    ...Object.values(ENDPOINT_PROVIDERS.REPOSITORIES),
+    ENDPOINT_PROVIDERS.REPOSITORY,
+
     ...Object.values(ENDPOINT_PROVIDERS.USE_CASES),
   ],
   exports: [EndpointTypeOrmRepository],
