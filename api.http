@@ -6,13 +6,25 @@ POST {{baseUrl}}/endpoints
 Content-Type: application/json
 
 {
-    "title": "Categoria atualizada",
+    "title": "Categoria criada",
     "method": "GET",
     "statusCode": 204
 }
 
 ###
 @endpointId = {{createEndpoint.response.body.data.id}}
+
+### Update endpoint
+# @name updateEndpoint
+PATCH {{baseUrl}}/endpoints/{{endpointId}}
+Content-Type: application/json
+
+{
+    "title": "Categoria atualizada",
+    "method": "GET",
+    "statusCode": 200
+}
+
 
 ### List endpoints summary
 GET {{baseUrl}}/endpoints/summary
