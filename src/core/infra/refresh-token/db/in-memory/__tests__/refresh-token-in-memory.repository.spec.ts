@@ -41,6 +41,32 @@ describe("Refresh Token In Memory Repository - Unit Tests", () => {
     });
   });
 
+  describe("findManyByUserId()", () => {
+    it("should return all refresh tokens for a given user ID", async () => {
+      const userId = new Uuid();
+      const refreshTokens = RefreshTokenFactory.fake()
+        .manyRefreshTokens(3)
+        .withUserId(userId)
+        .build();
+
+      for (const refreshToken of refreshTokens) {
+        await repository.insert(refreshToken);
+      }
+
+      const foundRefreshTokens = await repository.findManyByUserId(userId);
+
+      expect(foundRefreshTokens).toHaveLength(3);
+      expect(foundRefreshTokens).toEqual(expect.arrayContaining(refreshTokens));
+    });
+
+    it("should return an empty array if no refresh tokens are found for the given user ID", async () => {
+      const userId = new Uuid();
+      const foundRefreshTokens = await repository.findManyByUserId(userId);
+
+      expect(foundRefreshTokens).toHaveLength(0);
+    });
+  });
+
   describe("delete()", () => {
     it("should delete an existing refresh token", async () => {
       const refreshToken = RefreshTokenFactory.fake().oneRefreshToken().build();

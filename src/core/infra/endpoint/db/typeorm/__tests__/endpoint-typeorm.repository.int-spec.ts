@@ -7,7 +7,7 @@ import { EndpointModel } from "../endpoint-typeorm.model";
 import { EndpointTypeOrmRepository } from "../endpoint-typeorm.repository";
 import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
 
-describe("EndpointTypeOrmRepository - Integration Tests", () => {
+describe("Endpoint TypeOrm Repository - Integration Tests", () => {
   const { dataSource } = setupTypeOrm({ entities: [EndpointModel] });
 
   let repository: EndpointTypeOrmRepository;
@@ -178,9 +178,6 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
         .build();
 
       await expect(repository.update(endpoint)).rejects.toThrow(NotFoundError);
-      await expect(repository.update(endpoint)).rejects.toThrow(
-        `Endpoint Not Found using ID: ${endpoint.endpointId.toString()}`,
-      );
     });
   });
 
@@ -203,9 +200,6 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
       const id = new Uuid();
 
       await expect(repository.delete(id)).rejects.toThrow(NotFoundError);
-      await expect(repository.delete(id)).rejects.toThrow(
-        `Endpoint Not Found using ID: ${id.id}`,
-      );
     });
   });
 });

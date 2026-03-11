@@ -1,7 +1,6 @@
 import { DataSource, Repository } from "typeorm";
 import { User } from "@domain/user/user.entity";
 import { IUserRepository } from "@domain/user/user.repository";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import { NotFoundError } from "@domain/shared/errors/not-found.error";
 import { UserModel } from "./user-typeorm.model";
 import { UserModelMapper } from "./user-model-mapper";
@@ -28,12 +27,8 @@ export class UserTypeOrmRepository implements IUserRepository {
     }
   }
 
-  async delete(userId: Uuid): Promise<void> {
-    const { affected } = await this.repository.delete(userId.toString());
-
-    if (!affected) {
-      throw new NotFoundError(userId, this.getEntity());
-    }
+  async delete(): Promise<void> {
+    throw new Error("Method not implemented.");
   }
 
   async findById(): Promise<User | null> {

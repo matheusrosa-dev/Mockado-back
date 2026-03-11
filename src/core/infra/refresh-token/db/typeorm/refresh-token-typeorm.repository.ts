@@ -3,6 +3,7 @@ import { RefreshToken } from "@domain/refresh-token/refresh-token.entity";
 import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
 import { RefreshTokenModel } from "./refresh-token-typeorm.model";
 import { RefreshTokenModelMapper } from "./refresh-token-model-mapper";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 
 export class RefreshTokenTypeOrmRepository implements IRefreshTokenRepository {
   private repository: Repository<RefreshTokenModel>;
@@ -15,6 +16,14 @@ export class RefreshTokenTypeOrmRepository implements IRefreshTokenRepository {
     const model = RefreshTokenModelMapper.toModel(entity);
 
     await this.repository.save(model);
+  }
+
+  async findManyByUserId(userId: Uuid): Promise<RefreshToken[]> {
+    const models = await this.repository.find({
+      where: { userId: userId.toString() },
+    });
+
+    return models.map((model) => RefreshTokenModelMapper.toEntity(model));
   }
 
   async update(): Promise<void> {
