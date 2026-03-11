@@ -1,12 +1,17 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { apiConfig, databaseConfig, validationSchema } from "./env-config";
+import {
+  apiConfig,
+  databaseConfig,
+  googleAuthConfig,
+  validationSchema,
+} from "./env-config";
 import { join } from "node:path";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [apiConfig, databaseConfig],
+      load: [apiConfig, databaseConfig, googleAuthConfig],
       isGlobal: true,
       envFilePath: [join(process.cwd(), "envs", `.env`)],
       validationSchema,

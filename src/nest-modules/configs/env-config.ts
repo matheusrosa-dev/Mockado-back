@@ -1,5 +1,9 @@
 import { registerAs } from "@nestjs/config";
-import { IApiConfig, IDatabaseConfig } from "./configs.interface";
+import {
+  IApiConfig,
+  IDatabaseConfig,
+  IGoogleAuthConfig,
+} from "./configs.interface";
 
 import * as Joi from "joi";
 import "dotenv/config";
@@ -17,6 +21,13 @@ export const databaseConfig = registerAs<IDatabaseConfig>("database", () => ({
   database: process.env.DB_DATABASE!,
   migrationsRun: process.env.DB_MIGRATIONS_AUTO_RUN === "true",
 }));
+
+export const googleAuthConfig = registerAs<IGoogleAuthConfig>(
+  "googleAuth",
+  () => ({
+    clientId: process.env.GOOGLE_CLIENT_ID!,
+  }),
+);
 
 export const validationSchema = Joi.object({
   API_PORT: Joi.number().required(),
@@ -44,4 +55,6 @@ export const validationSchema = Joi.object({
   }),
   DB_DATABASE: Joi.string().required(),
   DB_MIGRATIONS_AUTO_RUN: Joi.boolean().required(),
+
+  GOOGLE_CLIENT_ID: Joi.string().required(),
 });

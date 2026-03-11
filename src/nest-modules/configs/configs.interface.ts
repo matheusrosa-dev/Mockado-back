@@ -11,3 +11,7 @@ export interface IDatabaseConfig {
 export interface IApiConfig {
   port: number;
 }
+
+export interface IGoogleAuthConfig {
+  clientId: string;
+}
