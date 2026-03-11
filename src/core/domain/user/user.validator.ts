@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsString,
@@ -9,8 +10,15 @@ import {
 import { User } from "./user.entity";
 import { ClassValidatorFields } from "../shared/validators/class-validator-fields";
 import { Notification } from "../shared/notification";
+import { Optional } from "@nestjs/common";
 
-const userValidationGroups = ["googleId", "email", "name", "picture"] as const;
+const userValidationGroups = [
+  "googleId",
+  "email",
+  "name",
+  "picture",
+  "isActive",
+] as const;
 
 export type UserValidationGroup = (typeof userValidationGroups)[number];
 
@@ -35,9 +43,13 @@ class UserRules {
   @IsString({ groups: ["name"] as UserValidationGroup[] })
   _name: string;
 
-  @IsNotEmpty({ groups: ["picture"] as UserValidationGroup[] })
+  @Optional()
   @IsUrl({}, { groups: ["picture"] as UserValidationGroup[] })
   _picture: string;
+
+  @IsNotEmpty({ groups: ["isActive"] as UserValidationGroup[] })
+  @IsBoolean({ groups: ["isActive"] as UserValidationGroup[] })
+  _isActive: boolean;
 
   constructor(entity: User) {
     Object.assign(this, entity);

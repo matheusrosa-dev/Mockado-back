@@ -14,6 +14,7 @@ export class UserFakeBuilder<TBuild = User | User[]> {
   private _name: PropOrFactory<string> = () => this.chance.name();
   private _picture: PropOrFactory<string> = () =>
     this.chance.url({ extensions: ["jpg"] });
+  private _isActive: PropOrFactory<boolean> = () => this.chance.bool();
   private _createdAt?: PropOrFactory<Date>;
 
   private constructor(private readonly amount = 1) {}
@@ -56,6 +57,11 @@ export class UserFakeBuilder<TBuild = User | User[]> {
     return this;
   }
 
+  withIsActive(valueOrFactory: PropOrFactory<boolean>) {
+    this._isActive = valueOrFactory;
+    return this;
+  }
+
   build(): TBuild {
     const users = Array.from({ length: this.amount }, () => {
       const user = new User({
@@ -64,7 +70,15 @@ export class UserFakeBuilder<TBuild = User | User[]> {
         googleId: this.callFactory(this._googleId),
         email: this.callFactory(this._email),
         name: this.callFactory(this._name),
-        picture: this.callFactory(this._picture),
+
+        picture:
+          this._picture === undefined
+            ? undefined
+            : this.callFactory(this._picture),
+        isActive:
+          this._isActive === undefined
+            ? undefined
+            : this.callFactory(this._isActive),
 
         ...(this._createdAt && {
           createdAt: this.callFactory(this._createdAt),

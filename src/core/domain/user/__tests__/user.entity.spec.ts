@@ -11,6 +11,7 @@ describe("User Entity - Unit Tests", () => {
         email: "email@example.com",
         name: "John Doe",
         picture: "picture.jpg",
+        isActive: false,
         createdAt: new Date(),
       };
 
@@ -21,6 +22,7 @@ describe("User Entity - Unit Tests", () => {
       expect(user.email).toBe(userProps.email);
       expect(user.name).toBe(userProps.name);
       expect(user.picture).toBe(userProps.picture);
+      expect(user.isActive).toBe(userProps.isActive);
       expect(user.createdAt).toEqual(userProps.createdAt);
     });
 
@@ -29,7 +31,6 @@ describe("User Entity - Unit Tests", () => {
         googleId: "google-id",
         email: "email@example.com",
         name: "John Doe",
-        picture: "picture.jpg",
       };
       const user = new User(userProps);
 
@@ -37,7 +38,8 @@ describe("User Entity - Unit Tests", () => {
       expect(user.googleId).toBe(userProps.googleId);
       expect(user.email).toBe(userProps.email);
       expect(user.name).toBe(userProps.name);
-      expect(user.picture).toBe(userProps.picture);
+      expect(user.picture).toBe(null);
+      expect(user.isActive).toBe(true);
       expect(user.createdAt).toBeInstanceOf(Date);
     });
   });
@@ -131,6 +133,30 @@ describe("User Entity - Unit Tests", () => {
     });
   });
 
+  describe("activate()", () => {
+    it("should set isActive to true and validate", () => {
+      const user = UserFactory.fake().oneUser().withIsActive(false).build();
+      const spyValidate = jest.spyOn(user, "validate");
+
+      user.activate();
+
+      expect(spyValidate).toHaveBeenCalled();
+      expect(user.isActive).toBe(true);
+    });
+  });
+
+  describe("deactivate()", () => {
+    it("should set isActive to false and validate", () => {
+      const user = UserFactory.fake().oneUser().withIsActive(true).build();
+      const spyValidate = jest.spyOn(user, "validate");
+
+      user.deactivate();
+
+      expect(spyValidate).toHaveBeenCalled();
+      expect(user.isActive).toBe(false);
+    });
+  });
+
   describe("toJSON()", () => {
     it("should return a plain object with all fields", () => {
       const user = UserFactory.fake().oneUser().build();
@@ -140,6 +166,7 @@ describe("User Entity - Unit Tests", () => {
         googleId: user.googleId,
         email: user.email,
         name: user.name,
+        isActive: user.isActive,
         picture: user.picture,
         createdAt: user.createdAt,
       });

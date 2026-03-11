@@ -3,10 +3,8 @@ import { Entity } from "@domain/shared/entity";
 import { IRepository } from "@domain/shared/repositories/repository-interface";
 import { NotFoundError } from "@domain/shared/errors/not-found.error";
 
-export abstract class InMemoryRepository<
-  E extends Entity,
-  EntityId extends ValueObject,
-> implements IRepository<E, EntityId>
+export abstract class InMemoryRepository<E extends Entity>
+  implements IRepository<E>
 {
   items: E[] = [];
 
@@ -26,7 +24,7 @@ export abstract class InMemoryRepository<
     this.items[index] = entity;
   }
 
-  async delete(entityId: EntityId): Promise<void> {
+  async delete(entityId: ValueObject): Promise<void> {
     const index = this.items.findIndex((item) =>
       item.entityId.equals(entityId),
     );
@@ -38,7 +36,7 @@ export abstract class InMemoryRepository<
     this.items.splice(index, 1);
   }
 
-  async findById(entityId: EntityId): Promise<E | null> {
+  async findById(entityId: ValueObject): Promise<E | null> {
     const item = this.items.find((item) => item.entityId.equals(entityId));
 
     if (!item) return null;

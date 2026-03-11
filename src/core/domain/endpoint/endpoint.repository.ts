@@ -3,7 +3,7 @@ import { Uuid } from "../shared/value-objects/uuid.vo";
 import { Endpoint } from "./endpoint.entity";
 import { HttpMethod } from "./endpoint.types";
 
-export interface IEndpointRepository extends IRepository<Endpoint, Uuid> {
+export interface IEndpointRepository extends IRepository<Endpoint> {
   findAllSummary(): Promise<
     Array<{
       endpointId: Uuid;
