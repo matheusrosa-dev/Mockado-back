@@ -35,14 +35,14 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       await repository.insert(endpoint);
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         title: "Updated Title",
       });
 
       const updatedEndpoint = await repository.findById(new Uuid(output.id));
 
       expect(updatedEndpoint).not.toBeNull();
-      expect(updatedEndpoint?.entity_id.id).toBe(output.id);
+      expect(updatedEndpoint?.endpointId.toString()).toBe(output.id);
       expect(updatedEndpoint?.title).toBe(output.title);
       expect(updatedEndpoint?.method).toBe(output.method);
       expect(updatedEndpoint?.statusCode.statusCode).toBe(output.statusCode);
@@ -64,14 +64,14 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       await repository.insert(endpoint);
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         method: HttpMethod.POST,
       });
 
       const updatedEndpoint = await repository.findById(new Uuid(output.id));
 
       expect(updatedEndpoint).not.toBeNull();
-      expect(updatedEndpoint?.entity_id.id).toBe(output.id);
+      expect(updatedEndpoint?.endpointId.toString()).toBe(output.id);
       expect(updatedEndpoint?.title).toBe(output.title);
       expect(updatedEndpoint?.method).toBe(output.method);
       expect(updatedEndpoint?.statusCode.statusCode).toBe(output.statusCode);
@@ -93,14 +93,14 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       await repository.insert(endpoint);
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         statusCode: 404,
       });
 
       const updatedEndpoint = await repository.findById(new Uuid(output.id));
 
       expect(updatedEndpoint).not.toBeNull();
-      expect(updatedEndpoint?.entity_id.id).toBe(output.id);
+      expect(updatedEndpoint?.endpointId.toString()).toBe(output.id);
       expect(updatedEndpoint?.title).toBe(output.title);
       expect(updatedEndpoint?.method).toBe(output.method);
       expect(updatedEndpoint?.statusCode.statusCode).toBe(output.statusCode);
@@ -118,14 +118,14 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       await repository.insert(endpoint);
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         description: "A new description",
       });
 
       const updatedEndpoint = await repository.findById(new Uuid(output.id));
 
       expect(updatedEndpoint).not.toBeNull();
-      expect(updatedEndpoint?.entity_id.id).toBe(output.id);
+      expect(updatedEndpoint?.endpointId.toString()).toBe(output.id);
       expect(updatedEndpoint?.title).toBe(output.title);
       expect(updatedEndpoint?.method).toBe(output.method);
       expect(updatedEndpoint?.statusCode.statusCode).toBe(output.statusCode);
@@ -143,14 +143,14 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       await repository.insert(endpoint);
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         delay: 7,
       });
 
       const updatedEndpoint = await repository.findById(new Uuid(output.id));
 
       expect(updatedEndpoint).not.toBeNull();
-      expect(updatedEndpoint?.entity_id.id).toBe(output.id);
+      expect(updatedEndpoint?.endpointId.toString()).toBe(output.id);
       expect(updatedEndpoint?.title).toBe(output.title);
       expect(updatedEndpoint?.method).toBe(output.method);
       expect(updatedEndpoint?.statusCode.statusCode).toBe(output.statusCode);
@@ -172,7 +172,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       await repository.insert(endpoint);
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         responseBodyType: ResponseBodyType.JSON,
         responseJson: '{"updated":true}',
       });
@@ -180,7 +180,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       const updatedEndpoint = await repository.findById(new Uuid(output.id));
 
       expect(updatedEndpoint).not.toBeNull();
-      expect(updatedEndpoint?.entity_id.id).toBe(output.id);
+      expect(updatedEndpoint?.endpointId.toString()).toBe(output.id);
       expect(updatedEndpoint?.title).toBe(output.title);
       expect(updatedEndpoint?.method).toBe(output.method);
       expect(updatedEndpoint?.statusCode.statusCode).toBe(output.statusCode);
@@ -202,7 +202,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       await repository.insert(endpoint);
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         responseBodyType: ResponseBodyType.TEXT,
         responseText: "Hello!",
       });
@@ -210,7 +210,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       const updatedEndpoint = await repository.findById(new Uuid(output.id));
 
       expect(updatedEndpoint).not.toBeNull();
-      expect(updatedEndpoint?.entity_id.id).toBe(output.id);
+      expect(updatedEndpoint?.endpointId.toString()).toBe(output.id);
       expect(updatedEndpoint?.title).toBe(output.title);
       expect(updatedEndpoint?.method).toBe(output.method);
       expect(updatedEndpoint?.statusCode.statusCode).toBe(output.statusCode);
@@ -232,7 +232,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       await repository.insert(endpoint);
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         title: "Bulk Update",
         method: HttpMethod.DELETE,
         statusCode: 201,
@@ -257,12 +257,12 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       await repository.insert(endpoint);
 
       await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         title: "Persisted Title",
       });
 
       const updatedEndpoint = await repository.findById(
-        new Uuid(endpoint.entity_id.id),
+        new Uuid(endpoint.endpointId.toString()),
       );
       expect(updatedEndpoint?.title).toBe("Persisted Title");
     });
@@ -287,7 +287,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
 
       await expect(
         useCase.execute({
-          id: endpoint.entity_id.id,
+          id: endpoint.endpointId.toString(),
           delay: 11, // Invalid: @Max(10) - triggers entity validation error
         }),
       ).rejects.toThrow(EntityValidationError);
@@ -301,7 +301,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       await repository.insert(endpoint);
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         delay: 3,
         description: "Updated description",
       });

@@ -27,10 +27,10 @@ describe("Delete Endpoint Use Case - Integration Tests", () => {
       await repository.insert(endpoint);
 
       await useCase.execute({
-        endpointId: endpoint.entity_id.id,
+        endpointId: endpoint.endpointId.toString(),
       });
 
-      const found = await repository.findById(endpoint.entity_id);
+      const found = await repository.findById(endpoint.endpointId);
 
       expect(found).toBeNull();
     });

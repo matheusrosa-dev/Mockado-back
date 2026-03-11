@@ -30,11 +30,11 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       inMemoryRepository.items = [endpoint];
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         title: "Updated Title",
       });
 
-      expect(output.id).toBe(endpoint.entity_id.id);
+      expect(output.id).toBe(endpoint.endpointId.toString());
       expect(output.title).toBe("Updated Title");
       expect(output.method).toBe(endpoint.method);
       expect(output.statusCode).toBe(endpoint.statusCode.statusCode);
@@ -57,11 +57,11 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       inMemoryRepository.items = [endpoint];
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         method: HttpMethod.POST,
       });
 
-      expect(output.id).toBe(endpoint.entity_id.id);
+      expect(output.id).toBe(endpoint.endpointId.toString());
       expect(output.title).toBe(endpoint.title);
       expect(output.method).toBe(HttpMethod.POST);
       expect(output.statusCode).toBe(endpoint.statusCode.statusCode);
@@ -84,11 +84,11 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       inMemoryRepository.items = [endpoint];
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         statusCode: 404,
       });
 
-      expect(output.id).toBe(endpoint.entity_id.id);
+      expect(output.id).toBe(endpoint.endpointId.toString());
       expect(output.title).toBe(endpoint.title);
       expect(output.method).toBe(endpoint.method);
       expect(output.statusCode).toBe(404);
@@ -107,11 +107,11 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       inMemoryRepository.items = [endpoint];
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         description: "A new description",
       });
 
-      expect(output.id).toBe(endpoint.entity_id.id);
+      expect(output.id).toBe(endpoint.endpointId.toString());
       expect(output.title).toBe(endpoint.title);
       expect(output.method).toBe(endpoint.method);
       expect(output.statusCode).toBe(endpoint.statusCode.statusCode);
@@ -130,11 +130,11 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       inMemoryRepository.items = [endpoint];
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         delay: 7,
       });
 
-      expect(output.id).toBe(endpoint.entity_id.id);
+      expect(output.id).toBe(endpoint.endpointId.toString());
       expect(output.title).toBe(endpoint.title);
       expect(output.method).toBe(endpoint.method);
       expect(output.statusCode).toBe(endpoint.statusCode.statusCode);
@@ -157,12 +157,12 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       inMemoryRepository.items = [endpoint];
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         responseBodyType: ResponseBodyType.JSON,
         responseJson: '{"updated":true}',
       });
 
-      expect(output.id).toBe(endpoint.entity_id.id);
+      expect(output.id).toBe(endpoint.endpointId.toString());
       expect(output.title).toBe(endpoint.title);
       expect(output.method).toBe(endpoint.method);
       expect(output.statusCode).toBe(endpoint.statusCode.statusCode);
@@ -185,12 +185,12 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       inMemoryRepository.items = [endpoint];
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         responseBodyType: ResponseBodyType.TEXT,
         responseText: "Hello!",
       });
 
-      expect(output.id).toBe(endpoint.entity_id.id);
+      expect(output.id).toBe(endpoint.endpointId.toString());
       expect(output.title).toBe(endpoint.title);
       expect(output.method).toBe(endpoint.method);
       expect(output.statusCode).toBe(endpoint.statusCode.statusCode);
@@ -213,7 +213,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       inMemoryRepository.items = [endpoint];
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         title: "Bulk Update",
         method: HttpMethod.DELETE,
         statusCode: 201,
@@ -239,7 +239,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       inMemoryRepository.items = [endpoint];
 
       await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         title: "Persisted Title",
       });
 
@@ -268,7 +268,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
 
       await expect(
         useCase.execute({
-          id: endpoint.entity_id.id,
+          id: endpoint.endpointId.toString(),
           delay: 11, // Invalid: @Max(10) - triggers entity validation error
         }),
       ).rejects.toThrow(EntityValidationError);
@@ -284,7 +284,7 @@ describe("Update Endpoint Use Case - Unit Tests", () => {
       inMemoryRepository.items = [endpoint];
 
       const output = await useCase.execute({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         delay: 3,
         description: "Updated description",
       });

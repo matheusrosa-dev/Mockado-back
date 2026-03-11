@@ -4,7 +4,7 @@ import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
 @Entity({ name: "endpoints" })
 export class EndpointModel {
   @PrimaryColumn({ type: "uuid", nullable: false })
-  endpoint_id: string;
+  endpointId: string;
 
   @Column({ type: "varchar", length: 50, nullable: false })
   title: string;

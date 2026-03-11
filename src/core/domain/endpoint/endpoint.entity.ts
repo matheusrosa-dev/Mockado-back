@@ -11,7 +11,7 @@ import { StatusCodeModifiedEvent } from "./events/status-code-modified.event";
 import { StatusCode } from "./value-objects/status-code.vo";
 
 type ConstructorProps = {
-  endpoint_id?: Uuid;
+  endpointId?: Uuid;
   method: HttpMethod;
   title: string;
   description?: string;
@@ -24,7 +24,7 @@ type ConstructorProps = {
 };
 
 export class Endpoint extends Entity {
-  private _endpoint_id: Uuid;
+  private _endpointId: Uuid;
   private _method: HttpMethod;
   private _title: string;
   private _description: string;
@@ -46,7 +46,7 @@ export class Endpoint extends Entity {
       this._onResponseBodyTypeModified(event as ResponseBodyTypeModifiedEvent),
     );
 
-    this._endpoint_id = props.endpoint_id ?? new Uuid();
+    this._endpointId = props.endpointId ?? new Uuid();
     this._method = props.method;
     this._title = props.title;
     this._description = props.description ?? "";
@@ -181,8 +181,12 @@ export class Endpoint extends Entity {
     return validator.validate(this.notification, this, fields);
   }
 
-  get entity_id() {
-    return this._endpoint_id;
+  get endpointId() {
+    return this._endpointId;
+  }
+
+  get entityId() {
+    return this._endpointId;
   }
 
   get method() {
@@ -223,7 +227,7 @@ export class Endpoint extends Entity {
 
   toJSON() {
     return {
-      endpoint_id: this._endpoint_id.id,
+      endpointId: this._endpointId.toString(),
       title: this._title,
       method: this._method,
       description: this._description,

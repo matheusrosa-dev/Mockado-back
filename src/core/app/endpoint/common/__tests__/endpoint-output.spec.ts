@@ -5,7 +5,7 @@ import { EndpointOutputMapper } from "../endpoint-output";
 import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
 
 const baseProps = {
-  endpoint_id: new Uuid(),
+  endpointId: new Uuid(),
   title: "My Endpoint",
   method: HttpMethod.GET,
   statusCode: new StatusCode(200),
@@ -16,11 +16,11 @@ const baseProps = {
 
 describe("Endpoint Output Mapper - Unit Tests", () => {
   describe("toOutput()", () => {
-    it("should map endpoint_id to id", () => {
+    it("should map endpointId to id", () => {
       const entity = new Endpoint(baseProps);
       const output = EndpointOutputMapper.toOutput(entity);
 
-      expect(output.id).toBe(baseProps.endpoint_id.id);
+      expect(output.id).toBe(baseProps.endpointId.toString());
     });
 
     it("should map all base fields correctly", () => {
@@ -104,11 +104,11 @@ describe("Endpoint Output Mapper - Unit Tests", () => {
       expect(output.responseJson).toBeUndefined();
     });
 
-    it("should not contain the endpoint_id key in the output", () => {
+    it("should not contain the endpointId key in the output", () => {
       const entity = new Endpoint(baseProps);
       const output = EndpointOutputMapper.toOutput(entity);
 
-      expect(output).not.toHaveProperty("endpoint_id");
+      expect(output).not.toHaveProperty("endpointId");
     });
   });
 });

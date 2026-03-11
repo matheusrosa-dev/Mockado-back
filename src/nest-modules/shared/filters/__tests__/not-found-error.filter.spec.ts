@@ -7,7 +7,7 @@ import { NotFoundError } from "@domain/shared/errors/not-found.error";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 
 class StubEntity extends Entity {
-  entity_id: Uuid;
+  entityId: Uuid;
   toJSON() {
     return {};
   }

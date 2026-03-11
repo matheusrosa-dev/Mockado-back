@@ -8,7 +8,7 @@ export class EndpointModelMapper {
   static toModel(entity: Endpoint): EndpointModel {
     const model = new EndpointModel();
 
-    model.endpoint_id = entity.entity_id.id;
+    model.endpointId = entity.endpointId.toString();
     model.title = entity.title;
     model.method = entity.method;
     model.description = entity.description;
@@ -24,7 +24,7 @@ export class EndpointModelMapper {
 
   static toEntity(model: EndpointModel): Endpoint {
     const endpoint = new Endpoint({
-      endpoint_id: new Uuid(model.endpoint_id),
+      endpointId: new Uuid(model.endpointId),
       title: model.title,
       method: model.method,
       description: model.description,

@@ -25,7 +25,7 @@ describe("Delete Endpoint Use Case - Unit Tests", () => {
       expect(inMemoryRepository.items).toHaveLength(1);
 
       await useCase.execute({
-        endpointId: endpoint.entity_id.id,
+        endpointId: endpoint.endpointId.toString(),
       });
 
       expect(inMemoryRepository.items).toHaveLength(0);

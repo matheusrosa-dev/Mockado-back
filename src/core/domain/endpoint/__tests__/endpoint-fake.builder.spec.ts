@@ -8,7 +8,7 @@ describe("Endpoint Fake Builder - Unit Tests", () => {
     it("should instance a fake endpoint with default values", () => {
       const fakeEndpoint = EndpointFactory.fake().oneEndpoint().build();
 
-      expect(fakeEndpoint.entity_id.id).toBeDefined();
+      expect(fakeEndpoint.endpointId.toString()).toBeDefined();
       expect(fakeEndpoint.title).toBeDefined();
       expect(fakeEndpoint.method).toBeDefined();
       expect(fakeEndpoint.statusCode).toBeDefined();
@@ -30,7 +30,7 @@ describe("Endpoint Fake Builder - Unit Tests", () => {
         .withCreatedAt(new Date("2024-01-01"))
         .build();
 
-      expect(fakeEndpoint.entity_id.equals(id)).toBeTruthy();
+      expect(fakeEndpoint.endpointId.equals(id)).toBeTruthy();
       expect(fakeEndpoint.title).toBe("Custom Title");
       expect(fakeEndpoint.method).toBe(HttpMethod.POST);
       expect(fakeEndpoint.description).toBe("Custom Description");
@@ -97,7 +97,7 @@ describe("Endpoint Fake Builder - Unit Tests", () => {
 
       expect(fakeEndpoints).toHaveLength(amount);
       fakeEndpoints.forEach((endpoint) => {
-        expect(endpoint.entity_id.id).toBeDefined();
+        expect(endpoint.endpointId.toString()).toBeDefined();
         expect(endpoint.title).toBeDefined();
         expect(endpoint.method).toBeDefined();
         expect(endpoint.statusCode).toBeDefined();
@@ -123,7 +123,7 @@ describe("Endpoint Fake Builder - Unit Tests", () => {
 
       expect(fakeEndpoints).toHaveLength(amount);
       fakeEndpoints.forEach((endpoint) => {
-        expect(endpoint.entity_id.equals(id)).toBeTruthy();
+        expect(endpoint.endpointId.equals(id)).toBeTruthy();
         expect(endpoint.title).toBe("Custom Title");
         expect(endpoint.method).toBe(HttpMethod.POST);
         expect(endpoint.description).toBe("Custom Description");

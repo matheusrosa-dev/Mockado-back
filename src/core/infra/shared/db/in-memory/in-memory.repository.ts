@@ -16,30 +16,30 @@ export abstract class InMemoryRepository<
 
   async update(entity: E): Promise<void> {
     const index = this.items.findIndex((item) =>
-      item.entity_id.equals(entity.entity_id),
+      item.entityId.equals(entity.entityId),
     );
 
     if (index === -1) {
-      throw new NotFoundError(entity.entity_id, this.getEntity());
+      throw new NotFoundError(entity.entityId, this.getEntity());
     }
 
     this.items[index] = entity;
   }
 
-  async delete(entity_id: EntityId): Promise<void> {
+  async delete(entityId: EntityId): Promise<void> {
     const index = this.items.findIndex((item) =>
-      item.entity_id.equals(entity_id),
+      item.entityId.equals(entityId),
     );
 
     if (index === -1) {
-      throw new NotFoundError(entity_id, this.getEntity());
+      throw new NotFoundError(entityId, this.getEntity());
     }
 
     this.items.splice(index, 1);
   }
 
-  async findById(entity_id: EntityId): Promise<E | null> {
-    const item = this.items.find((item) => item.entity_id.equals(entity_id));
+  async findById(entityId: EntityId): Promise<E | null> {
+    const item = this.items.find((item) => item.entityId.equals(entityId));
 
     if (!item) return null;
 

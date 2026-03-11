@@ -10,7 +10,7 @@ export abstract class Entity {
   dispatchedEvents: Set<IDomainEvent> = new Set<IDomainEvent>();
   events: Set<IDomainEvent> = new Set<IDomainEvent>();
 
-  abstract get entity_id(): ValueObject;
+  abstract get entityId(): ValueObject;
   abstract toJSON(): object;
 
   applyEvent(event: IDomainEvent) {

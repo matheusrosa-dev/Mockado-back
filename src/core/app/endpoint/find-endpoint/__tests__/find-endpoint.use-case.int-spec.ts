@@ -32,11 +32,11 @@ describe("Find Endpoint Use Case - Integration Tests", () => {
       await repository.insert(endpoint);
 
       const foundEndpoint = await useCase.execute({
-        endpointId: endpoint.entity_id.id,
+        endpointId: endpoint.endpointId.toString(),
       });
 
       expect(foundEndpoint).toEqual({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         title: endpoint.title,
         method: endpoint.method,
         statusCode: endpoint.statusCode.statusCode,
@@ -64,7 +64,7 @@ describe("Find Endpoint Use Case - Integration Tests", () => {
       await repository.insert(endpoint);
 
       const output = await useCase.execute({
-        endpointId: endpoint.entity_id.id,
+        endpointId: endpoint.endpointId.toString(),
       });
 
       expect(outputSpy).toHaveBeenCalledTimes(1);

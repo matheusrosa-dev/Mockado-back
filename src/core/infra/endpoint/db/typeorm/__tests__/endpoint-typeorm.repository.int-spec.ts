@@ -25,10 +25,10 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
 
       await repository.insert(endpoint);
 
-      const found = await repository.findById(endpoint.entity_id);
+      const found = await repository.findById(endpoint.endpointId);
 
       expect(found).not.toBeNull();
-      expect(found!.entity_id.id).toBe(endpoint.entity_id.id);
+      expect(found!.endpointId.toString()).toBe(endpoint.endpointId.toString());
       expect(found!.title).toBe(endpoint.title);
       expect(found!.method).toBe(endpoint.method);
       expect(found!.statusCode.statusCode).toBe(204);
@@ -45,7 +45,7 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
 
       await repository.insert(endpoint);
 
-      const found = await repository.findById(endpoint.entity_id);
+      const found = await repository.findById(endpoint.endpointId);
 
       expect(found).not.toBeNull();
       expect(found!.responseBodyType).toBe(ResponseBodyType.JSON);
@@ -62,7 +62,7 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
 
       await repository.insert(endpoint);
 
-      const found = await repository.findById(endpoint.entity_id);
+      const found = await repository.findById(endpoint.endpointId);
 
       expect(found).not.toBeNull();
       expect(found!.responseBodyType).toBe(ResponseBodyType.TEXT);
@@ -85,10 +85,10 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
 
       await repository.insert(endpoint);
 
-      const found = await repository.findById(endpoint.entity_id);
+      const found = await repository.findById(endpoint.endpointId);
 
       expect(found).not.toBeNull();
-      expect(found!.entity_id.id).toBe(endpoint.entity_id.id);
+      expect(found!.endpointId.toString()).toBe(endpoint.endpointId.toString());
       expect(found!.createdAt).toEqual(endpoint.createdAt);
     });
   });
@@ -113,10 +113,10 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
       const allEndpoints = await repository.findAll();
 
       expect(allEndpoints).toHaveLength(3);
-      const ids = allEndpoints.map((e) => e.entity_id.id);
-      expect(ids).toContain(endpoint1.entity_id.id);
-      expect(ids).toContain(endpoint2.entity_id.id);
-      expect(ids).toContain(endpoint3.entity_id.id);
+      const ids = allEndpoints.map((e) => e.endpointId.toString());
+      expect(ids).toContain(endpoint1.endpointId.toString());
+      expect(ids).toContain(endpoint2.endpointId.toString());
+      expect(ids).toContain(endpoint3.endpointId.toString());
     });
   });
 
@@ -140,13 +140,13 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
       expect(allEndpoints).toHaveLength(2);
 
       expect(allEndpoints[0]).toEqual({
-        entity_id: new Uuid(endpoint1.entity_id.id),
+        endpointId: new Uuid(endpoint1.endpointId.toString()),
         title: endpoint1.title,
         method: endpoint1.method,
       });
 
       expect(allEndpoints[1]).toEqual({
-        entity_id: new Uuid(endpoint2.entity_id.id),
+        endpointId: new Uuid(endpoint2.endpointId.toString()),
         title: endpoint2.title,
         method: endpoint2.method,
       });
@@ -166,7 +166,7 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
       endpoint.changeTitle("updated title");
       await repository.update(endpoint);
 
-      const found = await repository.findById(endpoint.entity_id);
+      const found = await repository.findById(endpoint.endpointId);
 
       expect(found!.title).toBe("updated title");
     });
@@ -179,7 +179,7 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
 
       await expect(repository.update(endpoint)).rejects.toThrow(NotFoundError);
       await expect(repository.update(endpoint)).rejects.toThrow(
-        `Endpoint Not Found using ID: ${endpoint.entity_id.id}`,
+        `Endpoint Not Found using ID: ${endpoint.endpointId.toString()}`,
       );
     });
   });
@@ -192,9 +192,9 @@ describe("EndpointTypeOrmRepository - Integration Tests", () => {
         .build();
 
       await repository.insert(endpoint);
-      await repository.delete(endpoint.entity_id);
+      await repository.delete(endpoint.endpointId);
 
-      const found = await repository.findById(endpoint.entity_id);
+      const found = await repository.findById(endpoint.endpointId);
 
       expect(found).toBeNull();
     });

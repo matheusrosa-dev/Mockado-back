@@ -65,7 +65,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         responseBodyType: ResponseBodyType.JSON,
       });
 
-      expect(endpoint1.entity_id).toBeInstanceOf(Uuid);
+      expect(endpoint1.endpointId).toBeInstanceOf(Uuid);
       expect(endpoint1.description).toBe("");
       expect(endpoint1.delay).toBe(0);
       expect(endpoint1.responseJson).toBe("{}");
@@ -81,19 +81,19 @@ describe("Endpoint Entity - Unit Tests", () => {
       expect(endpoint2.responseText).toBe("");
     });
 
-    it("should set endpoint_id and createdAt when provided", () => {
+    it("should set endpointId and createdAt when provided", () => {
       const id = new Uuid();
       const date = new Date("2024-01-01");
 
       const endpoint = new Endpoint({
-        endpoint_id: id,
+        endpointId: id,
         method: HttpMethod.GET,
         title: "My Endpoint",
         statusCode: new StatusCode(200),
         createdAt: date,
       });
 
-      expect(endpoint.entity_id.equals(id)).toBeTruthy();
+      expect(endpoint.endpointId.equals(id)).toBeTruthy();
       expect(endpoint.createdAt).toBe(date);
     });
 
@@ -124,15 +124,15 @@ describe("Endpoint Entity - Unit Tests", () => {
     });
   });
 
-  describe("endpoint_id", () => {
-    it("should return endpoint_id", () => {
+  describe("endpointId", () => {
+    it("should return endpointId", () => {
       const id = new Uuid();
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
         .withEndpointId(id)
         .build();
 
-      expect(endpoint.entity_id).toBe(id);
+      expect(endpoint.endpointId.equals(id)).toBe(true);
     });
   });
 
@@ -499,7 +499,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         .build();
 
       expect(endpointWithoutBody.toJSON()).toEqual({
-        endpoint_id: endpointWithoutBody.entity_id.id,
+        endpointId: endpointWithoutBody.endpointId.toString(),
         title: endpointWithoutBody.title,
         method: endpointWithoutBody.method,
         description: endpointWithoutBody.description,
@@ -517,7 +517,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         .build();
 
       expect(endpointWithJson.toJSON()).toEqual({
-        endpoint_id: endpointWithJson.entity_id.id,
+        endpointId: endpointWithJson.endpointId.toString(),
         title: endpointWithJson.title,
         method: endpointWithJson.method,
         description: endpointWithJson.description,
@@ -529,7 +529,7 @@ describe("Endpoint Entity - Unit Tests", () => {
       });
 
       const endpointWithText = new Endpoint({
-        endpoint_id: new Uuid(),
+        endpointId: new Uuid(),
         method: HttpMethod.GET,
         title: "My Endpoint",
         statusCode: new StatusCode(200),
@@ -541,7 +541,7 @@ describe("Endpoint Entity - Unit Tests", () => {
       });
 
       expect(endpointWithText.toJSON()).toEqual({
-        endpoint_id: endpointWithText.entity_id.id,
+        endpointId: endpointWithText.endpointId.toString(),
         title: endpointWithText.title,
         method: endpointWithText.method,
         description: endpointWithText.description,

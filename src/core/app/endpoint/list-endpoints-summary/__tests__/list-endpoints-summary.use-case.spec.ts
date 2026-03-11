@@ -27,7 +27,7 @@ describe("List Endpoints Summary Use Case - Unit Tests", () => {
 
       expect(endpointsList).toEqual(
         endpoints.map((endpoint) => ({
-          id: endpoint.entity_id.id,
+          id: endpoint.endpointId.toString(),
           title: endpoint.title,
           method: endpoint.method,
         })),

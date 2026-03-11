@@ -4,26 +4,26 @@ import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import { InMemoryRepository } from "../in-memory.repository";
 
 type ConstructorProps = {
-  entity_id?: Uuid;
+  entityId?: Uuid;
   name: string;
   price: number;
 };
 
 class StubEntity extends Entity {
-  entity_id: Uuid;
+  entityId: Uuid;
   name: string;
   price: number;
 
   constructor(props: ConstructorProps) {
     super();
-    this.entity_id = props.entity_id || new Uuid();
+    this.entityId = props.entityId || new Uuid();
     this.name = props.name;
     this.price = props.price;
   }
 
   toJSON() {
     return {
-      entity_id: this.entity_id.id,
+      entityId: this.entityId.toString(),
       name: this.name,
       price: this.price,
     };
@@ -46,7 +46,7 @@ describe("In Memory Repository - Unit Tests", () => {
   describe("insert()", () => {
     it("should insert a new entity", async () => {
       const entity = new StubEntity({
-        entity_id: new Uuid(),
+        entityId: new Uuid(),
         name: "Test",
         price: 100,
       });
@@ -74,7 +74,7 @@ describe("In Memory Repository - Unit Tests", () => {
       const entity = new StubEntity({ name: "name value", price: 5 });
       await repository.insert(entity);
 
-      const found = await repository.findById(entity.entity_id);
+      const found = await repository.findById(entity.entityId);
       expect(found).toBe(entity);
     });
 
@@ -88,7 +88,7 @@ describe("In Memory Repository - Unit Tests", () => {
     it("should throw an error on update when entity not found", async () => {
       const entity = new StubEntity({ name: "name value", price: 5 });
       await expect(repository.update(entity)).rejects.toThrow(
-        new NotFoundError(entity.entity_id, StubEntity),
+        new NotFoundError(entity.entityId, StubEntity),
       );
     });
 
@@ -97,7 +97,7 @@ describe("In Memory Repository - Unit Tests", () => {
       await repository.insert(entity);
 
       const entityUpdated = new StubEntity({
-        entity_id: entity.entity_id,
+        entityId: entity.entityId,
         name: "updated",
         price: 1,
       });
@@ -129,7 +129,7 @@ describe("In Memory Repository - Unit Tests", () => {
       const entity = new StubEntity({ name: "name value", price: 5 });
       await repository.insert(entity);
 
-      await repository.delete(entity.entity_id);
+      await repository.delete(entity.entityId);
       expect(repository.items).toHaveLength(0);
     });
   });

@@ -13,7 +13,7 @@ describe("Endpoint Model Mapper - Integration ", () => {
       const endpointModel = EndpointModelMapper.toModel(endpoint);
 
       expect(endpointModel).toBeDefined();
-      expect(endpointModel.endpoint_id).toBe(endpoint.entity_id.id);
+      expect(endpointModel.endpointId).toBe(endpoint.endpointId.toString());
       expect(endpointModel.title).toBe(endpoint.title);
       expect(endpointModel.method).toBe(endpoint.method);
       expect(endpointModel.description).toBe(endpoint.description);
@@ -38,7 +38,9 @@ describe("Endpoint Model Mapper - Integration ", () => {
       const mappedEndpoint = EndpointModelMapper.toEntity(endpointModel);
 
       expect(mappedEndpoint).toBeDefined();
-      expect(mappedEndpoint.entity_id.id).toBe(endpoint.entity_id.id);
+      expect(mappedEndpoint.endpointId.toString()).toBe(
+        endpoint.endpointId.toString(),
+      );
       expect(mappedEndpoint.title).toBe(endpoint.title);
       expect(mappedEndpoint.method).toBe(endpoint.method);
       expect(mappedEndpoint.description).toBe(endpoint.description);

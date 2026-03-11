@@ -3,10 +3,10 @@ import { Uuid } from "../../value-objects/uuid.vo";
 import { NotFoundError } from "../not-found.error";
 
 class StubEntity extends Entity {
-  entity_id = new Uuid();
+  entityId = new Uuid();
 
   toJSON(): object {
-    return { id: this.entity_id.id };
+    return { id: this.entityId.toString() };
   }
 }
 
@@ -14,10 +14,10 @@ describe("Not Found Error - Unit Tests", () => {
   it("should create an instance of NotFoundError with a single ID", () => {
     const entity = new StubEntity();
 
-    const error = new NotFoundError(entity.entity_id, StubEntity);
+    const error = new NotFoundError(entity.entityId, StubEntity);
     expect(error).toBeInstanceOf(NotFoundError);
     expect(error.message).toBe(
-      `StubEntity Not Found using ID: ${entity.entity_id.id}`,
+      `StubEntity Not Found using ID: ${entity.entityId.toString()}`,
     );
     expect(error.name).toBe("NotFoundError");
   });
@@ -27,12 +27,12 @@ describe("Not Found Error - Unit Tests", () => {
     const entity2 = new StubEntity();
 
     const error = new NotFoundError(
-      [entity1.entity_id, entity2.entity_id],
+      [entity1.entityId, entity2.entityId],
       StubEntity,
     );
     expect(error).toBeInstanceOf(NotFoundError);
     expect(error.message).toBe(
-      `StubEntity Not Found using IDs: ${entity1.entity_id.id}, ${entity2.entity_id.id}`,
+      `StubEntity Not Found using IDs: ${entity1.entityId.toString()}, ${entity2.entityId.toString()}`,
     );
     expect(error.name).toBe("NotFoundError");
   });

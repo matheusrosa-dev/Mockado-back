@@ -33,7 +33,7 @@ describe("Endpoint In Memory Repository - Unit Tests", () => {
       const endpoint = EndpointFactory.fake().oneEndpoint().build();
       await repository.insert(endpoint);
 
-      const found = await repository.findById(endpoint.entity_id as Uuid);
+      const found = await repository.findById(endpoint.endpointId);
       expect(found).toBe(endpoint);
     });
 
@@ -74,12 +74,12 @@ describe("Endpoint In Memory Repository - Unit Tests", () => {
 
       expect(summaries).toHaveLength(2);
       expect(summaries[0]).toEqual({
-        entity_id: endpoints[0].entity_id,
+        endpointId: endpoints[0].endpointId,
         title: endpoints[0].title,
         method: endpoints[0].method,
       });
       expect(summaries[1]).toEqual({
-        entity_id: endpoints[1].entity_id,
+        endpointId: endpoints[1].endpointId,
         title: endpoints[1].title,
         method: endpoints[1].method,
       });
@@ -107,7 +107,7 @@ describe("Endpoint In Memory Repository - Unit Tests", () => {
       const endpoint = EndpointFactory.fake().oneEndpoint().build();
 
       await expect(repository.update(endpoint)).rejects.toThrow(
-        new NotFoundError(endpoint.entity_id, Endpoint),
+        new NotFoundError(endpoint.endpointId, Endpoint),
       );
     });
   });
@@ -118,7 +118,7 @@ describe("Endpoint In Memory Repository - Unit Tests", () => {
 
       await repository.insert(endpoint);
 
-      await repository.delete(endpoint.entity_id as Uuid);
+      await repository.delete(endpoint.endpointId as Uuid);
       expect(repository.items).toHaveLength(0);
     });
 
@@ -142,7 +142,7 @@ describe("Endpoint In Memory Repository - Unit Tests", () => {
 
       await repository.insert(endpoint);
 
-      const found = await repository.findById(endpoint.entity_id as Uuid);
+      const found = await repository.findById(endpoint.endpointId as Uuid);
       expect(found?.responseBodyType).toBe(ResponseBodyType.JSON);
       expect(found?.responseJson).toBe('{"key":"value"}');
     });
@@ -157,7 +157,7 @@ describe("Endpoint In Memory Repository - Unit Tests", () => {
 
       await repository.insert(endpoint);
 
-      const found = await repository.findById(endpoint.entity_id as Uuid);
+      const found = await repository.findById(endpoint.endpointId as Uuid);
       expect(found?.responseBodyType).toBe(ResponseBodyType.TEXT);
       expect(found?.responseText).toBe("hello");
     });

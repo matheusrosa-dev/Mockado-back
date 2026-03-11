@@ -6,7 +6,7 @@ import { HttpMethod } from "./endpoint.types";
 export interface IEndpointRepository extends IRepository<Endpoint, Uuid> {
   findAllSummary(): Promise<
     Array<{
-      entity_id: Uuid;
+      endpointId: Uuid;
       title: string;
       method: HttpMethod;
     }>

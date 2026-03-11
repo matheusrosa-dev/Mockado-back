@@ -13,7 +13,7 @@ describe("Endpoint Model - Integration Tests", () => {
 
     const columnNames = columns.map((c) => c.propertyName);
     expect(columnNames).toStrictEqual([
-      "endpoint_id",
+      "endpointId",
       "title",
       "method",
       "description",
@@ -26,7 +26,7 @@ describe("Endpoint Model - Integration Tests", () => {
     ]);
 
     const endpointIdColumn = columns.find(
-      (c) => c.propertyName === "endpoint_id",
+      (c) => c.propertyName === "endpointId",
     );
     expect(endpointIdColumn).toMatchObject({
       isPrimary: true,

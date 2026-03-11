@@ -21,24 +21,24 @@ export class EndpointTypeOrmRepository implements IEndpointRepository {
 
   async update(entity: Endpoint): Promise<void> {
     const model = EndpointModelMapper.toModel(entity);
-    const { affected } = await this.repository.update(model.endpoint_id, model);
+    const { affected } = await this.repository.update(model.endpointId, model);
 
     if (!affected) {
-      throw new NotFoundError(entity.entity_id, this.getEntity());
+      throw new NotFoundError(entity.endpointId, this.getEntity());
     }
   }
 
-  async delete(entity_id: Uuid): Promise<void> {
-    const { affected } = await this.repository.delete(entity_id.id);
+  async delete(endpointId: Uuid): Promise<void> {
+    const { affected } = await this.repository.delete(endpointId.toString());
 
     if (!affected) {
-      throw new NotFoundError(entity_id, this.getEntity());
+      throw new NotFoundError(endpointId, this.getEntity());
     }
   }
 
-  async findById(entity_id: Uuid): Promise<Endpoint | null> {
+  async findById(endpointId: Uuid): Promise<Endpoint | null> {
     const model = await this.repository.findOneBy({
-      endpoint_id: entity_id.id,
+      endpointId: endpointId.toString(),
     });
 
     if (!model) {
@@ -60,14 +60,14 @@ export class EndpointTypeOrmRepository implements IEndpointRepository {
     const models = await this.repository.find({
       order: { createdAt: "ASC" },
       select: {
-        endpoint_id: true,
+        endpointId: true,
         title: true,
         method: true,
       },
     });
 
     return models.map((model) => ({
-      entity_id: new Uuid(model.endpoint_id),
+      endpointId: new Uuid(model.endpointId),
       title: model.title,
       method: model.method,
     }));

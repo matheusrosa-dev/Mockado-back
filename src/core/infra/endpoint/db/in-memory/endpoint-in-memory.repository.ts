@@ -9,7 +9,7 @@ export class EndpointInMemoryRepository
 {
   async findAllSummary() {
     const endpoints = this.items.map((endpoint) => ({
-      entity_id: endpoint.entity_id,
+      endpointId: endpoint.endpointId,
       title: endpoint.title,
       method: endpoint.method,
     }));

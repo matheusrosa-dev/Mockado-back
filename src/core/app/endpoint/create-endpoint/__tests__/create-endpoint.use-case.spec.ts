@@ -32,7 +32,7 @@ describe("Create Endpoint Use Case - Unit Tests", () => {
       const createdEndpoint = await repository.findById(new Uuid(output.id));
 
       expect(createdEndpoint).not.toBeNull();
-      expect(createdEndpoint?.entity_id.id).toBe(output.id);
+      expect(createdEndpoint?.endpointId.toString()).toBe(output.id);
       expect(createdEndpoint?.title).toBe(input.title);
       expect(createdEndpoint?.method).toBe(input.method);
       expect(createdEndpoint?.statusCode.statusCode).toBe(input.statusCode);
@@ -58,7 +58,7 @@ describe("Create Endpoint Use Case - Unit Tests", () => {
       const createdEndpoint = await repository.findById(new Uuid(output.id));
 
       expect(createdEndpoint).not.toBeNull();
-      expect(createdEndpoint?.entity_id.id).toBe(output.id);
+      expect(createdEndpoint?.endpointId.toString()).toBe(output.id);
       expect(createdEndpoint?.title).toBe(input.title);
       expect(createdEndpoint?.method).toBe(input.method);
       expect(createdEndpoint?.statusCode.statusCode).toBe(input.statusCode);
@@ -82,7 +82,7 @@ describe("Create Endpoint Use Case - Unit Tests", () => {
       const createdEndpoint = await repository.findById(new Uuid(output.id));
 
       expect(createdEndpoint).not.toBeNull();
-      expect(createdEndpoint?.entity_id.id).toBe(output.id);
+      expect(createdEndpoint?.endpointId.toString()).toBe(output.id);
       expect(createdEndpoint?.title).toBe(input.title);
       expect(createdEndpoint?.method).toBe(input.method);
       expect(createdEndpoint?.statusCode.statusCode).toBe(input.statusCode);
@@ -108,7 +108,7 @@ describe("Create Endpoint Use Case - Unit Tests", () => {
       const createdEndpoint = await repository.findById(new Uuid(output.id));
 
       expect(createdEndpoint).not.toBeNull();
-      expect(createdEndpoint?.entity_id.id).toBe(output.id);
+      expect(createdEndpoint?.endpointId.toString()).toBe(output.id);
       expect(createdEndpoint?.title).toBe(input.title);
       expect(createdEndpoint?.method).toBe(input.method);
       expect(createdEndpoint?.statusCode.statusCode).toBe(input.statusCode);

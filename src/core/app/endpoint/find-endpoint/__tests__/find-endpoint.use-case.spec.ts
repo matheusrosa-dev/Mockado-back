@@ -28,11 +28,11 @@ describe("Find Endpoint Use Case - Unit Tests", () => {
       inMemoryRepository.items = [endpoint];
 
       const foundEndpoint = await useCase.execute({
-        endpointId: endpoint.entity_id.id,
+        endpointId: endpoint.endpointId.toString(),
       });
 
       expect(foundEndpoint).toEqual({
-        id: endpoint.entity_id.id,
+        id: endpoint.endpointId.toString(),
         title: endpoint.title,
         method: endpoint.method,
         statusCode: endpoint.statusCode.statusCode,
@@ -62,7 +62,7 @@ describe("Find Endpoint Use Case - Unit Tests", () => {
       inMemoryRepository.items = [endpoint];
 
       const output = await useCase.execute({
-        endpointId: endpoint.entity_id.id,
+        endpointId: endpoint.endpointId.toString(),
       });
 
       expect(outputSpy).toHaveBeenCalledTimes(1);
