@@ -34,3 +34,12 @@ GET {{baseUrl}}/endpoints/{{endpointId}}
 
 ### Delete endpoint
 DELETE {{baseUrl}}/endpoints/{{endpointId}}
+
+
+### Login google
+POST {{baseUrl}}/google-auth
+Content-Type: application/json
+
+{
+    "token": ""
+}
