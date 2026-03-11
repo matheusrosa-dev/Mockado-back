@@ -1,5 +1,7 @@
-import { Entity } from "@domain/shared/entity";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { Entity } from "../shared/entity";
+import { Uuid } from "../shared/value-objects/uuid.vo";
+import { UserValidationGroup, UserValidator } from "./user.validator";
+import { UserFakeBuilder } from "./user.fake-builder";
 
 type ConstructorProps = {
   userId?: Uuid;
@@ -32,24 +34,25 @@ export class User extends Entity {
   changeName(name: string) {
     this._name = name;
 
-    // this.validate(["name"]);
+    this.validate(["name"]);
   }
 
   changeEmail(email: string) {
     this._email = email;
 
-    // this.validate(["email"]);
+    this.validate(["email"]);
   }
 
   changePicture(picture: string) {
     this._picture = picture;
 
-    // this.validate(["picture"]);
+    this.validate(["picture"]);
   }
 
-  // TODO: IMPLEMENTAR
-  validate(fields?: []) {
-    console.log(fields);
+  validate(fields?: UserValidationGroup[]) {
+    const validator = new UserValidator();
+
+    return validator.validate(this.notification, this, fields);
   }
 
   get entityId() {
@@ -82,7 +85,33 @@ export class User extends Entity {
 
   toJSON() {
     return {
-      user_id: this._userId.toString(),
+      userId: this._userId.toString(),
+      googleId: this._googleId,
+      email: this._email,
+      name: this._name,
+      picture: this._picture,
+      createdAt: this._createdAt,
     };
+  }
+}
+
+type CreateCommandProps = {
+  name: string;
+  email: string;
+  googleId: string;
+  picture: string;
+};
+
+export class UserFactory {
+  static create(props: CreateCommandProps) {
+    const user = new User(props);
+
+    user.validate();
+
+    return user;
+  }
+
+  static fake() {
+    return UserFakeBuilder;
   }
 }

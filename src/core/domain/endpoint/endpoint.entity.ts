@@ -1,6 +1,6 @@
 import { Entity } from "../shared/entity";
 import { Uuid } from "../shared/value-objects/uuid.vo";
-import { EndpointFakeBuilder } from "./endpoint-fake.builder";
+import { EndpointFakeBuilder } from "./endpoint.fake-builder";
 import { HttpMethod, ResponseBodyType } from "./endpoint.types";
 import {
   EndpointValidationGroup,

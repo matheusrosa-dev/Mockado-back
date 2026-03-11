@@ -124,15 +124,15 @@ describe("Endpoint Entity - Unit Tests", () => {
     });
   });
 
-  describe("endpointId", () => {
-    it("should return endpointId", () => {
+  describe("entityId", () => {
+    it("should return the entityId", () => {
       const id = new Uuid();
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
         .withEndpointId(id)
         .build();
 
-      expect(endpoint.endpointId.equals(id)).toBe(true);
+      expect(endpoint.entityId.equals(id)).toBe(true);
     });
   });
 
