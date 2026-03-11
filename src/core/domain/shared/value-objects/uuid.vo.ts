@@ -1,4 +1,4 @@
-import { v4 as uuid, validate as validateUuid } from "uuid";
+import { v7 as uuid, validate as validateUuid } from "uuid";
 
 import { ValueObject } from "./value-object";
 
