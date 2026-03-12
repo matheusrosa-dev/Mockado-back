@@ -4,13 +4,12 @@ import { User, UserFactory } from "../user.entity";
 
 describe("User Entity - Unit Tests", () => {
   describe("constructor", () => {
-    it("should instance an user with all properties", () => {
+    it("should instance an user", () => {
       const userProps = {
         userId: new Uuid(),
         googleId: "google-id",
         email: "email@example.com",
         name: "John Doe",
-        picture: "picture.jpg",
         isActive: false,
         createdAt: new Date(),
       };
@@ -21,26 +20,8 @@ describe("User Entity - Unit Tests", () => {
       expect(user.googleId).toBe(userProps.googleId);
       expect(user.email).toBe(userProps.email);
       expect(user.name).toBe(userProps.name);
-      expect(user.picture).toBe(userProps.picture);
       expect(user.isActive).toBe(userProps.isActive);
       expect(user.createdAt).toEqual(userProps.createdAt);
-    });
-
-    it("should instance an user with only required properties", () => {
-      const userProps = {
-        googleId: "google-id",
-        email: "email@example.com",
-        name: "John Doe",
-      };
-      const user = new User(userProps);
-
-      expect(user.userId).toBeInstanceOf(Uuid);
-      expect(user.googleId).toBe(userProps.googleId);
-      expect(user.email).toBe(userProps.email);
-      expect(user.name).toBe(userProps.name);
-      expect(user.picture).toBe(null);
-      expect(user.isActive).toBe(true);
-      expect(user.createdAt).toBeInstanceOf(Date);
     });
   });
 
@@ -110,29 +91,6 @@ describe("User Entity - Unit Tests", () => {
     });
   });
 
-  describe("changePicture()", () => {
-    it("should change the picture and validate", () => {
-      const user = UserFactory.fake().oneUser().build();
-      const spyValidate = jest.spyOn(user, "validate");
-
-      user.changePicture("newpicture.jpg");
-
-      expect(spyValidate).toHaveBeenCalled();
-      expect(user.picture).toBe("newpicture.jpg");
-    });
-
-    it("should add error to notification when picture is not a url", () => {
-      const user = UserFactory.fake().oneUser().build();
-
-      user.changePicture("not-a-url");
-
-      expect(user.notification.hasErrors()).toBe(true);
-      expect(user.notification.errors.get("picture")).toContain(
-        "picture must be a URL address",
-      );
-    });
-  });
-
   describe("activate()", () => {
     it("should set isActive to true and validate", () => {
       const user = UserFactory.fake().oneUser().withIsActive(false).build();
@@ -167,7 +125,6 @@ describe("User Entity - Unit Tests", () => {
         email: user.email,
         name: user.name,
         isActive: user.isActive,
-        picture: user.picture,
         createdAt: user.createdAt,
       });
     });
@@ -276,19 +233,6 @@ describe("User Entity - Unit Tests", () => {
       expect(user.notification.errors.size).toBe(1);
       expect(user.notification.errors.get("name")).toContain(
         "name should not be empty",
-      );
-    });
-
-    it("should add error when picture is not a url", () => {
-      const user = UserFactory.fake()
-        .oneUser()
-        .withPicture("not-a-url")
-        .build();
-
-      expect(user.notification.hasErrors()).toBe(true);
-      expect(user.notification.errors.size).toBe(1);
-      expect(user.notification.errors.get("picture")).toContain(
-        "picture must be a URL address",
       );
     });
   });

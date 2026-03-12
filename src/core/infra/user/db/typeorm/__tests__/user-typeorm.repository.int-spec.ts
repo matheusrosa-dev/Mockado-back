@@ -29,7 +29,6 @@ describe("User TypeOrm Repository - Integration Tests", () => {
       expect(foundUser!.googleId).toBe(user.googleId);
       expect(foundUser!.email).toBe(user.email);
       expect(foundUser!.name).toBe(user.name);
-      expect(foundUser!.picture).toBe(user.picture);
       expect(foundUser!.isActive).toBe(user.isActive);
       expect(foundUser!.createdAt).toEqual(user.createdAt);
     });
@@ -52,7 +51,6 @@ describe("User TypeOrm Repository - Integration Tests", () => {
       user.changeName("Updated Name");
       user.deactivate();
       user.changeEmail("updated@example.com");
-      user.changePicture("http://example.com/updated-picture.jpg");
 
       await repository.update(user);
 
@@ -62,9 +60,6 @@ describe("User TypeOrm Repository - Integration Tests", () => {
       expect(updatedUser!.name).toBe("Updated Name");
       expect(updatedUser!.isActive).toBe(false);
       expect(updatedUser!.email).toBe("updated@example.com");
-      expect(updatedUser!.picture).toBe(
-        "http://example.com/updated-picture.jpg",
-      );
     });
 
     it("should throw an error when trying to update a non-existent user", async () => {

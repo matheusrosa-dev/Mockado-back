@@ -8,7 +8,6 @@ type ConstructorProps = {
   googleId: string;
   email: string;
   name: string;
-  picture?: string;
   isActive?: boolean;
   createdAt?: Date;
 };
@@ -18,7 +17,6 @@ export class User extends Entity {
   private _googleId: string;
   private _email: string;
   private _name: string;
-  private _picture: string | null;
   private _isActive: boolean;
   private _createdAt: Date;
 
@@ -29,7 +27,6 @@ export class User extends Entity {
     this._googleId = props.googleId;
     this._email = props.email;
     this._name = props.name;
-    this._picture = props.picture ?? null;
     this._isActive = props.isActive ?? true;
     this._createdAt = props.createdAt ?? new Date();
   }
@@ -44,12 +41,6 @@ export class User extends Entity {
     this._email = email;
 
     this.validate(["email"]);
-  }
-
-  changePicture(picture: string) {
-    this._picture = picture;
-
-    this.validate(["picture"]);
   }
 
   activate() {
@@ -90,10 +81,6 @@ export class User extends Entity {
     return this._name;
   }
 
-  get picture() {
-    return this._picture;
-  }
-
   get isActive() {
     return this._isActive;
   }
@@ -109,7 +96,6 @@ export class User extends Entity {
       isActive: this._isActive,
       email: this._email,
       name: this._name,
-      picture: this._picture,
       createdAt: this._createdAt,
     };
   }
@@ -119,7 +105,6 @@ type CreateCommandProps = {
   name: string;
   email: string;
   googleId: string;
-  picture?: string;
 };
 
 export class UserFactory {

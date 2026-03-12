@@ -1,19 +1,27 @@
 import { IUserRepository } from "@domain/user/user.repository";
 import { GoogleLoginUseCase } from "../google-login.use-case";
 import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
-import { UserInMemoryRepository } from "@infra/user/db/in-memory/user-in-memory.repository";
-import { RefreshTokenInMemoryRepository } from "@infra/refresh-token/db/in-memory/refresh-token-in-memory.repository";
 import { UserFactory } from "@domain/user/user.entity";
 import { EntityValidationError } from "@domain/shared/validators/validation.error";
+import { setupTypeOrm } from "@infra/shared/testing/helpers";
+import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
+import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
+import { RefreshTokenTypeOrmRepository } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 
-describe("Google Login Use Case - Unit Tests", () => {
+describe("Google Login Use Case - Integration Tests", () => {
+  const { dataSource } = setupTypeOrm({
+    entities: [RefreshTokenModel, UserModel],
+  });
+
   let useCase: GoogleLoginUseCase;
   let userRepository: IUserRepository;
   let refreshTokenRepository: IRefreshTokenRepository;
 
   beforeEach(() => {
-    userRepository = new UserInMemoryRepository();
-    refreshTokenRepository = new RefreshTokenInMemoryRepository();
+    userRepository = new UserTypeOrmRepository(dataSource);
+    refreshTokenRepository = new RefreshTokenTypeOrmRepository(dataSource);
     useCase = new GoogleLoginUseCase(userRepository, refreshTokenRepository);
   });
 
@@ -37,9 +45,9 @@ describe("Google Login Use Case - Unit Tests", () => {
         isActive: user.isActive,
       });
 
-      const storedTokens = (
-        refreshTokenRepository as RefreshTokenInMemoryRepository
-      ).items;
+      const storedTokens = await refreshTokenRepository.findManyByUserId(
+        user.userId,
+      );
       expect(storedTokens).toHaveLength(1);
       expect(typeof storedTokens[0].refreshTokenHash).toBe("string");
       expect(storedTokens[0].refreshTokenHash).not.toBe("refresh-token-123");
@@ -62,9 +70,10 @@ describe("Google Login Use Case - Unit Tests", () => {
         isActive: true,
       });
 
-      const storedTokens = (
-        refreshTokenRepository as RefreshTokenInMemoryRepository
-      ).items;
+      const storedTokens = await refreshTokenRepository.findManyByUserId(
+        new Uuid(result.userId),
+      );
+
       expect(storedTokens).toHaveLength(1);
       expect(storedTokens[0].refreshTokenHash).not.toBe("refresh-token-456");
     });

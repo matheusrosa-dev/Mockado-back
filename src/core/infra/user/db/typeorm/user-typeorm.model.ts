@@ -31,9 +31,6 @@ export class UserModel {
   @Column({ type: "varchar", length: 100, nullable: false })
   name: string;
 
-  @Column({ type: "varchar", length: 500, nullable: true, default: null })
-  picture: string | null;
-
   @Column({
     name: "is_active",
     type: "boolean",

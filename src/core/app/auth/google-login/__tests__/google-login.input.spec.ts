@@ -16,16 +16,8 @@ function validate(props: object) {
 
 describe("Google Login Input - Unit Tests", () => {
   describe("valid input", () => {
-    it("should pass with only required fields", () => {
+    it("should pass with valid props", () => {
       const errors = validate(validProps);
-      expect(errors).toHaveLength(0);
-    });
-
-    it("should pass with all optional fields filled", () => {
-      const errors = validate({
-        ...validProps,
-        picture: "https://example.com/photo.jpg",
-      });
       expect(errors).toHaveLength(0);
     });
   });
@@ -117,19 +109,6 @@ describe("Google Login Input - Unit Tests", () => {
       const errors = validate({ ...validProps, refreshToken: 123 });
       const fields = errors.map((error) => error.property);
       expect(fields).toContain("refreshToken");
-    });
-  });
-
-  describe("picture (optional)", () => {
-    it("should pass when picture is absent", () => {
-      const errors = validate(validProps);
-      expect(errors).toHaveLength(0);
-    });
-
-    it("should fail when picture is not a string", () => {
-      const errors = validate({ ...validProps, picture: 123 });
-      const fields = errors.map((error) => error.property);
-      expect(fields).toContain("picture");
     });
   });
 });

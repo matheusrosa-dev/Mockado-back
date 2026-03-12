@@ -11,7 +11,6 @@ export class UserModelMapper {
     model.googleId = entity.googleId;
     model.email = entity.email;
     model.name = entity.name;
-    model.picture = entity.picture ?? null;
     model.isActive = entity.isActive;
     model.createdAt = entity.createdAt;
 
@@ -24,7 +23,6 @@ export class UserModelMapper {
       googleId: model.googleId,
       email: model.email,
       name: model.name,
-      picture: model.picture ?? undefined,
       isActive: model.isActive,
       createdAt: model.createdAt,
     });

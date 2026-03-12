@@ -10,7 +10,6 @@ describe("User Fake Builder - Unit Tests", () => {
       expect(fakeUser.googleId).toBeDefined();
       expect(fakeUser.email).toBeDefined();
       expect(fakeUser.name).toBeDefined();
-      expect(fakeUser.picture).toBeDefined();
       expect(fakeUser.isActive).toBeDefined();
       expect(fakeUser.createdAt).toBeDefined();
     });
@@ -24,7 +23,6 @@ describe("User Fake Builder - Unit Tests", () => {
         .withGoogleId("123456789012345678901")
         .withEmail("custom@email.com")
         .withName("Custom Name")
-        .withPicture("https://example.com/picture.jpg")
         .withIsActive(false)
         .withCreatedAt(new Date("2024-01-01"))
         .build();
@@ -33,7 +31,6 @@ describe("User Fake Builder - Unit Tests", () => {
       expect(fakeUser.googleId).toBe("123456789012345678901");
       expect(fakeUser.email).toBe("custom@email.com");
       expect(fakeUser.name).toBe("Custom Name");
-      expect(fakeUser.picture).toBe("https://example.com/picture.jpg");
       expect(fakeUser.isActive).toBe(false);
       expect(fakeUser.createdAt).toEqual(new Date("2024-01-01"));
     });
@@ -45,7 +42,6 @@ describe("User Fake Builder - Unit Tests", () => {
         .withGoogleId(() => "987654321098765432109")
         .withEmail(() => "factory@email.com")
         .withName(() => "Factory Name")
-        .withPicture(() => "https://example.com/factory.jpg")
         .withIsActive(() => true)
         .withCreatedAt(() => new Date("2025-06-15"))
         .build();
@@ -54,7 +50,6 @@ describe("User Fake Builder - Unit Tests", () => {
       expect(fakeUser.googleId).toBe("987654321098765432109");
       expect(fakeUser.email).toBe("factory@email.com");
       expect(fakeUser.name).toBe("Factory Name");
-      expect(fakeUser.picture).toBe("https://example.com/factory.jpg");
       expect(fakeUser.isActive).toBe(true);
       expect(fakeUser.createdAt).toEqual(new Date("2025-06-15"));
     });
@@ -71,7 +66,6 @@ describe("User Fake Builder - Unit Tests", () => {
         expect(user.googleId).toBeDefined();
         expect(user.email).toBeDefined();
         expect(user.name).toBeDefined();
-        expect(user.picture).toBeDefined();
         expect(user.isActive).toBeDefined();
         expect(user.createdAt).toBeDefined();
       });
@@ -87,7 +81,6 @@ describe("User Fake Builder - Unit Tests", () => {
         .withGoogleId("123456789012345678901")
         .withEmail("custom@email.com")
         .withName("Custom Name")
-        .withPicture("https://example.com/picture.jpg")
         .withIsActive(false)
         .withCreatedAt(new Date("2024-01-01"))
         .build();
@@ -98,7 +91,6 @@ describe("User Fake Builder - Unit Tests", () => {
         expect(user.googleId).toBe("123456789012345678901");
         expect(user.email).toBe("custom@email.com");
         expect(user.name).toBe("Custom Name");
-        expect(user.picture).toBe("https://example.com/picture.jpg");
         expect(user.isActive).toBe(false);
         expect(user.createdAt).toEqual(new Date("2024-01-01"));
       });

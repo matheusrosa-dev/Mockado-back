@@ -12,8 +12,6 @@ export class UserFakeBuilder<TBuild = User | User[]> {
     this.chance.string({ length: 21, pool: "0123456789" });
   private _email: PropOrFactory<string> = () => this.chance.email();
   private _name: PropOrFactory<string> = () => this.chance.name();
-  private _picture: PropOrFactory<string> = () =>
-    this.chance.url({ extensions: ["jpg"] });
   private _isActive: PropOrFactory<boolean> = () => this.chance.bool();
   private _createdAt?: PropOrFactory<Date>;
 
@@ -47,11 +45,6 @@ export class UserFakeBuilder<TBuild = User | User[]> {
     return this;
   }
 
-  withPicture(valueOrFactory: PropOrFactory<string>) {
-    this._picture = valueOrFactory;
-    return this;
-  }
-
   withCreatedAt(valueOrFactory: PropOrFactory<Date>) {
     this._createdAt = valueOrFactory;
     return this;
@@ -71,10 +64,6 @@ export class UserFakeBuilder<TBuild = User | User[]> {
         email: this.callFactory(this._email),
         name: this.callFactory(this._name),
 
-        picture:
-          this._picture === undefined
-            ? undefined
-            : this.callFactory(this._picture),
         isActive:
           this._isActive === undefined
             ? undefined

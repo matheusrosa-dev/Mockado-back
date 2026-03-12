@@ -16,56 +16,55 @@ export class GoogleLoginUseCase
   ) {}
 
   async execute(input: GoogleLoginInput): Promise<LoginOutput> {
-    const user = await this.userRepository.findByGoogleId(input.googleId);
+    let user = await this.userRepository.findByGoogleId(input.googleId);
     const refreshTokenHash = await bcrypt.hash(input.refreshToken, 10);
 
     if (user) {
-      const refreshToken = RefreshTokenFactory.create({
-        refreshTokenHash,
-        userId: user.userId,
-      });
-
-      if (refreshToken.notification.hasErrors()) {
-        throw new EntityValidationError(refreshToken.notification.toJSON());
+      if (user.name !== input.name) {
+        user.changeName(input.name);
       }
 
-      await this.refreshTokenRepository.insert(refreshToken);
+      if (input.email !== user.email) {
+        user.changeEmail(input.email);
+      }
 
-      return {
-        userId: user.userId.toString(),
-        email: user.email,
-        name: user.name,
-        picture: user.picture,
-        isActive: user.isActive,
-      };
+      if (user.notification.hasErrors()) {
+        throw new EntityValidationError(user.notification.toJSON());
+      }
+
+      await this.userRepository.update(user);
     }
 
-    const newUser = UserFactory.create({
-      name: input.name,
-      email: input.email,
-      googleId: input.googleId,
-      picture: input.picture,
-    });
+    if (!user) {
+      user = UserFactory.create({
+        name: input.name,
+        email: input.email,
+        googleId: input.googleId,
+      });
 
-    if (newUser.notification.hasErrors()) {
-      throw new EntityValidationError(newUser.notification.toJSON());
+      if (user.notification.hasErrors()) {
+        throw new EntityValidationError(user.notification.toJSON());
+      }
+
+      await this.userRepository.insert(user);
     }
-
-    await this.userRepository.insert(newUser);
 
     const refreshToken = RefreshTokenFactory.create({
-      userId: newUser.userId,
       refreshTokenHash,
+      userId: user.userId,
     });
+
+    if (refreshToken.notification.hasErrors()) {
+      throw new EntityValidationError(refreshToken.notification.toJSON());
+    }
 
     await this.refreshTokenRepository.insert(refreshToken);
 
     return {
-      userId: newUser.userId.toString(),
-      email: newUser.email,
-      name: newUser.name,
-      picture: newUser.picture,
-      isActive: newUser.isActive,
+      userId: user.userId.toString(),
+      email: user.email,
+      name: user.name,
+      isActive: user.isActive,
     };
   }
 }
@@ -74,6 +73,5 @@ type LoginOutput = {
   userId: string;
   email: string;
   name: string;
-  picture: string | null;
   isActive: boolean;
 };

@@ -1,10 +1,9 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 
 type ConstructorProps = {
   googleId: string;
   email: string;
   name: string;
-  picture?: string;
   refreshToken: string;
 };
 
@@ -20,10 +19,6 @@ export class GoogleLoginInput {
   @IsNotEmpty()
   @IsString()
   name: string;
-
-  @IsOptional()
-  @IsString()
-  picture?: string;
 
   @IsNotEmpty()
   @IsString()

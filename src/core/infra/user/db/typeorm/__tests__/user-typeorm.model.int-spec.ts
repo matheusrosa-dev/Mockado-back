@@ -17,7 +17,6 @@ describe("User Model - Integration Tests", () => {
       "googleId",
       "email",
       "name",
-      "picture",
       "isActive",
       "createdAt",
     ]);
@@ -60,15 +59,6 @@ describe("User Model - Integration Tests", () => {
       type: "varchar",
       length: "100",
       isNullable: false,
-    });
-
-    const pictureColumn = columns.find(
-      (column) => column.propertyName === "picture",
-    );
-    expect(pictureColumn).toMatchObject({
-      type: "varchar",
-      length: "500",
-      isNullable: true,
     });
 
     const isActiveColumn = columns.find(
