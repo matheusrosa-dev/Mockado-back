@@ -5,7 +5,7 @@ type ConstructorProps = {
   refreshToken: string;
 };
 
-export class ValidateRefreshTokenInput {
+export class ValidateAndRemoveRefreshTokenInput {
   @IsNotEmpty()
   @IsString()
   @Matches(/^\d+$/)

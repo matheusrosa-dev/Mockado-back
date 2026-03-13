@@ -5,6 +5,10 @@ import { OAuth2Client, TokenPayload } from "google-auth-library";
 import { IAuthConfig } from "../configs/configs.interface";
 import { GoogleLoginUseCase } from "@app/auth/google-login/google-login.use-case";
 import { GoogleLoginDto } from "./dtos/google-login.dto";
+import { ValidateAndRemoveRefreshTokenUseCase } from "@app/auth/validate-and-remove-refresh-token/validate-and-remove-refresh-token.use-case";
+import { ICurrentSession } from "../shared/decorators/current-session.decorator";
+import { ValidateAndRemoveRefreshTokenInput } from "@app/auth/validate-and-remove-refresh-token/validate-and-remove-refresh-token.input";
+import { validateSync } from "class-validator";
 
 @Injectable()
 export class AuthService {
@@ -15,6 +19,7 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private googleLoginUseCase: GoogleLoginUseCase,
+    private validateRefreshTokenUseCase: ValidateAndRemoveRefreshTokenUseCase,
   ) {
     const clientId = this.configService.get("auth.googleClientId") as string;
 
@@ -33,8 +38,8 @@ export class AuthService {
       });
 
       payload = ticket.getPayload();
-    } catch {
-      throw new UnauthorizedException("Invalid Google token");
+    } catch (e) {
+      console.error("Error verifying Google token:", e);
     }
 
     if (!payload) {
@@ -66,8 +71,33 @@ export class AuthService {
     };
   }
 
-  async refreshTokens(userId: string, refreshToken: string) {}
+  async refreshTokens(session: ICurrentSession) {
+    const input = new ValidateAndRemoveRefreshTokenInput({
+      googleId: session.googleId,
+      refreshToken: session.refreshToken,
+    });
 
+    // TODO: TESTAR
+    validateSync(input);
+
+    const isValid = await this.validateRefreshTokenUseCase.execute(input);
+
+    if (!isValid) {
+      throw new UnauthorizedException("Invalid refresh token");
+    }
+
+    const tokens = await this.getAuthTokens({
+      name: session.name,
+      email: session.email,
+      googleId: session.googleId,
+    });
+
+    // TODO: SALVAR REFRESH TOKEN
+
+    return tokens;
+  }
+
+  // biome-ignore lint/suspicious/noExplicitAny: <Payload can be any>
   private async getAuthTokens(payload: any) {
     const authConfig = this.configService.get<IAuthConfig>("auth")!;
 

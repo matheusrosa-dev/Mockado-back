@@ -4,7 +4,12 @@ import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
 import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
 import { RefreshTokenTypeOrmRepository } from "../refresh-token-typeorm.repository";
 import { UserFactory } from "@domain/user/user.entity";
-import { RefreshTokenFactory } from "@domain/refresh-token/refresh-token.entity";
+import {
+  RefreshToken,
+  RefreshTokenFactory,
+} from "@domain/refresh-token/refresh-token.entity";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { NotFoundError } from "@domain/shared/errors/not-found.error";
 
 describe("Refresh Token TypeOrm Repository - Integration Tests", () => {
   const { dataSource } = setupTypeOrm({
@@ -48,6 +53,41 @@ describe("Refresh Token TypeOrm Repository - Integration Tests", () => {
         refreshToken.refreshTokenHash,
       );
       expect(foundRefreshTokens[0].createdAt).toEqual(refreshToken.createdAt);
+    });
+  });
+
+  describe("delete()", () => {
+    it("should delete an existing refresh token", async () => {
+      const user = UserFactory.fake().oneUser().build();
+      const refreshToken = RefreshTokenFactory.fake()
+        .oneRefreshToken()
+        .withUserId(user.userId)
+        .withGoogleId(user.googleId)
+        .build();
+
+      await userRepository.insert(user);
+      await refreshTokenRepository.insert(refreshToken);
+
+      const foundTokensBeforeDelete =
+        await refreshTokenRepository.findManyByAnyId({
+          userId: refreshToken.userId,
+        });
+      expect(foundTokensBeforeDelete).toHaveLength(1);
+
+      await refreshTokenRepository.delete(refreshToken.refreshTokenId);
+      const foundTokensAfterDelete =
+        await refreshTokenRepository.findManyByAnyId({
+          userId: refreshToken.userId,
+        });
+      expect(foundTokensAfterDelete).toHaveLength(0);
+    });
+
+    it("should throw NotFoundError when refresh token does not exist", async () => {
+      const uuid = new Uuid();
+
+      await expect(refreshTokenRepository.delete(uuid)).rejects.toThrow(
+        new NotFoundError(uuid, RefreshToken),
+      );
     });
   });
 

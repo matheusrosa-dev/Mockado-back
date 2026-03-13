@@ -4,6 +4,7 @@ import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.rep
 import { RefreshTokenModel } from "./refresh-token-typeorm.model";
 import { RefreshTokenModelMapper } from "./refresh-token-model-mapper";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { NotFoundError } from "@domain/shared/errors/not-found.error";
 
 export class RefreshTokenTypeOrmRepository implements IRefreshTokenRepository {
   private repository: Repository<RefreshTokenModel>;
@@ -36,8 +37,14 @@ export class RefreshTokenTypeOrmRepository implements IRefreshTokenRepository {
     throw new Error("Method not implemented.");
   }
 
-  async delete(): Promise<void> {
-    throw new Error("Method not implemented.");
+  async delete(refreshTokenId: Uuid): Promise<void> {
+    const { affected } = await this.repository.delete(
+      refreshTokenId.toString(),
+    );
+
+    if (!affected) {
+      throw new NotFoundError(refreshTokenId, this.getEntity());
+    }
   }
 
   async findById(): Promise<RefreshToken | null> {

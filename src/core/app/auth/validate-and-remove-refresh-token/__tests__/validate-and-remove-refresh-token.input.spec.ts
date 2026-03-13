@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <It has to allow any in tests> */
 import { validateSync } from "class-validator";
-import { ValidateRefreshTokenInput } from "../validate-refresh-token.input";
+import { ValidateAndRemoveRefreshTokenInput } from "../validate-and-remove-refresh-token.input";
 
 const validProps = {
   googleId: "123456789012345678901",
@@ -8,11 +8,11 @@ const validProps = {
 };
 
 function validate(props: object) {
-  const input = new ValidateRefreshTokenInput(props as any);
+  const input = new ValidateAndRemoveRefreshTokenInput(props as any);
   return validateSync(input);
 }
 
-describe("Validate Refresh Token Input - Unit Tests", () => {
+describe("Validate And Remove Refresh Token Input - Unit Tests", () => {
   describe("valid input", () => {
     it("should pass with valid props", () => {
       const errors = validate(validProps);

@@ -1,20 +1,20 @@
 import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
-import { ValidateRefreshTokenUseCase } from "../validate-refresh-token.use-case";
+import { ValidateAndRemoveRefreshTokenUseCase } from "../validate-and-remove-refresh-token.use-case";
 import { RefreshTokenInMemoryRepository } from "@infra/refresh-token/db/in-memory/refresh-token-in-memory.repository";
 import { RefreshTokenFactory } from "@domain/refresh-token/refresh-token.entity";
 import bcrypt from "bcrypt";
 
-describe("Validate Refresh Token Use Case - Unit Tests", () => {
-  let useCase: ValidateRefreshTokenUseCase;
+describe("Validate And Remove Refresh Token Use Case - Unit Tests", () => {
+  let useCase: ValidateAndRemoveRefreshTokenUseCase;
   let repository: IRefreshTokenRepository;
 
   beforeEach(() => {
     repository = new RefreshTokenInMemoryRepository();
-    useCase = new ValidateRefreshTokenUseCase(repository);
+    useCase = new ValidateAndRemoveRefreshTokenUseCase(repository);
   });
 
   describe("execute()", () => {
-    it("should return true for a valid refresh token", async () => {
+    it("should return true for a valid refresh token and remove it", async () => {
       const refreshToken = "refresh-token-123";
 
       const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
@@ -31,6 +31,11 @@ describe("Validate Refresh Token Use Case - Unit Tests", () => {
         refreshToken: refreshToken,
       });
 
+      const deletedToken = await repository.findManyByAnyId({
+        googleId: refreshTokenEntity.googleId,
+      });
+
+      expect(deletedToken).toHaveLength(0);
       expect(result).toBe(true);
     });
 

@@ -5,6 +5,7 @@ import { IUserRepository } from "@domain/user/user.repository";
 import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
 import { GoogleLoginUseCase } from "@app/auth/google-login/google-login.use-case";
 import { FactoryProvider } from "@nestjs/common";
+import { ValidateAndRemoveRefreshTokenUseCase } from "@app/auth/validate-and-remove-refresh-token/validate-and-remove-refresh-token.use-case";
 
 const REPOSITORIES = {
   USER: {
@@ -31,6 +32,13 @@ const USE_CASES = {
       return new GoogleLoginUseCase(endpointRepository, refreshTokenRepository);
     },
     inject: [REPOSITORIES.USER.provide, REPOSITORIES.REFRESH_TOKEN.provide],
+  } as FactoryProvider,
+  VALIDATE_REFRESH_TOKEN: {
+    provide: ValidateAndRemoveRefreshTokenUseCase,
+    useFactory: (refreshTokenRepository: IRefreshTokenRepository) => {
+      return new ValidateAndRemoveRefreshTokenUseCase(refreshTokenRepository);
+    },
+    inject: [REPOSITORIES.REFRESH_TOKEN.provide],
   } as FactoryProvider,
 };
 

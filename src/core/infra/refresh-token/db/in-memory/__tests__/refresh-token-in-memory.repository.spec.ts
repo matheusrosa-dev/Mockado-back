@@ -4,6 +4,7 @@ import {
   RefreshToken,
   RefreshTokenFactory,
 } from "@domain/refresh-token/refresh-token.entity";
+import { NotFoundError } from "@domain/shared/errors/not-found.error";
 
 describe("Refresh Token In Memory Repository - Unit Tests", () => {
   let repository: RefreshTokenInMemoryRepository;
@@ -37,6 +38,25 @@ describe("Refresh Token In Memory Repository - Unit Tests", () => {
       }
 
       expect(repository.items).toHaveLength(3);
+    });
+  });
+
+  describe("delete()", () => {
+    it("should delete an existing refresh token", async () => {
+      const refreshToken = RefreshTokenFactory.fake().oneRefreshToken().build();
+
+      await repository.insert(refreshToken);
+
+      await repository.delete(refreshToken.refreshTokenId as Uuid);
+      expect(repository.items).toHaveLength(0);
+    });
+
+    it("should throw NotFoundError when refresh token does not exist", async () => {
+      const uuid = new Uuid();
+
+      await expect(repository.delete(uuid)).rejects.toThrow(
+        new NotFoundError(uuid, RefreshToken),
+      );
     });
   });
 

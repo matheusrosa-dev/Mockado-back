@@ -1,5 +1,5 @@
 import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
-import { ValidateRefreshTokenUseCase } from "../validate-refresh-token.use-case";
+import { ValidateAndRemoveRefreshTokenUseCase } from "../validate-and-remove-refresh-token.use-case";
 import { RefreshTokenFactory } from "@domain/refresh-token/refresh-token.entity";
 import bcrypt from "bcrypt";
 import { RefreshTokenTypeOrmRepository } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
@@ -9,23 +9,23 @@ import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
 import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
 import { UserFactory } from "@domain/user/user.entity";
 
-describe("Validate Refresh Token Use Case - Integration Tests", () => {
+describe("Validate And Remove Refresh Token Use Case - Integration Tests", () => {
   const { dataSource } = setupTypeOrm({
     entities: [RefreshTokenModel, UserModel],
   });
 
-  let useCase: ValidateRefreshTokenUseCase;
+  let useCase: ValidateAndRemoveRefreshTokenUseCase;
   let refreshTokenRepository: IRefreshTokenRepository;
   let userRepository: UserTypeOrmRepository;
 
   beforeEach(() => {
     userRepository = new UserTypeOrmRepository(dataSource);
     refreshTokenRepository = new RefreshTokenTypeOrmRepository(dataSource);
-    useCase = new ValidateRefreshTokenUseCase(refreshTokenRepository);
+    useCase = new ValidateAndRemoveRefreshTokenUseCase(refreshTokenRepository);
   });
 
   describe("execute()", () => {
-    it("should return true for a valid refresh token", async () => {
+    it("should return true for a valid refresh token and remove it", async () => {
       const user = UserFactory.fake().oneUser().build();
       await userRepository.insert(user);
 
@@ -45,6 +45,11 @@ describe("Validate Refresh Token Use Case - Integration Tests", () => {
         refreshToken: refreshToken,
       });
 
+      const deletedToken = await refreshTokenRepository.findManyByAnyId({
+        googleId: refreshTokenEntity.googleId,
+      });
+
+      expect(deletedToken).toHaveLength(0);
       expect(result).toBe(true);
     });
 

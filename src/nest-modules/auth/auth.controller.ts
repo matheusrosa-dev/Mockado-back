@@ -50,7 +50,13 @@ export class AuthController {
   ) {
     console.log("Session: ", session);
 
-    return {};
+    const tokens = await this.authService.refreshTokens(session);
+
+    this.setAuthCookies({
+      response: res,
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    });
   }
 
   private setAuthCookies(props: {
