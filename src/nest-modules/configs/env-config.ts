@@ -22,6 +22,8 @@ export const authConfig = registerAs<IAuthConfig>("auth", () => ({
   googleClientId: process.env.GOOGLE_CLIENT_ID!,
   jwtSecret: process.env.JWT_SECRET!,
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET!,
+  jwtExpirationTime: Number(process.env.JWT_EXPIRATION_TIME),
+  jwtRefreshExpirationTime: Number(process.env.JWT_REFRESH_EXPIRATION_TIME),
 }));
 
 export const validationSchema = Joi.object({
@@ -54,4 +56,6 @@ export const validationSchema = Joi.object({
   GOOGLE_CLIENT_ID: Joi.string().required(),
   JWT_SECRET: Joi.string().required(),
   JWT_REFRESH_SECRET: Joi.string().required(),
+  JWT_EXPIRATION_TIME: Joi.number().required(),
+  JWT_REFRESH_EXPIRATION_TIME: Joi.number().required(),
 });

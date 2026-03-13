@@ -8,8 +8,6 @@ import { GoogleLoginDto } from "./dtos/google-login.dto";
 
 @Injectable()
 export class AuthService {
-  private jwtSecret: string;
-  private jwtRefreshSecret: string;
   private client: OAuth2Client;
   private clientId: string;
 
@@ -18,11 +16,7 @@ export class AuthService {
     private configService: ConfigService,
     private googleLoginUseCase: GoogleLoginUseCase,
   ) {
-    const authConfig = this.configService.get<IAuthConfig>("auth")!;
     const clientId = this.configService.get("auth.googleClientId") as string;
-
-    this.jwtSecret = authConfig.jwtSecret;
-    this.jwtRefreshSecret = authConfig.jwtRefreshSecret;
 
     this.clientId = clientId;
 
@@ -72,20 +66,20 @@ export class AuthService {
     };
   }
 
+  async refreshTokens(userId: string, refreshToken: string) {}
+
   private async getAuthTokens(payload: any) {
-    // TODO: add to env
-    const oneWeek = 60 * 60 * 24 * 7;
-    const fifteenMinutes = 60 * 15;
+    const authConfig = this.configService.get<IAuthConfig>("auth")!;
 
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
-        secret: this.jwtSecret,
-        expiresIn: fifteenMinutes,
+        secret: authConfig.jwtSecret,
+        expiresIn: authConfig.jwtExpirationTime,
       }),
 
       this.jwtService.signAsync(payload, {
-        secret: this.jwtRefreshSecret,
-        expiresIn: oneWeek,
+        secret: authConfig.jwtRefreshSecret,
+        expiresIn: authConfig.jwtRefreshExpirationTime,
       }),
     ]);
 

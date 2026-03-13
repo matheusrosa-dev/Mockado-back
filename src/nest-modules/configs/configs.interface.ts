@@ -16,4 +16,6 @@ export interface IAuthConfig {
   googleClientId: string;
   jwtSecret: string;
   jwtRefreshSecret: string;
+  jwtExpirationTime: number;
+  jwtRefreshExpirationTime: number;
 }
