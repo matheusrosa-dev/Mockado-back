@@ -9,6 +9,7 @@ import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
 import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
 import { RefreshTokenTypeOrmRepository } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { TypeOrmGoogleLoginUnitOfWork } from "@infra/auth/google-login/typeorm-google-login.unit-of-work";
 
 describe("Google Login Use Case - Integration Tests", () => {
   const { dataSource } = setupTypeOrm({
@@ -22,7 +23,9 @@ describe("Google Login Use Case - Integration Tests", () => {
   beforeEach(() => {
     userRepository = new UserTypeOrmRepository(dataSource);
     refreshTokenRepository = new RefreshTokenTypeOrmRepository(dataSource);
-    useCase = new GoogleLoginUseCase(userRepository, refreshTokenRepository);
+    useCase = new GoogleLoginUseCase(
+      new TypeOrmGoogleLoginUnitOfWork(dataSource),
+    );
   });
 
   describe("execute()", () => {

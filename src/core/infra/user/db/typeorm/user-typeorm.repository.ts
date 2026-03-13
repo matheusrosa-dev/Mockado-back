@@ -1,4 +1,4 @@
-import { DataSource, Repository } from "typeorm";
+import { DataSource, EntityManager, Repository } from "typeorm";
 import { User } from "@domain/user/user.entity";
 import { IUserRepository } from "@domain/user/user.repository";
 import { NotFoundError } from "@domain/shared/errors/not-found.error";
@@ -8,8 +8,8 @@ import { UserModelMapper } from "./user-model-mapper";
 export class UserTypeOrmRepository implements IUserRepository {
   private repository: Repository<UserModel>;
 
-  constructor(dataSource: DataSource) {
-    this.repository = dataSource.getRepository(UserModel);
+  constructor(dataSourceOrManager: DataSource | EntityManager) {
+    this.repository = dataSourceOrManager.getRepository(UserModel);
   }
 
   async insert(entity: User): Promise<void> {

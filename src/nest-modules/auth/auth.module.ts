@@ -15,6 +15,7 @@ import { AuthService } from "./auth.service";
   controllers: [AuthController],
   providers: [
     ...Object.values(AUTH_PROVIDERS.REPOSITORIES),
+    ...Object.values(AUTH_PROVIDERS.UNIT_OF_WORKS),
     ...Object.values(AUTH_PROVIDERS.USE_CASES),
     ...Object.values(AUTH_PROVIDERS.VALIDATORS),
     AccessTokenStrategy,

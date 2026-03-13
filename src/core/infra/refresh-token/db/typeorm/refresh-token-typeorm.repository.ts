@@ -1,4 +1,4 @@
-import { DataSource, Repository } from "typeorm";
+import { DataSource, EntityManager, Repository } from "typeorm";
 import { RefreshToken } from "@domain/refresh-token/refresh-token.entity";
 import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
 import { RefreshTokenModel } from "./refresh-token-typeorm.model";
@@ -9,8 +9,8 @@ import { NotFoundError } from "@domain/shared/errors/not-found.error";
 export class RefreshTokenTypeOrmRepository implements IRefreshTokenRepository {
   private repository: Repository<RefreshTokenModel>;
 
-  constructor(dataSource: DataSource) {
-    this.repository = dataSource.getRepository(RefreshTokenModel);
+  constructor(dataSourceOrManager: DataSource | EntityManager) {
+    this.repository = dataSourceOrManager.getRepository(RefreshTokenModel);
   }
 
   async insert(entity: RefreshToken): Promise<void> {

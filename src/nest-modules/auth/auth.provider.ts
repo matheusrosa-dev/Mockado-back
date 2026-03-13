@@ -1,12 +1,16 @@
 import { DataSource } from "typeorm";
 import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
 import { RefreshTokenTypeOrmRepository } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
-import { IUserRepository } from "@domain/user/user.repository";
 import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
 import { GoogleLoginUseCase } from "@app/auth/use-cases/google-login/google-login.use-case";
 import { FactoryProvider } from "@nestjs/common";
 import { RefreshTokenExistsValidator } from "@app/auth/validations/refresh-token-exists/refresh-token-exists.validator";
 import { ReplaceRefreshTokenUseCase } from "@app/auth/use-cases/replace-refresh-token/replace-refresh-token.use-case";
+import {
+  GOOGLE_LOGIN_UNIT_OF_WORK,
+  IGoogleLoginUnitOfWork,
+} from "@app/auth/use-cases/google-login/google-login.unit-of-work";
+import { TypeOrmGoogleLoginUnitOfWork } from "@infra/auth/google-login/typeorm-google-login.unit-of-work";
 
 const REPOSITORIES = {
   USER: {
@@ -23,16 +27,23 @@ const REPOSITORIES = {
   } as FactoryProvider,
 };
 
+const UNIT_OF_WORKS = {
+  GOOGLE_LOGIN: {
+    provide: GOOGLE_LOGIN_UNIT_OF_WORK,
+    useFactory: (dataSource: DataSource) => {
+      return new TypeOrmGoogleLoginUnitOfWork(dataSource);
+    },
+    inject: [DataSource],
+  } as FactoryProvider,
+};
+
 const USE_CASES = {
   GOOGLE_LOGIN: {
     provide: GoogleLoginUseCase,
-    useFactory: (
-      endpointRepository: IUserRepository,
-      refreshTokenRepository: IRefreshTokenRepository,
-    ) => {
-      return new GoogleLoginUseCase(endpointRepository, refreshTokenRepository);
+    useFactory: (googleLoginUnitOfWork: IGoogleLoginUnitOfWork) => {
+      return new GoogleLoginUseCase(googleLoginUnitOfWork);
     },
-    inject: [REPOSITORIES.USER.provide, REPOSITORIES.REFRESH_TOKEN.provide],
+    inject: [UNIT_OF_WORKS.GOOGLE_LOGIN.provide],
   } as FactoryProvider,
   REPLACE_REFRESH_TOKEN: {
     provide: ReplaceRefreshTokenUseCase,
@@ -55,6 +66,7 @@ const VALIDATORS = {
 
 export const AUTH_PROVIDERS = {
   REPOSITORIES,
+  UNIT_OF_WORKS,
   USE_CASES,
   VALIDATORS,
 };

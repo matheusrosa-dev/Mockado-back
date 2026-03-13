@@ -5,6 +5,20 @@ import { UserInMemoryRepository } from "@infra/user/db/in-memory/user-in-memory.
 import { RefreshTokenInMemoryRepository } from "@infra/refresh-token/db/in-memory/refresh-token-in-memory.repository";
 import { UserFactory } from "@domain/user/user.entity";
 import { EntityValidationError } from "@domain/shared/validators/validation.error";
+import {
+  GoogleLoginRepositories,
+  IGoogleLoginUnitOfWork,
+} from "../google-login.unit-of-work";
+
+class FakeGoogleLoginUnitOfWork implements IGoogleLoginUnitOfWork {
+  constructor(private readonly repositories: GoogleLoginRepositories) {}
+
+  async runInTransaction<T>(
+    work: (repositories: GoogleLoginRepositories) => Promise<T>,
+  ): Promise<T> {
+    return work(this.repositories);
+  }
+}
 
 describe("Google Login Use Case - Unit Tests", () => {
   let useCase: GoogleLoginUseCase;
@@ -14,7 +28,11 @@ describe("Google Login Use Case - Unit Tests", () => {
   beforeEach(() => {
     userRepository = new UserInMemoryRepository();
     refreshTokenRepository = new RefreshTokenInMemoryRepository();
-    useCase = new GoogleLoginUseCase(userRepository, refreshTokenRepository);
+    const unitOfWork = new FakeGoogleLoginUnitOfWork({
+      userRepository,
+      refreshTokenRepository,
+    });
+    useCase = new GoogleLoginUseCase(unitOfWork);
   });
 
   describe("execute()", () => {
