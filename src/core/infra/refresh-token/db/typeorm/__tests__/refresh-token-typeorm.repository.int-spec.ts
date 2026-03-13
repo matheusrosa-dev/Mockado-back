@@ -31,9 +31,9 @@ describe("Refresh Token TypeOrm Repository - Integration Tests", () => {
 
       await refreshTokenRepository.insert(refreshToken);
 
-      const foundRefreshTokens = await refreshTokenRepository.findManyByUserId(
-        refreshToken.userId,
-      );
+      const foundRefreshTokens = await refreshTokenRepository.findManyByAnyId({
+        userId: refreshToken.userId,
+      });
 
       expect(foundRefreshTokens).toHaveLength(1);
       expect(
@@ -51,19 +51,30 @@ describe("Refresh Token TypeOrm Repository - Integration Tests", () => {
     });
   });
 
-  describe("findManyByUserId()", () => {
-    it("should return empty array when user has no refresh tokens", async () => {
+  describe("findManyByAnyId()", () => {
+    it("should return empty array when userId has no refresh tokens", async () => {
       const user = UserFactory.fake().oneUser().build();
       await userRepository.insert(user);
 
-      const foundTokens = await refreshTokenRepository.findManyByUserId(
-        user.userId,
-      );
+      const foundTokens = await refreshTokenRepository.findManyByAnyId({
+        userId: user.userId,
+      });
 
       expect(foundTokens).toHaveLength(0);
     });
 
-    it("should return all refresh tokens for a user", async () => {
+    it("should return empty array when googleId has no refresh tokens", async () => {
+      const user = UserFactory.fake().oneUser().build();
+      await userRepository.insert(user);
+
+      const foundTokens = await refreshTokenRepository.findManyByAnyId({
+        googleId: user.googleId,
+      });
+
+      expect(foundTokens).toHaveLength(0);
+    });
+
+    it("should return all refresh tokens for a userId", async () => {
       const user = UserFactory.fake().oneUser().build();
       await userRepository.insert(user);
 
@@ -75,9 +86,9 @@ describe("Refresh Token TypeOrm Repository - Integration Tests", () => {
       await refreshTokenRepository.insert(firstRefreshToken);
       await refreshTokenRepository.insert(secondRefreshToken);
 
-      const foundTokens = await refreshTokenRepository.findManyByUserId(
-        user.userId,
-      );
+      const foundTokens = await refreshTokenRepository.findManyByAnyId({
+        userId: user.userId,
+      });
 
       expect(foundTokens).toHaveLength(2);
       const ids = foundTokens.map((refreshToken) =>
@@ -87,7 +98,32 @@ describe("Refresh Token TypeOrm Repository - Integration Tests", () => {
       expect(ids).toContain(secondRefreshToken.refreshTokenId.toString());
     });
 
-    it("should not return tokens from other users", async () => {
+    it("should return all refresh tokens for a googleId", async () => {
+      const user = UserFactory.fake().oneUser().build();
+      await userRepository.insert(user);
+
+      const [firstRefreshToken, secondRefreshToken] = RefreshTokenFactory.fake()
+        .manyRefreshTokens(2)
+        .withUserId(user.userId)
+        .withGoogleId(user.googleId)
+        .build();
+
+      await refreshTokenRepository.insert(firstRefreshToken);
+      await refreshTokenRepository.insert(secondRefreshToken);
+
+      const foundTokens = await refreshTokenRepository.findManyByAnyId({
+        googleId: user.googleId,
+      });
+
+      expect(foundTokens).toHaveLength(2);
+      const ids = foundTokens.map((refreshToken) =>
+        refreshToken.refreshTokenId.toString(),
+      );
+      expect(ids).toContain(firstRefreshToken.refreshTokenId.toString());
+      expect(ids).toContain(secondRefreshToken.refreshTokenId.toString());
+    });
+
+    it("should not return tokens from other userIds", async () => {
       const firstUser = UserFactory.fake().oneUser().build();
       const secondUser = UserFactory.fake().oneUser().build();
       await userRepository.insert(firstUser);
@@ -99,9 +135,29 @@ describe("Refresh Token TypeOrm Repository - Integration Tests", () => {
         .build();
       await refreshTokenRepository.insert(refreshToken);
 
-      const foundTokens = await refreshTokenRepository.findManyByUserId(
-        secondUser.userId,
-      );
+      const foundTokens = await refreshTokenRepository.findManyByAnyId({
+        userId: secondUser.userId,
+      });
+
+      expect(foundTokens).toHaveLength(0);
+    });
+
+    it("should not return tokens from other googleIds", async () => {
+      const firstUser = UserFactory.fake().oneUser().build();
+      const secondUser = UserFactory.fake().oneUser().build();
+      await userRepository.insert(firstUser);
+      await userRepository.insert(secondUser);
+
+      const refreshToken = RefreshTokenFactory.fake()
+        .oneRefreshToken()
+        .withUserId(firstUser.userId)
+        .withGoogleId(firstUser.googleId)
+        .build();
+      await refreshTokenRepository.insert(refreshToken);
+
+      const foundTokens = await refreshTokenRepository.findManyByAnyId({
+        googleId: secondUser.googleId,
+      });
 
       expect(foundTokens).toHaveLength(0);
     });

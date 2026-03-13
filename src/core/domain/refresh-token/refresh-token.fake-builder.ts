@@ -9,6 +9,8 @@ export class RefreshTokenFakeBuilder<TBuild = RefreshToken | RefreshToken[]> {
 
   private _refreshTokenId?: PropOrFactory<Uuid>;
   private _userId: PropOrFactory<Uuid> = () => new Uuid();
+  private _googleId: PropOrFactory<string> = () =>
+    this.chance.string({ length: 21, pool: "0123456789" });
   private _refreshTokenHash: PropOrFactory<string> = () =>
     this.chance.string({ length: 60 });
   private _createdAt?: PropOrFactory<Date>;
@@ -33,6 +35,11 @@ export class RefreshTokenFakeBuilder<TBuild = RefreshToken | RefreshToken[]> {
     return this;
   }
 
+  withGoogleId(valueOrFactory: PropOrFactory<string>) {
+    this._googleId = valueOrFactory;
+    return this;
+  }
+
   withRefreshTokenHash(valueOrFactory: PropOrFactory<string>) {
     this._refreshTokenHash = valueOrFactory;
     return this;
@@ -52,6 +59,7 @@ export class RefreshTokenFakeBuilder<TBuild = RefreshToken | RefreshToken[]> {
 
         userId: this.callFactory(this._userId),
         refreshTokenHash: this.callFactory(this._refreshTokenHash),
+        googleId: this.callFactory(this._googleId),
 
         ...(this._createdAt && {
           createdAt: this.callFactory(this._createdAt),

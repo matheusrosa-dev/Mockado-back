@@ -16,6 +16,7 @@ describe("RefreshToken Model Mapper - Integration", () => {
       expect(refreshTokenModel.refreshTokenHash).toBe(
         refreshToken.refreshTokenHash,
       );
+      expect(refreshTokenModel.googleId).toBe(refreshToken.googleId);
       expect(refreshTokenModel.createdAt).toEqual(refreshToken.createdAt);
     });
   });
@@ -35,6 +36,7 @@ describe("RefreshToken Model Mapper - Integration", () => {
       expect(mappedRefreshToken.userId.toString()).toBe(
         refreshToken.userId.toString(),
       );
+      expect(mappedRefreshToken.googleId).toBe(refreshToken.googleId);
       expect(mappedRefreshToken.refreshTokenHash).toBe(
         refreshToken.refreshTokenHash,
       );

@@ -45,9 +45,9 @@ describe("Google Login Use Case - Integration Tests", () => {
         googleId: user.googleId,
       });
 
-      const storedTokens = await refreshTokenRepository.findManyByUserId(
-        user.userId,
-      );
+      const storedTokens = await refreshTokenRepository.findManyByAnyId({
+        userId: user.userId,
+      });
       expect(storedTokens).toHaveLength(1);
       expect(typeof storedTokens[0].refreshTokenHash).toBe("string");
       expect(storedTokens[0].refreshTokenHash).not.toBe("refresh-token-123");
@@ -70,9 +70,9 @@ describe("Google Login Use Case - Integration Tests", () => {
         googleId: user.googleId,
       });
 
-      const storedTokens = await refreshTokenRepository.findManyByUserId(
-        new Uuid(result.userId),
-      );
+      const storedTokens = await refreshTokenRepository.findManyByAnyId({
+        userId: new Uuid(result.userId),
+      });
 
       expect(storedTokens).toHaveLength(1);
       expect(storedTokens[0].refreshTokenHash).not.toBe("refresh-token-456");

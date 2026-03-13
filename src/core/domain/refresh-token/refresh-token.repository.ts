@@ -3,5 +3,8 @@ import { IRepository } from "../shared/repositories/repository-interface";
 import { RefreshToken } from "./refresh-token.entity";
 
 export interface IRefreshTokenRepository extends IRepository<RefreshToken> {
-  findManyByUserId(userId: Uuid): Promise<RefreshToken[]>;
+  findManyByAnyId(props: {
+    googleId?: string;
+    userId?: Uuid;
+  }): Promise<RefreshToken[]>;
 }

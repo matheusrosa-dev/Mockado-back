@@ -18,9 +18,15 @@ export class RefreshTokenTypeOrmRepository implements IRefreshTokenRepository {
     await this.repository.save(model);
   }
 
-  async findManyByUserId(userId: Uuid): Promise<RefreshToken[]> {
+  async findManyByAnyId(props: {
+    googleId?: string;
+    userId?: Uuid;
+  }): Promise<RefreshToken[]> {
     const models = await this.repository.find({
-      where: { userId: userId.toString() },
+      where: {
+        userId: props.userId?.toString(),
+        googleId: props?.googleId,
+      },
     });
 
     return models.map((model) => RefreshTokenModelMapper.toEntity(model));

@@ -10,6 +10,7 @@ describe("Refresh Token Fake Builder - Unit Tests", () => {
 
       expect(fakeRefreshToken.refreshTokenId.toString()).toBeDefined();
       expect(fakeRefreshToken.userId.toString()).toBeDefined();
+      expect(fakeRefreshToken.googleId).toBeDefined();
       expect(fakeRefreshToken.refreshTokenHash).toBeDefined();
       expect(fakeRefreshToken.createdAt).toBeDefined();
     });
@@ -22,12 +23,14 @@ describe("Refresh Token Fake Builder - Unit Tests", () => {
         .oneRefreshToken()
         .withRefreshTokenId(id)
         .withUserId(userId)
+        .withGoogleId("123456789012345678901")
         .withRefreshTokenHash("custom-hash-string")
         .withCreatedAt(new Date("2024-01-01"))
         .build();
 
       expect(fakeRefreshToken.refreshTokenId.equals(id)).toBeTruthy();
       expect(fakeRefreshToken.userId.equals(userId)).toBeTruthy();
+      expect(fakeRefreshToken.googleId).toBe("123456789012345678901");
       expect(fakeRefreshToken.refreshTokenHash).toBe("custom-hash-string");
       expect(fakeRefreshToken.createdAt).toEqual(new Date("2024-01-01"));
     });
@@ -37,12 +40,14 @@ describe("Refresh Token Fake Builder - Unit Tests", () => {
         .oneRefreshToken()
         .withRefreshTokenId(() => new Uuid())
         .withUserId(() => new Uuid())
+        .withGoogleId(() => "123456789012345678901")
         .withRefreshTokenHash(() => "factory-hash")
         .withCreatedAt(() => new Date("2025-06-15"))
         .build();
 
       expect(fakeRefreshToken.refreshTokenId.toString()).toBeDefined();
       expect(fakeRefreshToken.userId.toString()).toBeDefined();
+      expect(fakeRefreshToken.googleId).toBe("123456789012345678901");
       expect(fakeRefreshToken.refreshTokenHash).toBe("factory-hash");
       expect(fakeRefreshToken.createdAt).toEqual(new Date("2025-06-15"));
     });
@@ -59,6 +64,7 @@ describe("Refresh Token Fake Builder - Unit Tests", () => {
       fakeRefreshTokens.forEach((refreshToken) => {
         expect(refreshToken.refreshTokenId.toString()).toBeDefined();
         expect(refreshToken.userId.toString()).toBeDefined();
+        expect(refreshToken.googleId).toBeDefined();
         expect(refreshToken.refreshTokenHash).toBeDefined();
         expect(refreshToken.createdAt).toBeDefined();
       });
@@ -73,6 +79,7 @@ describe("Refresh Token Fake Builder - Unit Tests", () => {
         .manyRefreshTokens(amount)
         .withRefreshTokenId(id)
         .withUserId(userId)
+        .withGoogleId("123456789012345678901")
         .withRefreshTokenHash("custom-hash-string")
         .withCreatedAt(new Date("2024-01-01"))
         .build();
@@ -81,6 +88,7 @@ describe("Refresh Token Fake Builder - Unit Tests", () => {
       fakeRefreshTokens.forEach((refreshToken) => {
         expect(refreshToken.refreshTokenId.equals(id)).toBeTruthy();
         expect(refreshToken.userId.equals(userId)).toBeTruthy();
+        expect(refreshToken.googleId).toBe("123456789012345678901");
         expect(refreshToken.refreshTokenHash).toBe("custom-hash-string");
         expect(refreshToken.createdAt).toEqual(new Date("2024-01-01"));
       });
@@ -91,12 +99,14 @@ describe("Refresh Token Fake Builder - Unit Tests", () => {
 
       const fakeRefreshTokens = RefreshTokenFactory.fake()
         .manyRefreshTokens(amount)
+        .withGoogleId(() => "123456789012345678901")
         .withRefreshTokenHash(() => "factory-hash")
         .withCreatedAt(() => new Date("2025-06-15"))
         .build();
 
       expect(fakeRefreshTokens).toHaveLength(amount);
       fakeRefreshTokens.forEach((refreshToken) => {
+        expect(refreshToken.googleId).toBe("123456789012345678901");
         expect(refreshToken.refreshTokenHash).toBe("factory-hash");
         expect(refreshToken.createdAt).toEqual(new Date("2025-06-15"));
       });

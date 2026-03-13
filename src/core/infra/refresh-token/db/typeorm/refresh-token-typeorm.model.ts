@@ -26,6 +26,14 @@ export class RefreshTokenModel {
   userId: string;
 
   @Column({
+    name: "google_id",
+    type: "varchar",
+    length: 255,
+    nullable: false,
+  })
+  googleId: string;
+
+  @Column({
     name: "refresh_token_hash",
     type: "varchar",
     length: 500,

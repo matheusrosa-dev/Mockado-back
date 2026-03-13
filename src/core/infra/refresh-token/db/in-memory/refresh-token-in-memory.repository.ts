@@ -7,8 +7,32 @@ export class RefreshTokenInMemoryRepository
   extends InMemoryRepository<RefreshToken>
   implements IRefreshTokenRepository
 {
-  async findManyByUserId(userId: Uuid): Promise<RefreshToken[]> {
-    return this.items.filter((item) => item.userId.equals(userId));
+  findManyByAnyId(props: {
+    googleId?: string;
+    userId?: Uuid;
+  }): Promise<RefreshToken[]> {
+    const { googleId, userId } = props;
+
+    const refreshTokens = this.items.filter((refreshToken) => {
+      if (googleId && userId) {
+        return (
+          refreshToken.googleId === googleId &&
+          refreshToken.userId.equals(userId)
+        );
+      }
+
+      if (googleId) {
+        return refreshToken.googleId === googleId;
+      }
+
+      if (userId) {
+        return refreshToken.userId.equals(userId);
+      }
+
+      return false;
+    });
+
+    return Promise.resolve(refreshTokens);
   }
 
   getEntity() {
