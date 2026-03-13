@@ -53,7 +53,7 @@ export class GoogleLoginUseCase
     const refreshToken = RefreshTokenFactory.create({
       refreshTokenHash,
       userId: user.userId,
-      googleId: user.googleId,
+      googleId: input.googleId,
     });
 
     if (refreshToken.notification.hasErrors()) {
