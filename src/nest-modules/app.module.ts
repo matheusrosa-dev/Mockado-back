@@ -5,7 +5,7 @@ import { ConfigsModule } from "./configs/configs.module";
 import { StatusCodesModule } from "./status-codes/status-codes.module";
 import { AuthModule } from "./auth/auth.module";
 import { APP_GUARD } from "@nestjs/core";
-import { AccessTokenGuard } from "./guards/access-token.guard";
+import { AccessTokenGuard } from "./shared/guards/access-token.guard";
 
 @Module({
   imports: [

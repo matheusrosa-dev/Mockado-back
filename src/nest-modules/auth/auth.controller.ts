@@ -1,15 +1,15 @@
 import { Body, Controller, Post, Res, UseGuards } from "@nestjs/common";
 import { GoogleLoginDto } from "./dtos/google-login.dto";
-import { Public } from "../decorators/public.decorator";
+import { Public } from "../shared/decorators/public.decorator";
 import { AuthService } from "./auth.service";
 import type { Response } from "express";
-import { RefreshTokenGuard } from "../guards/refresh-token.guard";
+import { RefreshTokenGuard } from "../shared/guards/refresh-token.guard";
 import { ConfigService } from "@nestjs/config";
 import { IAuthConfig } from "../configs/configs.interface";
 import {
   CurrentSession,
   type ICurrentSession,
-} from "../decorators/current-session.decorator";
+} from "../shared/decorators/current-session.decorator";
 
 @Controller("auth")
 export class AuthController {
