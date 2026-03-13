@@ -25,7 +25,6 @@ class RefreshTokenRules {
   })
   _googleId: string;
 
-  // TODO: VERIFICAR SE PRECISA DESSE OBJECT ASSIGN EM TODA A APLICACAO
   constructor(entity: RefreshToken) {
     Object.assign(this, entity);
   }

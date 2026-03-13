@@ -48,13 +48,19 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     @CurrentSession() session: ICurrentSession,
   ) {
-    const tokens = await this.authService.refreshTokens(session);
+    try {
+      const tokens = await this.authService.refreshTokens(session);
 
-    this.setAuthCookies({
-      response: res,
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
-    });
+      this.setAuthCookies({
+        response: res,
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+      });
+    } catch (error) {
+      this.removeAuthCookies(res);
+
+      throw error;
+    }
   }
 
   private setAuthCookies(props: {
@@ -78,5 +84,10 @@ export class AuthController {
       maxAge: authConfig.jwtRefreshExpirationTime * 1000,
       path: "/auth/refresh",
     });
+  }
+
+  private removeAuthCookies(response: Response) {
+    response.clearCookie("access_token");
+    response.clearCookie("refresh_token", { path: "/auth/refresh" });
   }
 }
