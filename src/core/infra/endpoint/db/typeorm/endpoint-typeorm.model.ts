@@ -1,14 +1,30 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+  type Relation,
+} from "typeorm";
 import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
+import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
 
 @Entity({ name: "endpoints" })
 export class EndpointModel {
   @PrimaryColumn({
-    name: "endpoint_id",
+    name: "id",
     type: "uuid",
     nullable: false,
   })
   endpointId: string;
+
+  @Column({
+    name: "user_id",
+    type: "uuid",
+    nullable: false,
+  })
+  userId: string;
 
   @Column({ type: "varchar", length: 50, nullable: false })
   title: string;
@@ -56,4 +72,15 @@ export class EndpointModel {
 
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
+
+  @ManyToOne(
+    () => UserModel,
+    (user) => user.endpoints,
+    {
+      nullable: false,
+      onDelete: "CASCADE",
+    },
+  )
+  @JoinColumn({ name: "user_id" })
+  user: Relation<UserModel>;
 }

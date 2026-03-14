@@ -7,11 +7,12 @@ import {
   type Relation,
 } from "typeorm";
 import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
 
 @Entity({ name: "users" })
 export class UserModel {
   @PrimaryColumn({
-    name: "user_id",
+    name: "id",
     type: "uuid",
     nullable: false,
   })
@@ -48,4 +49,10 @@ export class UserModel {
     (refreshToken) => refreshToken.user,
   )
   refreshTokens: Relation<RefreshTokenModel[]>;
+
+  @OneToMany(
+    () => EndpointModel,
+    (endpoint) => endpoint.user,
+  )
+  endpoints: Relation<EndpointModel[]>;
 }

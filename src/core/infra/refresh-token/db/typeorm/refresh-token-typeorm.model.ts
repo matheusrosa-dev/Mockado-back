@@ -12,7 +12,7 @@ import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
 @Entity({ name: "refresh_tokens" })
 export class RefreshTokenModel {
   @PrimaryColumn({
-    name: "refresh_token_id",
+    name: "id",
     type: "uuid",
     nullable: false,
   })

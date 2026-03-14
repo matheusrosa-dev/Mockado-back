@@ -2,9 +2,8 @@ import { DataSource, Repository } from "typeorm";
 import { Endpoint } from "@domain/endpoint/endpoint.entity";
 import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
 import { EndpointModel } from "./endpoint-typeorm.model";
-import { EndpointModelMapper } from "./endpoint-model-mapper";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
+import { EndpointModelMapper } from "./endpoint-model-mapper";
 
 export class EndpointTypeOrmRepository implements IEndpointRepository {
   private repository: Repository<EndpointModel>;
@@ -19,26 +18,21 @@ export class EndpointTypeOrmRepository implements IEndpointRepository {
     await this.repository.save(model);
   }
 
-  async update(entity: Endpoint): Promise<void> {
-    const model = EndpointModelMapper.toModel(entity);
-    const { affected } = await this.repository.update(model.endpointId, model);
-
-    if (!affected) {
-      throw new NotFoundError(entity.endpointId.toString(), this.getEntity());
+  async findByIdWithUserId(props: {
+    endpointId: Uuid;
+    googleId?: string;
+    userId?: Uuid;
+  }) {
+    if (!props.userId && !props.googleId) {
+      throw new Error("Either userId or googleId must be provided");
     }
-  }
 
-  async delete(endpointId: Uuid): Promise<void> {
-    const { affected } = await this.repository.delete(endpointId.toString());
-
-    if (!affected) {
-      throw new NotFoundError(endpointId.toString(), this.getEntity());
-    }
-  }
-
-  async findById(endpointId: Uuid): Promise<Endpoint | null> {
-    const model = await this.repository.findOneBy({
-      endpointId: endpointId.toString(),
+    const model = await this.repository.findOne({
+      where: {
+        endpointId: props.endpointId.toString(),
+        ...(props.userId && { userId: props.userId.toString() }),
+        ...(props.googleId && { user: { googleId: props.googleId } }),
+      },
     });
 
     if (!model) {
@@ -48,16 +42,16 @@ export class EndpointTypeOrmRepository implements IEndpointRepository {
     return EndpointModelMapper.toEntity(model);
   }
 
-  async findAll(): Promise<Endpoint[]> {
-    const models = await this.repository.find({
-      order: { createdAt: "ASC" },
-    });
+  async findSummaryByUserId(props: { userId?: Uuid; googleId?: string }) {
+    if (!props.userId && !props.googleId) {
+      throw new Error("Either userId or googleId must be provided");
+    }
 
-    return models.map((model) => EndpointModelMapper.toEntity(model));
-  }
-
-  async findAllSummary() {
     const models = await this.repository.find({
+      where: {
+        ...(props.userId && { userId: props.userId.toString() }),
+        ...(props.googleId && { user: { googleId: props.googleId } }),
+      },
       order: { createdAt: "ASC" },
       select: {
         endpointId: true,
@@ -73,6 +67,23 @@ export class EndpointTypeOrmRepository implements IEndpointRepository {
     }));
   }
 
+  delete(): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
+  findAll(): Promise<Endpoint[]> {
+    throw new Error("Method not implemented.");
+  }
+
+  findById(): Promise<Endpoint | null> {
+    throw new Error("Method not implemented.");
+  }
+
+  update(): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
+  // TODO: checar se tem necessidade depois de remover os in memory repositories
   getEntity() {
     return Endpoint;
   }
