@@ -54,6 +54,7 @@ describe("Endpoint Output Mapper - Unit Tests", () => {
     it("should include responseText when responseBodyType is TEXT", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.TEXT)
         .withResponseText("hello world")
         .build();
