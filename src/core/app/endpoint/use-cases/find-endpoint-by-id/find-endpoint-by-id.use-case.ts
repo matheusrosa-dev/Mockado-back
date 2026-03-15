@@ -1,6 +1,6 @@
 import { IUseCase } from "../../../shared/use-case.interface";
 import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
-import { FindEndpointInput } from "./find-endpoint.input";
+import { FindEndpointByIdInput } from "./find-endpoint-by-id.input";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import {
   EndpointOutput,
@@ -9,12 +9,12 @@ import {
 import { NotFoundError } from "@domain/shared/errors/not-found.error";
 import { Endpoint } from "@domain/endpoint/endpoint.entity";
 
-export class FindEndpointUseCase
-  implements IUseCase<FindEndpointInput, EndpointOutput>
+export class FindEndpointByIdUseCase
+  implements IUseCase<FindEndpointByIdInput, EndpointOutput>
 {
   constructor(private endpointRepository: IEndpointRepository) {}
 
-  async execute(input: FindEndpointInput): Promise<EndpointOutput> {
+  async execute(input: FindEndpointByIdInput): Promise<EndpointOutput> {
     const endpointId = new Uuid(input.endpointId);
 
     const endpoint = await this.endpointRepository.findByIdWithUserId({

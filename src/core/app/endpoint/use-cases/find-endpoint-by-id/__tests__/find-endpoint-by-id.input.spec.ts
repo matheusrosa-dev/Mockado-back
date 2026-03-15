@@ -1,14 +1,14 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <It has to allow any in tests> */
 import { validateSync } from "class-validator";
-import { FindEndpointInput } from "../find-endpoint.input";
+import { FindEndpointByIdInput } from "../find-endpoint-by-id.input";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 
 function validate(props: object) {
-  const input = new FindEndpointInput(props as any);
+  const input = new FindEndpointByIdInput(props as any);
   return validateSync(input);
 }
 
-describe("Find Endpoint Input - Unit Tests", () => {
+describe("Find Endpoint By Id Input - Unit Tests", () => {
   it("should fail when endpointId is empty", () => {
     const errors = validate({ endpointId: "", userId: new Uuid().id });
 

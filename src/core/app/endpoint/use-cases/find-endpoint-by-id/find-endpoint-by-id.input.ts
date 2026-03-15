@@ -6,7 +6,7 @@ type ConstructorProps = {
   googleId?: string;
 };
 
-export class FindEndpointInput {
+export class FindEndpointByIdInput {
   @IsNotEmpty()
   @IsUUID()
   endpointId: string;

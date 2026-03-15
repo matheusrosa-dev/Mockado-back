@@ -1,5 +1,5 @@
 import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
-import { FindEndpointUseCase } from "../find-endpoint.use-case";
+import { FindEndpointByIdUseCase } from "../find-endpoint-by-id.use-case";
 import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import { NotFoundError } from "@domain/shared/errors/not-found.error";
@@ -14,8 +14,8 @@ import { IUserRepository } from "@domain/user/user.repository";
 import { UserFactory } from "@domain/user/user.entity";
 import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
 
-describe("Find Endpoint Use Case - Integration Tests", () => {
-  let useCase: FindEndpointUseCase;
+describe("Find Endpoint By Id Use Case - Integration Tests", () => {
+  let useCase: FindEndpointByIdUseCase;
   let endpointRepository: IEndpointRepository;
   let userRepository: IUserRepository;
 
@@ -27,7 +27,7 @@ describe("Find Endpoint Use Case - Integration Tests", () => {
     endpointRepository = new EndpointTypeOrmRepository(dataSource);
     userRepository = new UserTypeOrmRepository(dataSource);
 
-    useCase = new FindEndpointUseCase(endpointRepository);
+    useCase = new FindEndpointByIdUseCase(endpointRepository);
   });
 
   describe("execute()", () => {

@@ -1,6 +1,6 @@
 import { CreateEndpointUseCase } from "@app/endpoint/use-cases/create-endpoint/create-endpoint.use-case";
 import { UpdateEndpointUseCase } from "@app/endpoint/use-cases/update-endpoint/update-endpoint.use-case";
-import { FindEndpointUseCase } from "@app/endpoint/use-cases/find-endpoint/find-endpoint.use-case";
+import { FindEndpointByIdUseCase } from "@app/endpoint/use-cases/find-endpoint-by-id/find-endpoint-by-id.use-case";
 import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
 import { CreateEndpointDto } from "./dtos/create-endpoint.dto";
 import { FindEndpointByIdDto } from "./dtos/find-endpoint-by-id.dto";
@@ -20,7 +20,7 @@ export class EndpointsController {
     private listEndpointsSummaryUseCase: ListEndpointsSummaryUseCase,
     private createEndpointUseCase: CreateEndpointUseCase,
     private updateEndpointUseCase: UpdateEndpointUseCase,
-    private findEndpointUseCase: FindEndpointUseCase,
+    private findEndpointByIdUseCase: FindEndpointByIdUseCase,
   ) {}
 
   @Post()
@@ -46,7 +46,7 @@ export class EndpointsController {
     @Param() params: FindEndpointByIdDto,
     @CurrentSession() session: ICurrentSession,
   ) {
-    return this.findEndpointUseCase.execute({
+    return this.findEndpointByIdUseCase.execute({
       googleId: session.googleId,
       endpointId: params.endpointId,
     });

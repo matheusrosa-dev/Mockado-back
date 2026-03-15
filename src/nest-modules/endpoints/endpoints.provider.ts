@@ -1,6 +1,6 @@
 import { CreateEndpointUseCase } from "@app/endpoint/use-cases/create-endpoint/create-endpoint.use-case";
 import { UpdateEndpointUseCase } from "@app/endpoint/use-cases/update-endpoint/update-endpoint.use-case";
-import { FindEndpointUseCase } from "@app/endpoint/use-cases/find-endpoint/find-endpoint.use-case";
+import { FindEndpointByIdUseCase } from "@app/endpoint/use-cases/find-endpoint-by-id/find-endpoint-by-id.use-case";
 import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
 import { EndpointTypeOrmRepository } from "@infra/endpoint/db/typeorm/endpoint-typeorm.repository";
 import { FactoryProvider } from "@nestjs/common";
@@ -43,9 +43,9 @@ const USE_CASES = {
   } as FactoryProvider,
 
   FIND_ENDPOINT: {
-    provide: FindEndpointUseCase,
+    provide: FindEndpointByIdUseCase,
     useFactory: (endpointRepository: IEndpointRepository) =>
-      new FindEndpointUseCase(endpointRepository),
+      new FindEndpointByIdUseCase(endpointRepository),
     inject: [REPOSITORIES.ENDPOINT.provide],
   } as FactoryProvider,
 
