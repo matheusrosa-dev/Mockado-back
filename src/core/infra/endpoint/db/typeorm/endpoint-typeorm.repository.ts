@@ -1,4 +1,4 @@
-import { DataSource, Repository } from "typeorm";
+import { DataSource, EntityManager, Repository } from "typeorm";
 import { Endpoint } from "@domain/endpoint/endpoint.entity";
 import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
 import { EndpointModel } from "./endpoint-typeorm.model";
@@ -9,7 +9,7 @@ import { NotFoundError } from "@domain/shared/errors/not-found.error";
 export class EndpointTypeOrmRepository implements IEndpointRepository {
   private repository: Repository<EndpointModel>;
 
-  constructor(dataSource: DataSource) {
+  constructor(dataSource: DataSource | EntityManager) {
     this.repository = dataSource.getRepository(EndpointModel);
   }
 

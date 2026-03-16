@@ -12,6 +12,10 @@ import {
 import { IHashService } from "@app/auth/services/hash.service";
 import { AuthenticationError } from "@domain/shared/errors/authentication.error";
 import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
+import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
+import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
+import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
+import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
 
 export class GoogleLoginUseCase
   implements IUseCase<GoogleLoginInput, GoogleLoginOutput>
@@ -27,9 +31,17 @@ export class GoogleLoginUseCase
     const googleUser = await this.googleAuthService.verifyToken(input.token);
 
     return this.unitOfWork.runInTransaction(async (repositories) => {
-      const { userRepository, refreshTokenRepository } = repositories;
+      const { userRepository, refreshTokenRepository, endpointRepository } =
+        repositories;
 
-      const user = await this.resolveUser(googleUser, userRepository);
+      const { isNewUser, user } = await this.resolveUser(
+        googleUser,
+        userRepository,
+      );
+
+      if (isNewUser) {
+        await this.createEndpointForNewUser(user, endpointRepository);
+      }
 
       const generatedTokens = await this.resolveTokens(
         user,
@@ -81,6 +93,7 @@ export class GoogleLoginUseCase
     userRepository: IUserRepository,
   ) {
     let user = await userRepository.findByGoogleId(googleUser.googleId);
+    const isNewUser = !user;
 
     if (user && !user.isActive) {
       throw new AuthenticationError("User account is inactive");
@@ -101,7 +114,10 @@ export class GoogleLoginUseCase
       });
     }
 
-    return user;
+    return {
+      isNewUser,
+      user,
+    };
   }
 
   private async updateUserIfDataIsDifferent(props: {
@@ -145,6 +161,22 @@ export class GoogleLoginUseCase
     await userRepository.insert(user);
 
     return user;
+  }
+
+  private async createEndpointForNewUser(
+    user: User,
+    endpointRepository: IEndpointRepository,
+  ) {
+    const endpoint = EndpointFactory.create({
+      userId: user.userId,
+      title: "My First Endpoint",
+      method: HttpMethod.GET,
+      statusCode: new StatusCode(200),
+      responseBodyType: ResponseBodyType.JSON,
+      responseJson: '{\n  "message": "Hello, World!"\n}',
+    });
+
+    await endpointRepository.insert(endpoint);
   }
 }
 

@@ -27,12 +27,12 @@ describe("TypeOrm Replace Refresh Token Unit Of Work - Integration Tests", () =>
     const user = UserFactory.fake().oneUser().build();
     await userRepository.insert(user);
 
-    await unitOfWork.runInTransaction(async (repositories) => {
-      const refreshToken = RefreshTokenFactory.fake()
-        .oneRefreshToken()
-        .withUserId(user.userId)
-        .build();
+    const refreshToken = RefreshTokenFactory.fake()
+      .oneRefreshToken()
+      .withUserId(user.userId)
+      .build();
 
+    await unitOfWork.runInTransaction(async (repositories) => {
       await repositories.refreshTokenRepository.insert(refreshToken);
     });
 
@@ -45,18 +45,16 @@ describe("TypeOrm Replace Refresh Token Unit Of Work - Integration Tests", () =>
 
   it("should rollback all writes when transaction fails", async () => {
     const user = UserFactory.fake().oneUser().build();
-
     await userRepository.insert(user);
+
+    const refreshToken = RefreshTokenFactory.fake()
+      .oneRefreshToken()
+      .withUserId(user.userId)
+      .build();
 
     await expect(
       unitOfWork.runInTransaction(async (repositories) => {
-        const refreshToken = RefreshTokenFactory.fake()
-          .oneRefreshToken()
-          .withUserId(user.userId)
-          .build();
-
         await repositories.refreshTokenRepository.insert(refreshToken);
-
         throw new Error("force rollback");
       }),
     ).rejects.toThrow("force rollback");

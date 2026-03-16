@@ -14,6 +14,8 @@ import { IGoogleAuthService } from "@app/auth/services/google-auth.service";
 import { BcryptHashService } from "@infra/auth/services/bcrypt-hash.service";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import { AuthenticationError } from "@domain/shared/errors/authentication.error";
+import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
+import { EndpointTypeOrmRepository } from "@infra/endpoint/db/typeorm/endpoint-typeorm.repository";
 
 class FakeGoogleAuthService implements IGoogleAuthService {
   verifyToken() {
@@ -33,6 +35,7 @@ describe("Google Login Use Case - Integration Tests", () => {
   let useCase: GoogleLoginUseCase;
   let userRepository: IUserRepository;
   let refreshTokenRepository: IRefreshTokenRepository;
+  let endpointRepository: IEndpointRepository;
 
   const hashService = new BcryptHashService();
   const googleAuthService = new FakeGoogleAuthService();
@@ -46,6 +49,7 @@ describe("Google Login Use Case - Integration Tests", () => {
   beforeEach(() => {
     userRepository = new UserTypeOrmRepository(dataSource);
     refreshTokenRepository = new RefreshTokenTypeOrmRepository(dataSource);
+    endpointRepository = new EndpointTypeOrmRepository(dataSource);
     useCase = new GoogleLoginUseCase(
       new TypeOrmGoogleLoginUnitOfWork(dataSource),
       tokenService,
@@ -86,6 +90,38 @@ describe("Google Login Use Case - Integration Tests", () => {
 
       expect(storedTokens).toHaveLength(1);
       expect(typeof storedTokens[0].refreshTokenHash).toBe("string");
+    });
+
+    it("should create an endpoint for a new user", async () => {
+      const { user } = await useCase.execute({
+        token: "fake-token",
+      });
+
+      const endpoints = await endpointRepository.findSummaryByUserId(
+        new Uuid(user.id),
+      );
+      expect(endpoints).toHaveLength(1);
+    });
+
+    it("should not create a new endpoint if the user already exists", async () => {
+      const user = UserFactory.fake()
+        .oneUser()
+        .withIsActive(true)
+        .withGoogleId("1".repeat(21))
+        .withEmail("fake@email.com")
+        .withName("Fake User")
+        .build();
+
+      await userRepository.insert(user);
+
+      await useCase.execute({
+        token: "fake-token",
+      });
+
+      const endpoints = await endpointRepository.findSummaryByUserId(
+        user.userId,
+      );
+      expect(endpoints).toHaveLength(0);
     });
 
     it("should create a new user and hash a refreshToken", async () => {
@@ -132,6 +168,7 @@ describe("Google Login Use Case - Integration Tests", () => {
     it("should update user name and email if they differ from input", async () => {
       const user = UserFactory.fake()
         .oneUser()
+        .withIsActive(true)
         .withGoogleId("1".repeat(21))
         .build();
 
