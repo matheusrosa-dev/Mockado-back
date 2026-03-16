@@ -1,7 +1,6 @@
 import { Body, Controller, Post, Res, UseGuards } from "@nestjs/common";
 import { GoogleLoginDto } from "./dtos/google-login.dto";
 import { Public } from "../shared/decorators/public.decorator";
-import { AuthService } from "./auth.service";
 import type { Response } from "express";
 import { RefreshTokenGuard } from "../shared/guards/refresh-token.guard";
 import { ConfigService } from "@nestjs/config";
@@ -10,12 +9,17 @@ import {
   CurrentSession,
   type ICurrentSession,
 } from "../shared/decorators/current-session.decorator";
+import { GoogleLoginUseCase } from "@app/auth/use-cases/google-login/google-login.use-case";
+import { LogoutUseCase } from "@app/auth/use-cases/logout/logout.use-case";
+import { ReplaceRefreshTokenUseCase } from "@app/auth/use-cases/replace-refresh-token/replace-refresh-token.use-case";
 
 @Controller("auth")
 export class AuthController {
   constructor(
-    private authService: AuthService,
     private configService: ConfigService,
+    private googleLoginUseCase: GoogleLoginUseCase,
+    private logoutUseCase: LogoutUseCase,
+    private replaceRefreshTokenUseCase: ReplaceRefreshTokenUseCase,
   ) {}
 
   @Public()
@@ -24,8 +28,10 @@ export class AuthController {
     @Body() loginDto: GoogleLoginDto,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const { accessToken, refreshToken, ...output } =
-      await this.authService.googleLogin(loginDto);
+    const { accessToken, refreshToken, user } =
+      await this.googleLoginUseCase.execute({
+        token: loginDto.googleToken,
+      });
 
     this.setAuthCookies({
       response,
@@ -35,7 +41,9 @@ export class AuthController {
 
     // TODO: ADICIONAR AQUELES TRANSFORM PRA LIMITAR CAMPOS A SEREM RETORNADOS
 
-    return output;
+    return {
+      user,
+    };
   }
 
   @Public()
@@ -45,19 +53,21 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
     @CurrentSession() session: ICurrentSession,
   ) {
-    try {
-      const tokens = await this.authService.refreshTokens(session);
-
-      this.setAuthCookies({
-        response,
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
+    const { accessToken, refreshToken, user } =
+      await this.replaceRefreshTokenUseCase.execute({
+        userId: session.userId,
+        refreshToken: session.refreshToken,
       });
-    } catch (error) {
-      this.removeAuthCookies(response);
 
-      throw error;
-    }
+    this.setAuthCookies({
+      response,
+      accessToken,
+      refreshToken,
+    });
+
+    return {
+      user,
+    };
   }
 
   @Post("logout")
@@ -65,7 +75,10 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
     @CurrentSession() session: ICurrentSession,
   ) {
-    await this.authService.logout(session);
+    await this.logoutUseCase.execute({
+      refreshToken: session.refreshToken,
+      userId: session.userId,
+    });
 
     this.removeAuthCookies(response);
   }

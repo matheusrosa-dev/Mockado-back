@@ -41,6 +41,7 @@ describe("Endpoint Output Mapper - Unit Tests", () => {
     it("should include responseJson when responseBodyType is JSON", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
+        .withStatusCode(new StatusCode(200))
         .withResponseBodyType(ResponseBodyType.JSON)
         .withResponseJson('{"ok":true}')
         .build();

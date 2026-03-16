@@ -44,7 +44,6 @@ describe("Find Endpoint By Id Use Case - Integration Tests", () => {
       await expect(
         useCase.execute({
           endpointId: endpoint.endpointId.toString(),
-          googleId: "some-google-id",
           userId: new Uuid().id,
         }),
       ).rejects.toThrow(NotFoundError);
@@ -64,7 +63,6 @@ describe("Find Endpoint By Id Use Case - Integration Tests", () => {
       const foundEndpoint = await useCase.execute({
         endpointId: endpoint.endpointId.toString(),
         userId: user.userId.toString(),
-        googleId: user.googleId,
       });
 
       expect(foundEndpoint).toEqual({
@@ -94,7 +92,6 @@ describe("Find Endpoint By Id Use Case - Integration Tests", () => {
       const output = await useCase.execute({
         endpointId: endpoint.endpointId.toString(),
         userId: user.userId.toString(),
-        googleId: user.googleId,
       });
 
       expect(outputSpy).toHaveBeenCalledTimes(1);

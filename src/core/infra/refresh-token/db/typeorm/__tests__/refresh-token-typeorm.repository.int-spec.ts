@@ -34,13 +34,23 @@ describe("Refresh Token TypeOrm Repository - Integration Tests", () => {
 
       await refreshTokenRepository.insert(refreshToken);
 
-      const foundRefreshTokens = await refreshTokenRepository.findManyByAnyId({
-        userId: refreshToken.userId,
-      });
+      const foundRefreshTokens = await refreshTokenRepository.findManyByUserId(
+        refreshToken.userId,
+      );
 
       expect(foundRefreshTokens).toHaveLength(1);
 
-      expect(foundRefreshTokens[0].toJSON()).toEqual(refreshToken.toJSON());
+      expect(foundRefreshTokens[0]).toEqual({
+        refreshTokenId: refreshToken.refreshTokenId.toString(),
+        userId: refreshToken.userId.toString(),
+        refreshTokenHash: refreshToken.refreshTokenHash,
+        createdAt: refreshToken.createdAt,
+        user: {
+          userId: user.userId.toString(),
+          name: user.name,
+          email: user.email,
+        },
+      });
     });
   });
 
@@ -51,7 +61,6 @@ describe("Refresh Token TypeOrm Repository - Integration Tests", () => {
       const refreshTokens = RefreshTokenFactory.fake()
         .manyRefreshTokens(2)
         .withUserId(user.userId)
-        .withGoogleId(user.googleId)
         .build();
 
       await userRepository.insert(user);
@@ -65,14 +74,20 @@ describe("Refresh Token TypeOrm Repository - Integration Tests", () => {
       await refreshTokenRepository.delete(refreshTokens[0].refreshTokenId);
 
       const foundTokensAfterDelete =
-        await refreshTokenRepository.findManyByAnyId({
-          userId: refreshTokens[0].userId,
-        });
+        await refreshTokenRepository.findManyByUserId(user.userId);
 
       expect(foundTokensAfterDelete).toHaveLength(1);
-      expect(foundTokensAfterDelete[0].toJSON()).toEqual(
-        refreshTokens[1].toJSON(),
-      );
+      expect(foundTokensAfterDelete[0]).toEqual({
+        refreshTokenId: refreshTokens[1].refreshTokenId.toString(),
+        userId: refreshTokens[1].userId.toString(),
+        refreshTokenHash: refreshTokens[1].refreshTokenHash,
+        createdAt: refreshTokens[1].createdAt,
+        user: {
+          userId: user.userId.toString(),
+          name: user.name,
+          email: user.email,
+        },
+      });
     });
 
     it("should throw NotFoundError when refresh token does not exist", async () => {
@@ -84,25 +99,14 @@ describe("Refresh Token TypeOrm Repository - Integration Tests", () => {
     });
   });
 
-  describe("findManyByAnyId()", () => {
+  describe("findManyByUserId()", () => {
     it("should return empty array when userId has no refresh tokens", async () => {
       const user = UserFactory.fake().oneUser().build();
       await userRepository.insert(user);
 
-      const foundTokens = await refreshTokenRepository.findManyByAnyId({
-        userId: user.userId,
-      });
-
-      expect(foundTokens).toHaveLength(0);
-    });
-
-    it("should return empty array when googleId has no refresh tokens", async () => {
-      const user = UserFactory.fake().oneUser().build();
-      await userRepository.insert(user);
-
-      const foundTokens = await refreshTokenRepository.findManyByAnyId({
-        googleId: user.googleId,
-      });
+      const foundTokens = await refreshTokenRepository.findManyByUserId(
+        user.userId,
+      );
 
       expect(foundTokens).toHaveLength(0);
     });
@@ -114,7 +118,6 @@ describe("Refresh Token TypeOrm Repository - Integration Tests", () => {
       const refreshTokens = RefreshTokenFactory.fake()
         .manyRefreshTokens(2)
         .withUserId(user.userId)
-        .withGoogleId(user.googleId)
         .build();
 
       await Promise.all(
@@ -123,47 +126,28 @@ describe("Refresh Token TypeOrm Repository - Integration Tests", () => {
         ),
       );
 
-      const foundTokens = await refreshTokenRepository.findManyByAnyId({
-        userId: user.userId,
-      });
-
-      expect(foundTokens).toHaveLength(2);
-      foundTokens.forEach((refreshToken) => {
-        const refreshTokenWithId = refreshTokens.find((rt) =>
-          rt.refreshTokenId.equals(refreshToken.refreshTokenId),
-        );
-
-        expect(refreshTokenWithId!.toJSON()).toEqual(refreshToken.toJSON());
-      });
-    });
-
-    it("should return all refresh tokens for a googleId", async () => {
-      const user = UserFactory.fake().oneUser().build();
-      await userRepository.insert(user);
-
-      const refreshTokens = RefreshTokenFactory.fake()
-        .manyRefreshTokens(2)
-        .withUserId(user.userId)
-        .withGoogleId(user.googleId)
-        .build();
-
-      await Promise.all(
-        refreshTokens.map((refreshToken) =>
-          refreshTokenRepository.insert(refreshToken),
-        ),
+      const foundTokens = await refreshTokenRepository.findManyByUserId(
+        user.userId,
       );
 
-      const foundTokens = await refreshTokenRepository.findManyByAnyId({
-        googleId: user.googleId,
-      });
-
       expect(foundTokens).toHaveLength(2);
+
       foundTokens.forEach((refreshToken) => {
-        const refreshTokenWithId = refreshTokens.find((rt) =>
-          rt.refreshTokenId.equals(refreshToken.refreshTokenId),
+        const refreshTokenWithId = refreshTokens.find(
+          (rt) => rt.refreshTokenId.toString() === refreshToken.refreshTokenId,
         );
 
-        expect(refreshTokenWithId!.toJSON()).toEqual(refreshToken.toJSON());
+        expect(refreshToken).toEqual({
+          refreshTokenId: refreshTokenWithId!.refreshTokenId.toString(),
+          userId: refreshTokenWithId!.userId.toString(),
+          refreshTokenHash: refreshTokenWithId!.refreshTokenHash,
+          createdAt: refreshTokenWithId!.createdAt,
+          user: {
+            userId: user.userId.toString(),
+            name: user.name,
+            email: user.email,
+          },
+        });
       });
     });
 
@@ -178,28 +162,9 @@ describe("Refresh Token TypeOrm Repository - Integration Tests", () => {
         .build();
       await refreshTokenRepository.insert(refreshToken);
 
-      const foundTokens = await refreshTokenRepository.findManyByAnyId({
-        userId: users[1].userId,
-      });
-
-      expect(foundTokens).toHaveLength(0);
-    });
-
-    it("should not return tokens from other googleIds", async () => {
-      const users = UserFactory.fake().manyUsers(2).build();
-
-      await Promise.all(users.map((user) => userRepository.insert(user)));
-
-      const refreshToken = RefreshTokenFactory.fake()
-        .oneRefreshToken()
-        .withUserId(users[0].userId)
-        .withGoogleId(users[0].googleId)
-        .build();
-      await refreshTokenRepository.insert(refreshToken);
-
-      const foundTokens = await refreshTokenRepository.findManyByAnyId({
-        googleId: users[1].googleId,
-      });
+      const foundTokens = await refreshTokenRepository.findManyByUserId(
+        users[1].userId,
+      );
 
       expect(foundTokens).toHaveLength(0);
     });

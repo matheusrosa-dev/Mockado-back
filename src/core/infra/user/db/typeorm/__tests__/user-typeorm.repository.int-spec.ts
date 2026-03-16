@@ -5,6 +5,7 @@ import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token
 import { UserFactory } from "@domain/user/user.entity";
 import { NotFoundError } from "@domain/shared/errors/not-found.error";
 import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 
 describe("User TypeOrm Repository - Integration Tests", () => {
   const { dataSource } = setupTypeOrm({
@@ -29,7 +30,34 @@ describe("User TypeOrm Repository - Integration Tests", () => {
     });
   });
 
+  describe("findById()", () => {
+    it("should return user by id", async () => {
+      const user = UserFactory.fake().oneUser().build();
+      await repository.insert(user);
+
+      const foundUser = await repository.findById(user.userId);
+
+      expect(foundUser).toBeDefined();
+      expect(foundUser!.toJSON()).toEqual(user.toJSON());
+    });
+
+    it("should return null if user not found", async () => {
+      const foundUser = await repository.findById(new Uuid());
+      expect(foundUser).toBeNull();
+    });
+  });
+
   describe("findByGoogleId()", () => {
+    it("should return user by googleId", async () => {
+      const user = UserFactory.fake().oneUser().build();
+      await repository.insert(user);
+
+      const foundUser = await repository.findByGoogleId(user.googleId);
+
+      expect(foundUser).toBeDefined();
+      expect(foundUser!.toJSON()).toEqual(user.toJSON());
+    });
+
     it("should return null if user not found", async () => {
       const user = UserFactory.fake().oneUser().build();
       await repository.insert(user);

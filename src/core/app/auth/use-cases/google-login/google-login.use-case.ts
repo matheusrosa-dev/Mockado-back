@@ -1,57 +1,61 @@
 import { IUseCase } from "@app/shared/use-case.interface";
-import { GoogleLoginInput } from "./google-login.input";
 import { RefreshTokenFactory } from "@domain/refresh-token/refresh-token.entity";
-import { UserFactory } from "@domain/user/user.entity";
-import bcrypt from "bcrypt";
+import { User, UserFactory } from "@domain/user/user.entity";
 import { EntityValidationError } from "@domain/shared/validators/validation.error";
 import { IGoogleLoginUnitOfWork } from "./google-login.unit-of-work";
+import { IUserRepository } from "@domain/user/user.repository";
+import { IAuthTokenService } from "@app/auth/services/auth-token.service";
+import {
+  GoogleUser,
+  IGoogleAuthService,
+} from "@app/auth/services/google-auth.service";
+import { IHashService } from "@app/auth/services/hash.service";
 
 export class GoogleLoginUseCase
-  implements IUseCase<GoogleLoginInput, LoginOutput>
+  implements IUseCase<GoogleLoginInput, GoogleLoginOutput>
 {
-  constructor(private unitOfWork: IGoogleLoginUnitOfWork) {}
+  constructor(
+    private unitOfWork: IGoogleLoginUnitOfWork,
+    private authTokenService: IAuthTokenService,
+    private googleAuthService: IGoogleAuthService,
+    private hashService: IHashService,
+  ) {}
 
-  async execute(input: GoogleLoginInput): Promise<LoginOutput> {
+  async execute(input: GoogleLoginInput): Promise<GoogleLoginOutput> {
+    const googleUser = await this.googleAuthService.verifyToken(input.token);
+
     return this.unitOfWork.runInTransaction(async (repositories) => {
       const { userRepository, refreshTokenRepository } = repositories;
-      let user = await userRepository.findByGoogleId(input.googleId);
+      let user = await userRepository.findByGoogleId(googleUser.googleId);
 
       if (user) {
-        if (user.name !== input.name) {
-          user.changeName(input.name);
-        }
-
-        if (input.email !== user.email) {
-          user.changeEmail(input.email);
-        }
-
-        if (user.notification.hasErrors()) {
-          throw new EntityValidationError(user.notification.toJSON());
-        }
-
-        await userRepository.update(user);
+        await this.updateUserIfDataIsDifferent({
+          googleUser,
+          user,
+          userRepository,
+        });
       }
 
       if (!user) {
-        user = UserFactory.create({
-          name: input.name,
-          email: input.email,
-          googleId: input.googleId,
+        user = await this.createUser({
+          googleUser,
+          userRepository,
         });
-
-        if (user.notification.hasErrors()) {
-          throw new EntityValidationError(user.notification.toJSON());
-        }
-
-        await userRepository.insert(user);
       }
 
-      const refreshTokenHash = await bcrypt.hash(input.refreshToken, 10);
+      const generatedTokens = await this.authTokenService.generate({
+        userId: user.userId.toString(),
+        email: user.email,
+        name: user.name,
+      });
+
+      const refreshTokenHash = await this.hashService.hash(
+        generatedTokens.refreshToken,
+      );
 
       const refreshToken = RefreshTokenFactory.create({
         refreshTokenHash,
         userId: user.userId,
-        googleId: input.googleId,
       });
 
       if (refreshToken.notification.hasErrors()) {
@@ -61,18 +65,71 @@ export class GoogleLoginUseCase
       await refreshTokenRepository.insert(refreshToken);
 
       return {
-        userId: user.userId.toString(),
-        email: user.email,
-        name: user.name,
-        googleId: user.googleId,
+        accessToken: generatedTokens.accessToken,
+        refreshToken: generatedTokens.refreshToken,
+        user: {
+          id: user.userId.toString(),
+          name: user.name,
+          email: user.email,
+        },
       };
     });
   }
+
+  private async updateUserIfDataIsDifferent(props: {
+    user: User;
+    userRepository: IUserRepository;
+    googleUser: GoogleUser;
+  }) {
+    const { user, googleUser, userRepository } = props;
+
+    if (user.name !== googleUser.name) {
+      user.changeName(googleUser.name);
+    }
+
+    if (googleUser.email !== user.email) {
+      user.changeEmail(googleUser.email);
+    }
+
+    if (user.notification.hasErrors()) {
+      throw new EntityValidationError(user.notification.toJSON());
+    }
+
+    await userRepository.update(user);
+  }
+
+  private async createUser(props: {
+    googleUser: GoogleUser;
+    userRepository: IUserRepository;
+  }) {
+    const { googleUser, userRepository } = props;
+
+    const user = UserFactory.create({
+      name: googleUser.name,
+      email: googleUser.email,
+      googleId: googleUser.googleId,
+    });
+
+    if (user.notification.hasErrors()) {
+      throw new EntityValidationError(user.notification.toJSON());
+    }
+
+    await userRepository.insert(user);
+
+    return user;
+  }
 }
 
-type LoginOutput = {
-  userId: string;
-  email: string;
-  name: string;
-  googleId: string;
+type GoogleLoginInput = {
+  token: string;
+};
+
+type GoogleLoginOutput = {
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
 };

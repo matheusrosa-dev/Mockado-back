@@ -6,11 +6,10 @@ import { HttpMethod } from "./endpoint.types";
 export interface IEndpointRepository extends IRepository<Endpoint> {
   findByIdWithUserId(props: {
     endpointId: Uuid;
-    googleId?: string;
-    userId?: Uuid;
+    userId: Uuid;
   }): Promise<Endpoint | null>;
 
-  findSummaryByUserId(props: { userId?: Uuid; googleId?: string }): Promise<
+  findSummaryByUserId(userId: Uuid): Promise<
     Array<{
       endpointId: Uuid;
       title: string;

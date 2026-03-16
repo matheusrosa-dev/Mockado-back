@@ -3,13 +3,16 @@ import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.rep
 import { UserFactory } from "@domain/user/user.entity";
 import { ReplaceRefreshTokenUseCase } from "../replace-refresh-token.use-case";
 import { RefreshTokenFactory } from "@domain/refresh-token/refresh-token.entity";
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
 import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
 import { RefreshTokenTypeOrmRepository } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
 import { setupTypeOrm } from "@infra/shared/testing/helpers";
 import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
 import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
 import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { BcryptHashService } from "@infra/auth/services/bcrypt-hash.service";
+import { JwtTokenService } from "@infra/auth/services/jwt-token.service";
+import { AuthenticationError } from "@domain/shared/errors/authentication.error";
+import { TypeOrmReplaceRefreshTokenUnitOfWork } from "@infra/auth/replace-refresh-token/typeorm-replace-refresh-token.unit-of-work";
 
 describe("Replace Refresh Token Use Case - Integration Tests", () => {
   let useCase: ReplaceRefreshTokenUseCase;
@@ -20,56 +23,74 @@ describe("Replace Refresh Token Use Case - Integration Tests", () => {
     entities: [RefreshTokenModel, UserModel, EndpointModel],
   });
 
+  const hashService = new BcryptHashService();
+  const tokenService = new JwtTokenService({
+    jwtSecret: "test-secret",
+    jwtExpirationTime: 3600,
+    jwtRefreshExpirationTime: 86400,
+    jwtRefreshSecret: "test-refresh-secret",
+  });
+
   beforeEach(() => {
     userRepository = new UserTypeOrmRepository(dataSource);
     refreshTokenRepository = new RefreshTokenTypeOrmRepository(dataSource);
-    useCase = new ReplaceRefreshTokenUseCase(refreshTokenRepository);
+    useCase = new ReplaceRefreshTokenUseCase(
+      new TypeOrmReplaceRefreshTokenUnitOfWork(dataSource),
+      hashService,
+      tokenService,
+    );
   });
 
   describe("execute()", () => {
     it("should replace the refresh token successfully", async () => {
       const user = UserFactory.fake().oneUser().build();
 
-      await userRepository.insert(user);
+      const refreshTokenHash = await hashService.hash("old-refresh-token");
 
       const oldToken = RefreshTokenFactory.fake()
         .oneRefreshToken()
         .withUserId(user.userId)
-        .withGoogleId(user.googleId)
+        .withRefreshTokenHash(refreshTokenHash)
         .build();
 
+      await userRepository.insert(user);
       await refreshTokenRepository.insert(oldToken);
 
-      await useCase.execute({
-        refreshTokenIdToRevoke: oldToken.refreshTokenId.toString(),
-        newRefreshToken: "new-refresh-token",
+      const result = await useCase.execute({
+        refreshToken: "old-refresh-token",
         userId: user.userId.toString(),
-        googleId: user.googleId,
       });
 
-      const foundTokens = await refreshTokenRepository.findManyByAnyId({
-        googleId: user.googleId,
-      });
+      const foundTokens = await refreshTokenRepository.findManyByUserId(
+        user.userId,
+      );
 
       expect(foundTokens).toHaveLength(1);
       expect(foundTokens[0].refreshTokenHash).not.toBe(
         oldToken.refreshTokenHash,
       );
+
+      expect(result).toEqual({
+        accessToken: expect.any(String),
+        refreshToken: expect.any(String),
+        user: {
+          id: user.userId.toString(),
+          email: user.email,
+          name: user.name,
+        },
+      });
     });
 
     it("should throw an error if the refresh token to revoke does not exist", async () => {
       const user = UserFactory.fake().oneUser().build();
-
       await userRepository.insert(user);
 
       await expect(
         useCase.execute({
-          refreshTokenIdToRevoke: "550e8400-e29b-41d4-a716-446655440000",
-          newRefreshToken: "new-refresh-token",
           userId: user.userId.toString(),
-          googleId: user.googleId,
+          refreshToken: "non-existent-refresh-token",
         }),
-      ).rejects.toThrow(NotFoundError);
+      ).rejects.toThrow(AuthenticationError);
     });
   });
 });

@@ -16,7 +16,6 @@ describe("RefreshToken Model Mapper - Integration Tests", () => {
       expect(refreshTokenModel.refreshTokenHash).toBe(
         refreshToken.refreshTokenHash,
       );
-      expect(refreshTokenModel.googleId).toBe(refreshToken.googleId);
       expect(refreshTokenModel.createdAt).toEqual(refreshToken.createdAt);
     });
   });

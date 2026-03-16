@@ -50,7 +50,6 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
       const output = await useCase.execute({
         id: endpoint.endpointId.toString(),
         userId: user.userId.toString(),
-        googleId: user.googleId,
         title: "Updated Title",
         method: HttpMethod.POST,
         statusCode: 201,

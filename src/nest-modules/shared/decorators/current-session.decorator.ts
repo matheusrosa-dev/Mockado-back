@@ -1,11 +1,9 @@
 import { ExecutionContext, createParamDecorator } from "@nestjs/common";
 
 export interface ICurrentSession {
+  userId: string;
   name: string;
   email: string;
-  googleId: string;
-  iat: number;
-  exp: number;
   refreshToken: string;
 }
 

@@ -1,6 +1,9 @@
 import { DataSource, EntityManager, Repository } from "typeorm";
 import { RefreshToken } from "@domain/refresh-token/refresh-token.entity";
-import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
+import {
+  FindManyByUserIdResponse,
+  IRefreshTokenRepository,
+} from "@domain/refresh-token/refresh-token.repository";
 import { RefreshTokenModel } from "./refresh-token-typeorm.model";
 import { RefreshTokenModelMapper } from "./refresh-token-model-mapper";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
@@ -19,18 +22,24 @@ export class RefreshTokenTypeOrmRepository implements IRefreshTokenRepository {
     await this.repository.save(model);
   }
 
-  async findManyByAnyId(props: {
-    googleId?: string;
-    userId?: Uuid;
-  }): Promise<RefreshToken[]> {
+  async findManyByUserId(userId?: Uuid): Promise<FindManyByUserIdResponse[]> {
     const models = await this.repository.find({
       where: {
-        userId: props.userId?.toString(),
-        googleId: props?.googleId,
+        userId: userId?.toString(),
+      },
+      relations: {
+        user: true,
+      },
+      select: {
+        user: {
+          userId: true,
+          name: true,
+          email: true,
+        },
       },
     });
 
-    return models.map((model) => RefreshTokenModelMapper.toEntity(model));
+    return models;
   }
 
   async delete(refreshTokenId: Uuid): Promise<void> {

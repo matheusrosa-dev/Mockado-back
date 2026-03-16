@@ -1,10 +1,6 @@
 import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
 import { RefreshTokenExistsValidator } from "../refresh-token-exists.validator";
-import {
-  RefreshToken,
-  RefreshTokenFactory,
-} from "@domain/refresh-token/refresh-token.entity";
-import bcrypt from "bcrypt";
+import { RefreshTokenFactory } from "@domain/refresh-token/refresh-token.entity";
 import { RefreshTokenTypeOrmRepository } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
 import { setupTypeOrm } from "@infra/shared/testing/helpers";
 import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
@@ -13,6 +9,8 @@ import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repos
 import { UserFactory } from "@domain/user/user.entity";
 import { NotFoundError } from "@domain/shared/errors/not-found.error";
 import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { BcryptHashService } from "@infra/auth/services/bcrypt-hash.service";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 
 describe("Refresh Token Exists Validator - Integration Tests", () => {
   const { dataSource } = setupTypeOrm({
@@ -22,11 +20,15 @@ describe("Refresh Token Exists Validator - Integration Tests", () => {
   let validator: RefreshTokenExistsValidator;
   let refreshTokenRepository: IRefreshTokenRepository;
   let userRepository: UserTypeOrmRepository;
+  const hashService = new BcryptHashService();
 
   beforeEach(() => {
     userRepository = new UserTypeOrmRepository(dataSource);
     refreshTokenRepository = new RefreshTokenTypeOrmRepository(dataSource);
-    validator = new RefreshTokenExistsValidator(refreshTokenRepository);
+    validator = new RefreshTokenExistsValidator(
+      refreshTokenRepository,
+      hashService,
+    );
   });
 
   describe("validate()", () => {
@@ -34,11 +36,9 @@ describe("Refresh Token Exists Validator - Integration Tests", () => {
       const user = UserFactory.fake().oneUser().build();
       await userRepository.insert(user);
 
-      const refreshToken = "refresh-token-123";
-      const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
+      const refreshTokenHash = await hashService.hash("refresh-token-123");
 
       const refreshTokenEntity = RefreshTokenFactory.create({
-        googleId: user.googleId,
         refreshTokenHash,
         userId: user.userId,
       });
@@ -47,12 +47,22 @@ describe("Refresh Token Exists Validator - Integration Tests", () => {
 
       const [foundRefreshToken, validationError] = (
         await validator.validate({
-          googleId: refreshTokenEntity.googleId,
-          refreshToken: refreshToken,
+          userId: refreshTokenEntity.userId,
+          refreshToken: "refresh-token-123",
         })
       ).asArray();
 
-      expect(foundRefreshToken).toBeInstanceOf(RefreshToken);
+      expect(foundRefreshToken).toEqual({
+        refreshTokenId: refreshTokenEntity.refreshTokenId.toString(),
+        userId: refreshTokenEntity.userId.toString(),
+        refreshTokenHash: refreshTokenEntity.refreshTokenHash,
+        createdAt: refreshTokenEntity.createdAt,
+        user: {
+          userId: user.userId.toString(),
+          name: user.name,
+          email: user.email,
+        },
+      });
       expect(validationError).toBeNull();
     });
 
@@ -61,10 +71,9 @@ describe("Refresh Token Exists Validator - Integration Tests", () => {
       await userRepository.insert(user);
 
       const refreshToken = "refresh-token-123";
-      const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
+      const refreshTokenHash = await hashService.hash(refreshToken);
 
       const refreshTokenEntity = RefreshTokenFactory.create({
-        googleId: user.googleId,
         refreshTokenHash,
         userId: user.userId,
       });
@@ -73,7 +82,7 @@ describe("Refresh Token Exists Validator - Integration Tests", () => {
 
       const [foundRefreshToken, validationError] = (
         await validator.validate({
-          googleId: refreshTokenEntity.googleId,
+          userId: refreshTokenEntity.userId,
           refreshToken: "invalid-refresh-token",
         })
       ).asArray();
@@ -82,10 +91,10 @@ describe("Refresh Token Exists Validator - Integration Tests", () => {
       expect(foundRefreshToken).toBeNull();
     });
 
-    it("should return false if there are no refresh tokens for the googleId", async () => {
+    it("should return false if there are no refresh tokens for the userId", async () => {
       const [foundRefreshToken, validationError] = (
         await validator.validate({
-          googleId: "non-existent-google-id",
+          userId: new Uuid(),
           refreshToken: "any-refresh-token",
         })
       ).asArray();

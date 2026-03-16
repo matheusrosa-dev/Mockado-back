@@ -1,6 +1,5 @@
 import { IUseCase } from "../../../shared/use-case.interface";
 import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
-import { FindEndpointByIdInput } from "./find-endpoint-by-id.input";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import {
   EndpointOutput,
@@ -19,8 +18,7 @@ export class FindEndpointByIdUseCase
 
     const endpoint = await this.endpointRepository.findByIdWithUserId({
       endpointId,
-      ...(input.userId && { userId: new Uuid(input.userId) }),
-      ...(input.googleId && { googleId: input.googleId }),
+      userId: new Uuid(input.userId),
     });
 
     if (!endpoint) {
@@ -30,3 +28,8 @@ export class FindEndpointByIdUseCase
     return EndpointOutputMapper.toOutput(endpoint);
   }
 }
+
+type FindEndpointByIdInput = {
+  endpointId: string;
+  userId: string;
+};

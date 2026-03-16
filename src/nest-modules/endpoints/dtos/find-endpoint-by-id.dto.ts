@@ -1,10 +1,13 @@
-import { FindEndpointByIdInput } from "@app/endpoint/use-cases/find-endpoint-by-id/find-endpoint-by-id.input";
-import { IsOptional } from "class-validator";
+import { IsNotEmpty, IsUUID } from "class-validator";
 
-export class FindEndpointByIdDto extends FindEndpointByIdInput {
-  @IsOptional()
-  declare googleId?: string;
+export class FindEndpointByIdDto {
+  @IsNotEmpty()
+  @IsUUID()
+  endpointId: string;
 
-  @IsOptional()
-  declare userId?: string;
+  constructor(props: FindEndpointByIdDto) {
+    if (!props) return;
+
+    Object.assign(this, props);
+  }
 }

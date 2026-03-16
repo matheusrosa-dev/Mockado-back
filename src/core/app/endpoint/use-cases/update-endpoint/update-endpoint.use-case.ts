@@ -5,11 +5,11 @@ import {
   EndpointOutput,
   EndpointOutputMapper,
 } from "../common/endpoint.output";
-import { UpdateEndpointInput } from "./update-endpoint.input";
 import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import { NotFoundError } from "@domain/shared/errors/not-found.error";
 import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
+import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
 
 export class UpdateEndpointUseCase
   implements IUseCase<UpdateEndpointInput, EndpointOutput>
@@ -21,8 +21,7 @@ export class UpdateEndpointUseCase
 
     const endpoint = await this.endpointRepository.findByIdWithUserId({
       endpointId,
-      ...(input.userId && { userId: new Uuid(input.userId) }),
-      ...(input.googleId && { googleId: input.googleId }),
+      userId: new Uuid(input.userId),
     });
 
     if (!endpoint) {
@@ -70,3 +69,16 @@ export class UpdateEndpointUseCase
     return EndpointOutputMapper.toOutput(endpoint);
   }
 }
+
+type UpdateEndpointInput = {
+  id: string;
+  userId: string;
+  title?: string;
+  method?: HttpMethod;
+  description?: string;
+  delay?: number;
+  statusCode?: number;
+  responseBodyType?: ResponseBodyType;
+  responseJson?: string;
+  responseText?: string;
+};

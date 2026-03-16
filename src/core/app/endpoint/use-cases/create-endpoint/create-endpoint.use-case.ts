@@ -5,11 +5,13 @@ import {
   EndpointOutput,
   EndpointOutputMapper,
 } from "../common/endpoint.output";
-import { CreateEndpointInput } from "./create-endpoint.input";
 import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
 import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
 import { IUserRepository } from "@domain/user/user.repository";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
+import { NotFoundError } from "@domain/shared/errors/not-found.error";
+import { User } from "@domain/user/user.entity";
 
 export class CreateEndpointUseCase
   implements IUseCase<CreateEndpointInput, EndpointOutput>
@@ -20,25 +22,19 @@ export class CreateEndpointUseCase
   ) {}
 
   async execute(input: CreateEndpointInput): Promise<EndpointOutput> {
-    let userId = new Uuid(input.userId);
+    const existingUser = await this.userRepository.findById(
+      new Uuid(input.userId),
+    );
 
-    if (!input.userId && input.googleId) {
-      const existingUser = await this.userRepository.findByGoogleId(
-        input.googleId,
-      );
-
-      if (!existingUser) {
-        throw new Error("User not found with the provided googleId");
-      }
-
-      userId = existingUser.userId;
+    if (!existingUser) {
+      throw new NotFoundError("User not found with the provided userId", User);
     }
 
     const statusCode = new StatusCode(input.statusCode);
 
     const endpoint = EndpointFactory.create({
       ...input,
-      userId,
+      userId: new Uuid(input.userId),
       statusCode,
     });
 
@@ -51,3 +47,15 @@ export class CreateEndpointUseCase
     return EndpointOutputMapper.toOutput(endpoint);
   }
 }
+
+type CreateEndpointInput = {
+  title: string;
+  userId: string;
+  method: HttpMethod;
+  description?: string;
+  delay?: number;
+  statusCode: number;
+  responseBodyType?: ResponseBodyType;
+  responseJson?: string;
+  responseText?: string;
+};

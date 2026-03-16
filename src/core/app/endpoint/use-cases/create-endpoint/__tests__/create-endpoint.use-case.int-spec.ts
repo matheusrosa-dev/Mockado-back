@@ -14,6 +14,7 @@ import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
 import { IUserRepository } from "@domain/user/user.repository";
 import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
 import { UserFactory } from "@domain/user/user.entity";
+import { NotFoundError } from "@domain/shared/errors/not-found.error";
 
 describe("Create Endpoint Use Case - Integration Tests", () => {
   let useCase: CreateEndpointUseCase;
@@ -54,37 +55,29 @@ describe("Create Endpoint Use Case - Integration Tests", () => {
       expect(createdEndpoint).toBeDefined();
     });
 
-    it("should create an endpoint for a given googleId", async () => {
-      const user = UserFactory.fake().oneUser().build();
-      await userRepository.insert(user);
-
+    it("should throw not found error if user does not exist", async () => {
       const input = {
-        googleId: user.googleId,
+        userId: new Uuid().id,
         title: "My Endpoint",
         method: HttpMethod.GET,
         statusCode: 200,
-        responseBodyType: ResponseBodyType.JSON,
-        responseJson: '{"key":"value"}',
       };
 
-      const output = await useCase.execute(input);
-
-      const createdEndpoint = await endpointRepository.findByIdWithUserId({
-        endpointId: new Uuid(output.id),
-        googleId: input.googleId,
-      });
-
-      expect(createdEndpoint).toBeDefined();
+      await expect(useCase.execute(input)).rejects.toThrow(NotFoundError);
     });
 
     it("should throw EntityValidationError when input is not valid", async () => {
-      const input = {
+      const user = UserFactory.fake().oneUser().build();
+      await userRepository.insert(user);
+
+      const input1 = {
+        userId: user.userId.toString(),
         title: "", // Invalid: empty title
         method: HttpMethod.GET,
         statusCode: 204,
       };
 
-      await expect(useCase.execute(input)).rejects.toThrow(
+      await expect(useCase.execute(input1)).rejects.toThrow(
         EntityValidationError,
       );
     });

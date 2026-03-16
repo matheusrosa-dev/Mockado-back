@@ -9,7 +9,6 @@ export class RefreshTokenModelMapper {
 
     model.refreshTokenId = entity.refreshTokenId.toString();
     model.userId = entity.userId.toString();
-    model.googleId = entity.googleId;
     model.refreshTokenHash = entity.refreshTokenHash;
     model.createdAt = entity.createdAt;
 
@@ -20,7 +19,6 @@ export class RefreshTokenModelMapper {
     const refreshToken = new RefreshToken({
       refreshTokenId: new Uuid(model.refreshTokenId),
       userId: new Uuid(model.userId),
-      googleId: model.googleId,
       refreshTokenHash: model.refreshTokenHash,
       createdAt: model.createdAt,
     });

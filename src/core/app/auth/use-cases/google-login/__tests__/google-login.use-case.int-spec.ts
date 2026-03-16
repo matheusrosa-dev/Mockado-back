@@ -2,15 +2,27 @@ import { IUserRepository } from "@domain/user/user.repository";
 import { GoogleLoginUseCase } from "../google-login.use-case";
 import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
 import { UserFactory } from "@domain/user/user.entity";
-import { EntityValidationError } from "@domain/shared/validators/validation.error";
 import { setupTypeOrm } from "@infra/shared/testing/helpers";
 import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
 import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
 import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
 import { RefreshTokenTypeOrmRepository } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import { TypeOrmGoogleLoginUnitOfWork } from "@infra/auth/google-login/typeorm-google-login.unit-of-work";
 import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { JwtTokenService } from "@infra/auth/services/jwt-token.service";
+import { IGoogleAuthService } from "@app/auth/services/google-auth.service";
+import { BcryptHashService } from "@infra/auth/services/bcrypt-hash.service";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+
+class FakeGoogleAuthService implements IGoogleAuthService {
+  verifyToken() {
+    return Promise.resolve({
+      googleId: "1".repeat(21),
+      email: "fake@email.com",
+      name: "Fake User",
+    });
+  }
+}
 
 describe("Google Login Use Case - Integration Tests", () => {
   const { dataSource } = setupTypeOrm({
@@ -21,120 +33,97 @@ describe("Google Login Use Case - Integration Tests", () => {
   let userRepository: IUserRepository;
   let refreshTokenRepository: IRefreshTokenRepository;
 
+  const hashService = new BcryptHashService();
+  const googleAuthService = new FakeGoogleAuthService();
+  const tokenService = new JwtTokenService({
+    jwtSecret: "test-secret",
+    jwtExpirationTime: 3600,
+    jwtRefreshExpirationTime: 86400,
+    jwtRefreshSecret: "test-refresh-secret",
+  });
+
   beforeEach(() => {
     userRepository = new UserTypeOrmRepository(dataSource);
     refreshTokenRepository = new RefreshTokenTypeOrmRepository(dataSource);
     useCase = new GoogleLoginUseCase(
       new TypeOrmGoogleLoginUnitOfWork(dataSource),
+      tokenService,
+      googleAuthService,
+      hashService,
     );
   });
 
   describe("execute()", () => {
     it("should log in an existing user and hash a refreshToken", async () => {
-      const user = UserFactory.fake().oneUser().build();
-
-      await userRepository.insert(user);
-
-      const result = await useCase.execute({
-        googleId: user.googleId,
-        email: user.email,
-        name: user.name,
-        refreshToken: "refresh-token-123",
-      });
-
-      expect(result).toEqual({
-        userId: user.userId.toString(),
-        email: user.email,
-        name: user.name,
-        googleId: user.googleId,
-      });
-
-      const storedTokens = await refreshTokenRepository.findManyByAnyId({
-        userId: user.userId,
-      });
-      expect(storedTokens).toHaveLength(1);
-      expect(typeof storedTokens[0].refreshTokenHash).toBe("string");
-      expect(storedTokens[0].refreshTokenHash).not.toBe("refresh-token-123");
-    });
-
-    it("should create a new user and hash a refreshToken", async () => {
-      const user = UserFactory.fake().oneUser().build();
-
-      const result = await useCase.execute({
-        googleId: user.googleId,
-        email: user.email,
-        name: user.name,
-        refreshToken: "refresh-token-456",
-      });
-
-      expect(result).toEqual({
-        userId: expect.any(String),
-        email: user.email,
-        name: user.name,
-        googleId: user.googleId,
-      });
-
-      const storedTokens = await refreshTokenRepository.findManyByAnyId({
-        userId: new Uuid(result.userId),
-      });
-
-      expect(storedTokens).toHaveLength(1);
-      expect(storedTokens[0].refreshTokenHash).not.toBe("refresh-token-456");
-    });
-
-    it("should update user name and email if they differ from input", async () => {
       const user = UserFactory.fake()
         .oneUser()
-        .withName("Old Name")
-        .withEmail("oldemail@example.com")
+        .withGoogleId("1".repeat(21))
+        .withEmail("fake@email.com")
+        .withName("Fake User")
         .build();
 
       await userRepository.insert(user);
 
       const result = await useCase.execute({
-        googleId: user.googleId,
-        email: "newemail@example.com",
-        name: "New Name",
-        refreshToken: "refresh-token-789",
+        token: "fake-token",
       });
 
       expect(result).toEqual({
-        userId: user.userId.toString(),
-        email: "newemail@example.com",
-        name: "New Name",
-        googleId: user.googleId,
+        user: {
+          id: user.userId.toString(),
+          email: user.email,
+          name: user.name,
+        },
+        accessToken: expect.any(String),
+        refreshToken: expect.any(String),
+      });
+
+      const storedTokens = await refreshTokenRepository.findManyByUserId(
+        user.userId,
+      );
+
+      expect(storedTokens).toHaveLength(1);
+      expect(typeof storedTokens[0].refreshTokenHash).toBe("string");
+    });
+
+    it("should create a new user and hash a refreshToken", async () => {
+      const result = await useCase.execute({
+        token: "fake-token",
+      });
+
+      expect(result).toEqual({
+        user: {
+          id: expect.any(String),
+          email: "fake@email.com",
+          name: "Fake User",
+        },
+        accessToken: expect.any(String),
+        refreshToken: expect.any(String),
+      });
+
+      const storedTokens = await refreshTokenRepository.findManyByUserId(
+        new Uuid(result.user.id),
+      );
+
+      expect(storedTokens).toHaveLength(1);
+      expect(typeof storedTokens[0].refreshTokenHash).toBe("string");
+    });
+
+    it("should update user name and email if they differ from input", async () => {
+      const user = UserFactory.fake()
+        .oneUser()
+        .withGoogleId("1".repeat(21))
+        .build();
+
+      await userRepository.insert(user);
+
+      await useCase.execute({
+        token: "fake-token",
       });
 
       const updatedUser = await userRepository.findByGoogleId(user.googleId);
-      expect(updatedUser?.name).toBe("New Name");
-      expect(updatedUser?.email).toBe("newemail@example.com");
-    });
-
-    it("should throw EntityValidationError when input is not valid", async () => {
-      await expect(
-        useCase.execute({
-          googleId: "", // Invalid: empty googleId
-          email: "", // Invalid: empty email
-          name: "Invalid User",
-          refreshToken: "refresh-token-invalid",
-        }),
-      ).rejects.toThrow(EntityValidationError);
-    });
-
-    it("should return formatted output", async () => {
-      const output = await useCase.execute({
-        googleId: "1".repeat(21),
-        email: "formatted@example.com",
-        name: "Formatted User",
-        refreshToken: "refresh-token-789",
-      });
-
-      expect(output).toEqual({
-        userId: expect.any(String),
-        email: "formatted@example.com",
-        name: "Formatted User",
-        googleId: "1".repeat(21),
-      });
+      expect(updatedUser!.name).toBe("Fake User");
+      expect(updatedUser!.email).toBe("fake@email.com");
     });
   });
 });

@@ -30,14 +30,14 @@ export class EndpointsController {
   ) {
     return this.createEndpointUseCase.execute({
       ...createEndpointDto,
-      googleId: session.googleId,
+      userId: session.userId,
     });
   }
 
   @Get("summary")
   async listEndpointsSummary(@CurrentSession() session: ICurrentSession) {
     return this.listEndpointsSummaryUseCase.execute({
-      googleId: session.googleId,
+      userId: session.userId,
     });
   }
 
@@ -47,7 +47,7 @@ export class EndpointsController {
     @CurrentSession() session: ICurrentSession,
   ) {
     return this.findEndpointByIdUseCase.execute({
-      googleId: session.googleId,
+      userId: session.userId,
       endpointId: params.endpointId,
     });
   }
@@ -61,7 +61,7 @@ export class EndpointsController {
     return this.updateEndpointUseCase.execute({
       ...updateEndpointDto,
       id: params.endpointId,
-      googleId: session.googleId,
+      userId: session.userId,
     });
   }
 }

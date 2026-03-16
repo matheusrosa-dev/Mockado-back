@@ -31,7 +31,6 @@ describe("TypeOrm Google Login Unit Of Work - Integration Tests", () => {
 
       const refreshToken = RefreshTokenFactory.create({
         userId: user.userId,
-        googleId: user.googleId,
         refreshTokenHash: "hashed-token",
       });
 
@@ -39,9 +38,9 @@ describe("TypeOrm Google Login Unit Of Work - Integration Tests", () => {
     });
 
     const savedUser = await userRepository.findByGoogleId(user.googleId);
-    const savedTokens = await refreshTokenRepository.findManyByAnyId({
-      userId: user.userId,
-    });
+    const savedTokens = await refreshTokenRepository.findManyByUserId(
+      user.userId,
+    );
 
     expect(savedUser).not.toBeNull();
     expect(savedTokens).toHaveLength(1);
@@ -57,7 +56,6 @@ describe("TypeOrm Google Login Unit Of Work - Integration Tests", () => {
 
         const refreshToken = RefreshTokenFactory.create({
           userId: user.userId,
-          googleId: user.googleId,
           refreshTokenHash: "hashed-token",
         });
 
@@ -68,9 +66,9 @@ describe("TypeOrm Google Login Unit Of Work - Integration Tests", () => {
     ).rejects.toThrow("force rollback");
 
     const savedUser = await userRepository.findByGoogleId(user.googleId);
-    const savedTokens = await refreshTokenRepository.findManyByAnyId({
-      userId: user.userId,
-    });
+    const savedTokens = await refreshTokenRepository.findManyByUserId(
+      user.userId,
+    );
 
     expect(savedUser).toBeNull();
     expect(savedTokens).toHaveLength(0);

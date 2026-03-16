@@ -4,6 +4,7 @@ import { IUserRepository } from "@domain/user/user.repository";
 import { NotFoundError } from "@domain/shared/errors/not-found.error";
 import { UserModel } from "./user-typeorm.model";
 import { UserModelMapper } from "./user-model-mapper";
+import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 
 export class UserTypeOrmRepository implements IUserRepository {
   private repository: Repository<UserModel>;
@@ -27,6 +28,18 @@ export class UserTypeOrmRepository implements IUserRepository {
     }
   }
 
+  async findById(userId: Uuid): Promise<User | null> {
+    const model = await this.repository.findOneBy({
+      userId: userId.toString(),
+    });
+
+    if (!model) {
+      return null;
+    }
+
+    return UserModelMapper.toEntity(model);
+  }
+
   async findByGoogleId(googleId: string): Promise<User | null> {
     const model = await this.repository.findOneBy({ googleId });
 
@@ -38,10 +51,6 @@ export class UserTypeOrmRepository implements IUserRepository {
   }
 
   async delete(): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-
-  async findById(): Promise<User | null> {
     throw new Error("Method not implemented.");
   }
 

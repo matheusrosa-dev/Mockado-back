@@ -1,32 +1,88 @@
 import { IUseCase } from "@app/shared/use-case.interface";
-import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
-import { ReplaceRefreshTokenInput } from "./replace-refresh-token.input";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 import { RefreshTokenFactory } from "@domain/refresh-token/refresh-token.entity";
-import bcrypt from "bcrypt";
+import { RefreshTokenExistsValidator } from "@app/auth/validations/refresh-token-exists/refresh-token-exists.validator";
+import { IHashService } from "@app/auth/services/hash.service";
+import { AuthenticationError } from "@domain/shared/errors/authentication.error";
+import { IAuthTokenService } from "@app/auth/services/auth-token.service";
+import { IReplaceRefreshTokenUnitOfWork } from "./replace-refresh-token.unit-of-work";
 
 export class ReplaceRefreshTokenUseCase
   implements IUseCase<ReplaceRefreshTokenInput, ReplaceRefreshTokenOutput>
 {
-  constructor(private refreshTokenRepository: IRefreshTokenRepository) {}
+  constructor(
+    private unitOfWork: IReplaceRefreshTokenUnitOfWork,
+    private hashService: IHashService,
+    private authTokenService: IAuthTokenService,
+  ) {}
 
   async execute(
     input: ReplaceRefreshTokenInput,
   ): Promise<ReplaceRefreshTokenOutput> {
-    const refreshTokenIdToRevoke = new Uuid(input.refreshTokenIdToRevoke);
+    return this.unitOfWork.runInTransaction(async (repositories) => {
+      const { refreshTokenRepository } = repositories;
 
-    await this.refreshTokenRepository.delete(refreshTokenIdToRevoke);
+      const refreshTokenExistsValidator = new RefreshTokenExistsValidator(
+        refreshTokenRepository,
+        this.hashService,
+      );
 
-    const refreshTokenHash = await bcrypt.hash(input.newRefreshToken, 10);
+      const [refreshTokenExists, notFoundError] = (
+        await refreshTokenExistsValidator.validate({
+          userId: new Uuid(input.userId),
+          refreshToken: input.refreshToken,
+        })
+      ).asArray();
 
-    const newRefreshToken = RefreshTokenFactory.create({
-      userId: new Uuid(input.userId),
-      googleId: input.googleId,
-      refreshTokenHash,
+      if (notFoundError) {
+        throw new AuthenticationError("Refresh token not found for the user");
+      }
+
+      const newTokens = await this.authTokenService.generate({
+        userId: refreshTokenExists.user.userId,
+        email: refreshTokenExists.user.email,
+        name: refreshTokenExists.user.name,
+      });
+
+      const refreshTokenHash = await this.hashService.hash(
+        newTokens.refreshToken,
+      );
+
+      await refreshTokenRepository.delete(
+        new Uuid(refreshTokenExists.refreshTokenId),
+      );
+
+      const refreshToken = RefreshTokenFactory.create({
+        userId: new Uuid(refreshTokenExists.userId),
+        refreshTokenHash,
+      });
+
+      await refreshTokenRepository.insert(refreshToken);
+
+      return {
+        accessToken: newTokens.accessToken,
+        refreshToken: newTokens.refreshToken,
+        user: {
+          id: refreshTokenExists.user.userId,
+          email: refreshTokenExists.user.email,
+          name: refreshTokenExists.user.name,
+        },
+      };
     });
-
-    await this.refreshTokenRepository.insert(newRefreshToken);
   }
 }
 
-type ReplaceRefreshTokenOutput = void;
+type ReplaceRefreshTokenInput = {
+  userId: string;
+  refreshToken: string;
+};
+
+type ReplaceRefreshTokenOutput = {
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+};

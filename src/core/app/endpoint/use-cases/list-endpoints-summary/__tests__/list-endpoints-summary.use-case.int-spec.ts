@@ -51,7 +51,6 @@ describe("List Endpoints Summary Use Case - Integration Tests", () => {
 
       const endpointsList = await useCase.execute({
         userId: mainUser.userId.toString(),
-        googleId: mainUser.googleId,
       });
 
       expect(endpointsList).toEqual(

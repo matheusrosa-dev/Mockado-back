@@ -16,7 +16,6 @@ describe("Refresh Token Model - Integration Tests", () => {
     expect(columnNames).toStrictEqual([
       "refreshTokenId",
       "userId",
-      "googleId",
       "refreshTokenHash",
       "createdAt",
     ]);
@@ -35,15 +34,6 @@ describe("Refresh Token Model - Integration Tests", () => {
     );
     expect(userIdColumn).toMatchObject({
       type: "uuid",
-      isNullable: false,
-    });
-
-    const googleIdColumn = columns.find(
-      (column) => column.propertyName === "googleId",
-    );
-    expect(googleIdColumn).toMatchObject({
-      type: "varchar",
-      length: "255",
       isNullable: false,
     });
 

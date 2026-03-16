@@ -32,20 +32,11 @@ export class EndpointTypeOrmRepository implements IEndpointRepository {
     }
   }
 
-  async findByIdWithUserId(props: {
-    endpointId: Uuid;
-    googleId?: string;
-    userId?: Uuid;
-  }) {
-    if (!props.userId && !props.googleId) {
-      throw new Error("Either userId or googleId must be provided");
-    }
-
+  async findByIdWithUserId(props: { endpointId: Uuid; userId: Uuid }) {
     const model = await this.repository.findOne({
       where: {
         endpointId: props.endpointId.toString(),
-        ...(props.userId && { userId: props.userId.toString() }),
-        ...(props.googleId && { user: { googleId: props.googleId } }),
+        userId: props.userId.toString(),
       },
     });
 
@@ -56,15 +47,10 @@ export class EndpointTypeOrmRepository implements IEndpointRepository {
     return EndpointModelMapper.toEntity(model);
   }
 
-  async findSummaryByUserId(props: { userId?: Uuid; googleId?: string }) {
-    if (!props.userId && !props.googleId) {
-      throw new Error("Either userId or googleId must be provided");
-    }
-
+  async findSummaryByUserId(userId: Uuid) {
     const models = await this.repository.find({
       where: {
-        ...(props.userId && { userId: props.userId.toString() }),
-        ...(props.googleId && { user: { googleId: props.googleId } }),
+        userId: userId.toString(),
       },
       order: { createdAt: "ASC" },
       select: {

@@ -9,7 +9,6 @@ import { RefreshTokenFakeBuilder } from "./refresh-token.fake-builder";
 type ConstructorProps = {
   refreshTokenId?: Uuid;
   userId: Uuid;
-  googleId: string;
   refreshTokenHash: string;
   createdAt?: Date;
 };
@@ -17,7 +16,6 @@ type ConstructorProps = {
 export class RefreshToken extends Entity {
   private _refreshTokenId: Uuid;
   private _userId: Uuid;
-  private _googleId: string;
   private _refreshTokenHash: string;
   private _createdAt: Date;
 
@@ -26,7 +24,6 @@ export class RefreshToken extends Entity {
 
     this._refreshTokenId = props.refreshTokenId ?? new Uuid();
     this._userId = props.userId;
-    this._googleId = props.googleId;
     this._refreshTokenHash = props.refreshTokenHash;
     this._createdAt = props.createdAt ?? new Date();
   }
@@ -53,10 +50,6 @@ export class RefreshToken extends Entity {
     return this._refreshTokenHash;
   }
 
-  get googleId() {
-    return this._googleId;
-  }
-
   get createdAt() {
     return this._createdAt;
   }
@@ -66,7 +59,6 @@ export class RefreshToken extends Entity {
       refreshTokenId: this._refreshTokenId.toString(),
       userId: this._userId.toString(),
       refreshTokenHash: this._refreshTokenHash,
-      googleId: this._googleId,
       createdAt: this._createdAt,
     };
   }
@@ -74,7 +66,6 @@ export class RefreshToken extends Entity {
 
 type CreateCommandProps = {
   userId: Uuid;
-  googleId: string;
   refreshTokenHash: string;
 };
 

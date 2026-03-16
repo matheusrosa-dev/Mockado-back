@@ -1,5 +1,3 @@
 ADICIONAR VALIDAÇÃO PARA BLOQUEAR ACESSO DE USUARIOS COM isActive false
 PEDIR PARA O CLAUDE REVER OS ARQUIVOS CLAUDE.MD
 QUANDO UM USUARIO CRIAR UMA CONTA ELE DEVE JA VIR COM UM ENDPOINT DE EXEMPLO
-substituir para que sempre seja usado o userId na aplicação, nos repositories
-remover as validações com decorators dos inputs

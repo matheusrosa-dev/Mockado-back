@@ -1,109 +1,38 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <It has to allow any in tests> */
 import { validateSync } from "class-validator";
-import { UpdateEndpointInput } from "../update-endpoint.input";
 import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { CreateEndpointDto } from "../create-endpoint.dto";
 
-function validate(props: object) {
-  const input = new UpdateEndpointInput(props as any);
+function validate(props: any) {
+  const input = new CreateEndpointDto(props);
   return validateSync(input);
 }
 
 const validBase = {
-  id: new Uuid().id,
+  title: "My Endpoint",
   userId: new Uuid().id,
+  method: HttpMethod.GET,
+  statusCode: 200,
 };
 
-describe("Update Endpoint Input - Unit Tests", () => {
-  describe("id", () => {
-    it("should fail when id is empty", () => {
-      const errors = validate({ ...validBase, id: "" });
-
-      const idError = errors.find((e) => e.property === "id")!;
-      expect(idError).toBeDefined();
-      expect(Object.keys(idError.constraints as object)).toContain(
-        "isNotEmpty",
-      );
-      expect(Object.keys(idError.constraints as object)).toContain("isUuid");
-    });
-
-    it("should fail when id is not a UUID", () => {
-      const errors = validate({ ...validBase, id: "invalid-uuid" });
-
-      const idError = errors.find((e) => e.property === "id")!;
-      expect(idError).toBeDefined();
-      expect(Object.keys(idError.constraints as object)).toContain("isUuid");
-    });
-
-    it("should pass with a valid id", () => {
-      const errors = validate(validBase);
-      const idError = errors.find((e) => e.property === "id");
-      expect(idError).toBeUndefined();
-    });
-  });
-
-  describe("userId / googleId", () => {
-    it("should fail when both userId and googleId are absent", () => {
-      const { userId, ...propsWithoutUser } = validBase;
-      const errors = validate(propsWithoutUser);
-
-      const userIdError = errors.find((e) => e.property === "userId")!;
-      const googleIdError = errors.find((e) => e.property === "googleId")!;
-
-      expect(userIdError).toBeDefined();
-      expect(Object.keys(userIdError.constraints as object)).toContain(
-        "isNotEmpty",
-      );
-      expect(googleIdError).toBeDefined();
-      expect(Object.keys(googleIdError.constraints as object)).toContain(
-        "isNotEmpty",
-      );
-    });
-
-    it("should fail when userId is not a UUID", () => {
-      const errors = validate({ ...validBase, userId: "invalid-uuid" });
-
-      const userIdError = errors.find((e) => e.property === "userId")!;
-      expect(userIdError).toBeDefined();
-      expect(Object.keys(userIdError.constraints as object)).toContain(
-        "isUuid",
-      );
-    });
-
-    it("should pass with a valid userId", () => {
-      const errors = validate({ ...validBase, userId: new Uuid().id });
-      const userIdError = errors.find((e) => e.property === "userId");
-      expect(userIdError).toBeUndefined();
-    });
-
-    it("should pass with a valid googleId and no userId", () => {
-      const { userId, ...propsWithoutUser } = validBase;
-      const errors = validate({
-        ...propsWithoutUser,
-        googleId: "google-id-123",
-      });
-
-      const userIdError = errors.find((e) => e.property === "userId");
-      const googleIdError = errors.find((e) => e.property === "googleId");
-      expect(userIdError).toBeUndefined();
-      expect(googleIdError).toBeUndefined();
-    });
-
-    it("should pass when both userId and googleId are provided", () => {
-      const errors = validate({
-        ...validBase,
-        userId: new Uuid().id,
-        googleId: "google-id-123",
-      });
-
-      const userIdError = errors.find((e) => e.property === "userId");
-      const googleIdError = errors.find((e) => e.property === "googleId");
-      expect(userIdError).toBeUndefined();
-      expect(googleIdError).toBeUndefined();
-    });
+describe("Create Endpoint DTO - Unit Tests", () => {
+  it("should pass with valid props", () => {
+    const errors = validate(validBase);
+    expect(errors).toHaveLength(0);
   });
 
   describe("title", () => {
+    it("should fail when title is empty", () => {
+      const errors = validate({ ...validBase, title: "" });
+
+      const titleError = errors.find((e) => e.property === "title")!;
+      expect(titleError).toBeDefined();
+      expect(Object.keys(titleError.constraints as object)).toContain(
+        "isNotEmpty",
+      );
+    });
+
     it("should fail when title is not a string", () => {
       const errors = validate({ ...validBase, title: 123 });
 
@@ -114,14 +43,8 @@ describe("Update Endpoint Input - Unit Tests", () => {
       );
     });
 
-    it("should pass when title is absent", () => {
-      const errors = validate(validBase);
-      const titleError = errors.find((e) => e.property === "title");
-      expect(titleError).toBeUndefined();
-    });
-
     it("should pass with a valid title", () => {
-      const errors = validate({ ...validBase, title: "My Endpoint" });
+      const errors = validate(validBase);
       const titleError = errors.find((e) => e.property === "title");
       expect(titleError).toBeUndefined();
     });
@@ -136,12 +59,6 @@ describe("Update Endpoint Input - Unit Tests", () => {
       expect(Object.keys(methodError.constraints as object)).toContain(
         "isEnum",
       );
-    });
-
-    it("should pass when method is absent", () => {
-      const errors = validate(validBase);
-      const methodError = errors.find((e) => e.property === "method");
-      expect(methodError).toBeUndefined();
     });
 
     it("should pass for each valid HttpMethod value", () => {
@@ -230,12 +147,6 @@ describe("Update Endpoint Input - Unit Tests", () => {
       expect(Object.keys(statusCodeError.constraints as object)).toContain(
         "isInt",
       );
-    });
-
-    it("should pass when statusCode is absent", () => {
-      const errors = validate(validBase);
-      const statusCodeError = errors.find((e) => e.property === "statusCode");
-      expect(statusCodeError).toBeUndefined();
     });
 
     it("should pass at the boundary values 100 and 511", () => {
