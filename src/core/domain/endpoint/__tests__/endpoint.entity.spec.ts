@@ -13,6 +13,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         method,
         title: "My Endpoint",
         statusCode: new StatusCode(100),
+        userId: new Uuid(),
       };
 
       const endpoint = new Endpoint(requiredProps);
@@ -20,6 +21,7 @@ describe("Endpoint Entity - Unit Tests", () => {
       expect(endpoint.method).toBe(requiredProps.method);
       expect(endpoint.title).toBe(requiredProps.title);
       expect(endpoint.statusCode).toBe(requiredProps.statusCode);
+      expect(endpoint.userId).toBe(requiredProps.userId);
     });
 
     it.each(
@@ -30,6 +32,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         title: "My Endpoint",
         statusCode: new StatusCode(200),
         responseBodyType,
+        userId: new Uuid(),
       });
 
       expect(endpoint.responseBodyType).toBe(responseBodyType);
@@ -40,6 +43,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         method: HttpMethod.GET,
         title: "My Endpoint",
         statusCode: new StatusCode(204),
+        userId: new Uuid(),
       };
 
       const endpoint = new Endpoint({
@@ -52,6 +56,7 @@ describe("Endpoint Entity - Unit Tests", () => {
       expect(endpoint.method).toBe(endpointProps.method);
       expect(endpoint.title).toBe(endpointProps.title);
       expect(endpoint.statusCode).toBe(endpointProps.statusCode);
+      expect(endpoint.userId).toBe(endpointProps.userId);
       expect(endpoint.responseBodyType).toBeUndefined();
       expect(endpoint.responseJson).toBeUndefined();
       expect(endpoint.responseText).toBeUndefined();
@@ -63,6 +68,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         title: "My Endpoint",
         statusCode: new StatusCode(200),
         responseBodyType: ResponseBodyType.JSON,
+        userId: new Uuid(),
       });
 
       expect(endpoint1.endpointId).toBeInstanceOf(Uuid);
@@ -76,6 +82,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         title: "My Endpoint",
         statusCode: new StatusCode(200),
         responseBodyType: ResponseBodyType.TEXT,
+        userId: new Uuid(),
       });
 
       expect(endpoint2.responseText).toBe("");
@@ -91,6 +98,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         title: "My Endpoint",
         statusCode: new StatusCode(200),
         createdAt: date,
+        userId: new Uuid(),
       });
 
       expect(endpoint.endpointId.equals(id)).toBeTruthy();
@@ -106,6 +114,7 @@ describe("Endpoint Entity - Unit Tests", () => {
         description: "A description",
         delay: 5,
         responseJson: '{"key":"value"}',
+        userId: new Uuid(),
       });
 
       expect(endpoint1.description).toBe("A description");
@@ -118,25 +127,26 @@ describe("Endpoint Entity - Unit Tests", () => {
         statusCode: new StatusCode(200),
         responseBodyType: ResponseBodyType.TEXT,
         responseText: "some text",
+        userId: new Uuid(),
       });
 
       expect(endpoint2.responseText).toBe("some text");
     });
   });
 
-  describe("endpointId", () => {
-    it("should return endpointId", () => {
+  describe("entityId", () => {
+    it("should return the entityId", () => {
       const id = new Uuid();
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
         .withEndpointId(id)
         .build();
 
-      expect(endpoint.endpointId.equals(id)).toBe(true);
+      expect(endpoint.entityId.equals(id)).toBe(true);
     });
   });
 
-  describe("changeMethod", () => {
+  describe("changeMethod()", () => {
     it("should change the method and validate", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
@@ -152,7 +162,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     });
   });
 
-  describe("changeTitle", () => {
+  describe("changeTitle()", () => {
     it("should change the title and validate", () => {
       const endpoint = EndpointFactory.fake().oneEndpoint().build();
 
@@ -165,7 +175,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     });
   });
 
-  describe("changeDescription", () => {
+  describe("changeDescription()", () => {
     it("should change the description and validate", () => {
       const endpoint = EndpointFactory.fake().oneEndpoint().build();
 
@@ -190,7 +200,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     });
   });
 
-  describe("changeDelay", () => {
+  describe("changeDelay()", () => {
     it("should change the delay and validate", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
@@ -218,7 +228,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     });
   });
 
-  describe("changeStatusCode", () => {
+  describe("changeStatusCode()", () => {
     it("should change the status code and validate", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
@@ -276,7 +286,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     });
   });
 
-  describe("changeResponseBodyType", () => {
+  describe("changeResponseBodyType()", () => {
     it("should change the response body type and validate", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
@@ -366,7 +376,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     });
   });
 
-  describe("changeResponseJson", () => {
+  describe("changeResponseJson()", () => {
     it("should change the responseJson and validate", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
@@ -410,7 +420,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     });
   });
 
-  describe("changeResponseText", () => {
+  describe("changeResponseText()", () => {
     it("should change the responseText and validate", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
@@ -454,7 +464,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     });
   });
 
-  describe("_onStatusCodeModified", () => {
+  describe("_onStatusCodeModified()", () => {
     it("should execute when status code is changed", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
@@ -472,7 +482,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     });
   });
 
-  describe("_onResponseBodyTypeModified", () => {
+  describe("_onResponseBodyTypeModified()", () => {
     it("should execute when response body type is changed", () => {
       const endpoint = EndpointFactory.fake()
         .oneEndpoint()
@@ -490,7 +500,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     });
   });
 
-  describe("toJSON", () => {
+  describe("toJSON()", () => {
     it("should return a plain object with all fields", () => {
       const endpointWithoutBody = EndpointFactory.fake()
         .oneEndpoint()
@@ -500,6 +510,7 @@ describe("Endpoint Entity - Unit Tests", () => {
 
       expect(endpointWithoutBody.toJSON()).toEqual({
         endpointId: endpointWithoutBody.endpointId.toString(),
+        userId: endpointWithoutBody.userId.toString(),
         title: endpointWithoutBody.title,
         method: endpointWithoutBody.method,
         description: endpointWithoutBody.description,
@@ -518,6 +529,7 @@ describe("Endpoint Entity - Unit Tests", () => {
 
       expect(endpointWithJson.toJSON()).toEqual({
         endpointId: endpointWithJson.endpointId.toString(),
+        userId: endpointWithJson.userId.toString(),
         title: endpointWithJson.title,
         method: endpointWithJson.method,
         description: endpointWithJson.description,
@@ -530,6 +542,7 @@ describe("Endpoint Entity - Unit Tests", () => {
 
       const endpointWithText = new Endpoint({
         endpointId: new Uuid(),
+        userId: new Uuid(),
         method: HttpMethod.GET,
         title: "My Endpoint",
         statusCode: new StatusCode(200),
@@ -542,6 +555,7 @@ describe("Endpoint Entity - Unit Tests", () => {
 
       expect(endpointWithText.toJSON()).toEqual({
         endpointId: endpointWithText.endpointId.toString(),
+        userId: endpointWithText.userId.toString(),
         title: endpointWithText.title,
         method: endpointWithText.method,
         description: endpointWithText.description,
@@ -554,7 +568,7 @@ describe("Endpoint Entity - Unit Tests", () => {
     });
   });
 
-  describe("validate", () => {
+  describe("validate()", () => {
     it("should call validate on create with factory", () => {
       const spyValidate = jest.spyOn(Endpoint.prototype, "validate");
 

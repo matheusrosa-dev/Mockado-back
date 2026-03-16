@@ -19,7 +19,8 @@
       "recommended": true,
       "correctness": {
         "noUnusedVariables": "error",
-        "noUnusedImports": "error"
+        "noUnusedImports": "error",
+        "noUnusedPrivateClassMembers": "error"
       },
       "style": {
         "useImportType": "off",
@@ -29,7 +30,8 @@
         "noStaticOnlyClass": "off"
       },
       "suspicious": {
-        "noThenProperty": "off"
+        "noThenProperty": "off",
+        "noConfusingVoidType": "off"
       }
     }
   },

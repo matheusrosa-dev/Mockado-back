@@ -1,11 +1,11 @@
 import { IDomainEvent } from "../../shared/events/domain-event.interface";
 
 export class ResponseBodyTypeModifiedEvent implements IDomainEvent {
-  readonly occurred_on: Date;
-  readonly event_version: number;
+  readonly occurredOn: Date;
+  readonly eventVersion: number;
 
   constructor() {
-    this.occurred_on = new Date();
-    this.event_version = 1;
+    this.occurredOn = new Date();
+    this.eventVersion = 1;
   }
 }

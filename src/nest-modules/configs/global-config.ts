@@ -2,8 +2,17 @@ import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { WrapperDataInterceptor } from "../shared/interceptors/wrapper-data/wrapper-data.interceptor";
 import { NotFoundErrorFilter } from "../shared/filters/not-found-error.filter";
 import { EntityValidationErrorFilter } from "../shared/filters/entity-validation-error.filter";
+import cookieParser from "cookie-parser";
 
 export function applyGlobalConfig(app: INestApplication) {
+  app.enableCors({
+    origin: "http://localhost:3000",
+    allowedHeaders: ["Content-Type", "Cookie"],
+    credentials: true,
+  });
+
+  app.use(cookieParser());
+
   app.useGlobalPipes(
     new ValidationPipe({
       errorHttpStatusCode: 422,

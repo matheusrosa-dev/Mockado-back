@@ -1,15 +1,15 @@
-import { DataSource, Repository } from "typeorm";
+import { DataSource, EntityManager, Repository } from "typeorm";
 import { Endpoint } from "@domain/endpoint/endpoint.entity";
 import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
 import { EndpointModel } from "./endpoint-typeorm.model";
-import { EndpointModelMapper } from "./endpoint-model-mapper";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { EndpointModelMapper } from "./endpoint-model-mapper";
 import { NotFoundError } from "@domain/shared/errors/not-found.error";
 
 export class EndpointTypeOrmRepository implements IEndpointRepository {
   private repository: Repository<EndpointModel>;
 
-  constructor(dataSource: DataSource) {
+  constructor(dataSource: DataSource | EntityManager) {
     this.repository = dataSource.getRepository(EndpointModel);
   }
 
@@ -21,24 +21,23 @@ export class EndpointTypeOrmRepository implements IEndpointRepository {
 
   async update(entity: Endpoint): Promise<void> {
     const model = EndpointModelMapper.toModel(entity);
-    const { affected } = await this.repository.update(model.endpointId, model);
 
-    if (!affected) {
-      throw new NotFoundError(entity.endpointId, this.getEntity());
+    const result = await this.repository.update(
+      { endpointId: model.endpointId },
+      model,
+    );
+
+    if (!result?.affected) {
+      throw new NotFoundError(model.endpointId, Endpoint);
     }
   }
 
-  async delete(endpointId: Uuid): Promise<void> {
-    const { affected } = await this.repository.delete(endpointId.toString());
-
-    if (!affected) {
-      throw new NotFoundError(endpointId, this.getEntity());
-    }
-  }
-
-  async findById(endpointId: Uuid): Promise<Endpoint | null> {
-    const model = await this.repository.findOneBy({
-      endpointId: endpointId.toString(),
+  async findByIdWithUserId(props: { endpointId: Uuid; userId: Uuid }) {
+    const model = await this.repository.findOne({
+      where: {
+        endpointId: props.endpointId.toString(),
+        userId: props.userId.toString(),
+      },
     });
 
     if (!model) {
@@ -48,16 +47,11 @@ export class EndpointTypeOrmRepository implements IEndpointRepository {
     return EndpointModelMapper.toEntity(model);
   }
 
-  async findAll(): Promise<Endpoint[]> {
+  async findSummaryByUserId(userId: Uuid) {
     const models = await this.repository.find({
-      order: { createdAt: "ASC" },
-    });
-
-    return models.map((model) => EndpointModelMapper.toEntity(model));
-  }
-
-  async findAllSummary() {
-    const models = await this.repository.find({
+      where: {
+        userId: userId.toString(),
+      },
       order: { createdAt: "ASC" },
       select: {
         endpointId: true,
@@ -73,7 +67,15 @@ export class EndpointTypeOrmRepository implements IEndpointRepository {
     }));
   }
 
-  getEntity() {
-    return Endpoint;
+  delete(): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
+  findAll(): Promise<Endpoint[]> {
+    throw new Error("Method not implemented.");
+  }
+
+  findById(): Promise<Endpoint | null> {
+    throw new Error("Method not implemented.");
   }
 }
