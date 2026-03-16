@@ -12,17 +12,17 @@ domain/
 
 ## Organização por módulo
 
-Cada módulo de domínio (ex: `endpoint/`, `user/`) segue uma estrutura consistente:
+Cada módulo de domínio (ex: `endpoint/`, `user/`, `refresh-token/`) segue uma estrutura consistente:
 
 ```
 <módulo>/
-  <entidade>.entity.ts         → classe da entidade
+  <entidade>.entity.ts         → classe da entidade e sua Factory
   <entidade>.validator.ts      → validador da entidade
   <entidade>.repository.ts     → interface do repositório
   <entidade>.types.ts          → enums e tipos específicos do módulo (quando existem)
   <entidade>.fake-builder.ts   → builder fluente para testes
-  events/                      → eventos de domínio do módulo
-  value-objects/               → value objects específicos do módulo
+  events/                      → eventos de domínio do módulo (quando existem)
+  value-objects/               → value objects específicos do módulo (quando existem)
   __tests__/                   → testes unitários
 ```
 
@@ -39,7 +39,9 @@ Cada módulo de domínio (ex: `endpoint/`, `user/`) segue uma estrutura consiste
 
 ## Padrão de Factory
 
-Cada módulo contém uma classe `<Entity>Factory` (declarada dentro do mesmo arquivo da entidade) com método estático `.create()` que instancia a entidade, chama `.validate()` e retorna a instância. Não é possível criar entidades sem passar pela factory em cenários que exigem validação completa.
+Cada módulo exporta uma classe `<Entity>Factory` (declarada no mesmo arquivo da entidade) com método estático `.create()` que instancia a entidade e retorna a instância. A validação completa é realizada externamente pelo caso de uso após a criação (verificando `entity.notification.hasErrors()`).
+
+A fábrica para testes (`FakeBuilder`) usa `<Entity>Factory.fake()` como ponto de entrada.
 
 ## Padrão de Validador
 
@@ -50,12 +52,13 @@ Cada módulo contém uma classe `<Entity>Factory` (declarada dentro do mesmo arq
 
 ## Padrão de FakeBuilder
 
-- Classe genérica `<Entity>FakeBuilder<TBuild>` para construção em testes
+- Classe `<Entity>FakeBuilder<TBuild>` para construção em testes
 - Tipo auxiliar `PropOrFactory<T> = T | (() => T)` permite valores estáticos ou factories
 - Métodos fluentes `with*()` para sobrescrever cada campo individualmente
 - Construtores estáticos: `one<Entity>()` e `many<Entities>(n)`
-- `.build()` instancia a(s) entidade(s) e chama `.validate()`
+- `.build()` instancia a(s) entidade(s)
 - Valores default são gerados com a biblioteca `Chance`
+- Acessado via `<Entity>Factory.fake().one<Entity>()...build()`
 
 ## Padrão de Repositório
 

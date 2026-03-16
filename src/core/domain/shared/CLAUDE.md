@@ -24,6 +24,21 @@ Classe `Notification` para coletar e expor erros de validação sem lançar exce
 - `hasErrors()` — verifica se há algum erro acumulado
 - `toJSON()` — serializa os erros em formato de array
 
+### Either (`either.ts`)
+
+Classe genérica `Either<Ok, ErrorType>` para resultados que podem ser sucesso ou erro sem lançar exceções:
+
+- Construtores estáticos: `Either.ok(value)`, `Either.fail(error)`, `Either.safe(fn)`, `Either.of(value)`
+- `.isOk()` / `.isFail()` — verificações booleanas
+- `.map(fn)` — transforma o valor ok; passa erros sem modificar
+- `.chain(fn)` — flatMap; fn deve retornar um novo `Either`
+- `.asArray(): [Ok, ErrorType]` — **padrão de uso principal**: desestruturação com `const [value, error] = either.asArray()`
+
+```ts
+const [result, notFoundError] = (await validator.validate(props)).asArray();
+if (notFoundError) throw new AuthenticationError("...");
+```
+
 ### Value Object base (`value-objects/value-object.ts`)
 
 Abstract class `ValueObject` com igualdade por valor via `fast-deep-equal`. Toda comparação entre value objects usa `.equals()`.
@@ -58,6 +73,10 @@ Interface genérica `IRepository<E, EntityId>` com contrato CRUD:
 ### Erro de não encontrado (`errors/not-found.error.ts`)
 
 `NotFoundError` recebe a entidade (classe) e o ID (value object ou array). A mensagem é construída automaticamente com o nome da classe e o(s) ID(s).
+
+### Erro de autenticação (`errors/authentication.error.ts`)
+
+`AuthenticationError` lançado por casos de uso de autenticação quando uma operação não é permitida (ex: usuário inativo, refresh token não encontrado). Mapeado para HTTP 401 pelo `AuthenticationErrorFilter`.
 
 ### Interface de Evento de Domínio (`events/domain-event.interface.ts`)
 

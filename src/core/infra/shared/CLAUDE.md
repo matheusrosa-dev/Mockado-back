@@ -7,30 +7,27 @@ Contém infraestrutura reutilizável por todos os módulos de `infra/`.
 ```
 shared/
   db/
-    in-memory/   → repositório base em memória
     typeorm/
-      migrations/ → migrations TypeORM de produção
+      migrations/ → migrations TypeORM para banco de dados de produção (PostgreSQL)
   testing/       → utilitários de setup para testes de integração
 ```
 
-## Repositório base em memória (`db/in-memory/`)
-
-Abstract class `InMemoryRepository<E, EntityId>` que implementa `IRepository<E, EntityId>` completo:
-- Mantém um array `items` em memória
-- Implementa `insert`, `update`, `delete`, `findById`, `findAll`
-- `update()` e `delete()` lançam `NotFoundError` se o item não existir (busca por `entityId.equals()`)
-- Força as subclasses a implementar `getEntity()` (abstract)
-
-Todos os repositórios in-memory de módulos específicos estendem esta classe.
-
 ## Migrations TypeORM (`db/typeorm/migrations/`)
 
-Contém as migration files usadas no banco de dados de produção. Cada migration implementa `MigrationInterface` com `up()` e `down()`. Executadas automaticamente quando `DB_MIGRATIONS_AUTO_RUN=true` ou manualmente via CLI.
+Contém as migration files usadas no banco de dados de produção (PostgreSQL). Cada migration implementa `MigrationInterface` com `up()` e `down()`. São executadas automaticamente quando `DB_MIGRATIONS_AUTO_RUN=true` ou manualmente via CLI (`npm run migration:run`). Não são usadas quando `DB_TYPE=sqlite` (que usa `synchronize: true`).
 
 ## Utilitários de teste (`testing/`)
 
 Função `setupTypeOrm(options)` para uso em arquivos de teste de integração:
-- Cria um `DataSource` com SQLite in-memory, `synchronize: true`, `dropSchema: true`
-- Aceita opções adicionais (como `entities`) para customização
+- Cria um `DataSource` **real** com SQLite in-memory (`database: ":memory:"`), `synchronize: true`, `dropSchema: true`
+- Aceita opções adicionais (como `entities`) para customizar as entidades carregadas
 - Registra `beforeEach` para inicializar e `afterEach` para destruir o `DataSource` automaticamente
 - Retorna `{ dataSource }` para uso nos testes
+
+```ts
+const { dataSource } = setupTypeOrm({
+  entities: [UserModel, RefreshTokenModel, EndpointModel],
+});
+```
+
+Todos os testes de integração usam este helper — **não existem repositórios in-memory** na base de código. Os testes rodam contra SQLite real.

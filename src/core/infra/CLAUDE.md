@@ -1,21 +1,22 @@
 # core/infra
 
-Camada de infraestrutura. Contém os implementações concretas dos repositórios, modelos ORM e utilitários de teste. Depende de `domain/` e das bibliotecas externas de persistência (TypeORM).
+Camada de infraestrutura. Contém as implementações concretas dos repositórios, modelos ORM, mappers, unit-of-works e serviços externos. Depende de `domain/` e de bibliotecas externas (TypeORM, bcrypt, JWT, etc.).
 
 ## Estrutura
 
 ```
 infra/
-  shared/        → implementações reutilizáveis entre todos os módulos
+  shared/        → utilitários reutilizáveis entre todos os módulos
+  auth/          → implementações de serviços e unit-of-works de autenticação
+    google-login/           → TypeORM UoW para o caso de uso google-login
+    replace-refresh-token/  → TypeORM UoW para o caso de uso replace-refresh-token
+    services/               → implementações concretas de IAuthTokenService, IGoogleAuthService, IHashService
   <módulo>/      → implementações específicas de cada entidade
     db/
       typeorm/   → modelo ORM, mapper e repositório TypeORM
-      in-memory/ → repositório em memória para testes
 ```
 
-## Organização por módulo
-
-Cada módulo de infra segue a estrutura:
+## Organização por módulo de entidade
 
 ```
 <módulo>/
@@ -24,8 +25,6 @@ Cada módulo de infra segue a estrutura:
       <entidade>-typeorm.model.ts       → modelo ORM (classe decorada com TypeORM)
       <entidade>-model-mapper.ts        → conversão bidirecional: entidade ↔ model
       <entidade>-typeorm.repository.ts  → implementação do repositório com TypeORM
-    in-memory/
-      <entidade>-in-memory.repository.ts → implementação em memória para testes
 ```
 
 ## Padrão de Model ORM
@@ -43,18 +42,45 @@ Cada módulo de infra segue a estrutura:
 ## Padrão de Repositório TypeORM
 
 - Classe que implementa a interface `I<Entity>Repository` do domínio
-- Construtor recebe `DataSource` e extrai o `Repository<Model>` interno
+- Construtor recebe `DataSource` (ou `EntityManager` quando dentro de uma transação) e extrai o `Repository<Model>` interno
 - `update()` e `delete()` verificam o campo `affected` do resultado; se for `0`, lançam `NotFoundError`
 - `getEntity()` retorna a classe construtora da entidade de domínio
 
-## Padrão de Repositório In-Memory
+## Padrão de Unit of Work TypeORM
 
-- Estende `InMemoryRepository<E, EntityId>` (de `shared/db/in-memory/`)
-- Implementa apenas `getEntity()` e quaisquer métodos de consulta adicionais da interface do repositório
-- Utilizado exclusivamente nos testes de casos de uso e de domínio
+Implementação concreta das interfaces `I<Operação>UnitOfWork` definidas em `core/app/`:
+
+```ts
+// typeorm-google-login.unit-of-work.ts
+export class TypeOrmGoogleLoginUnitOfWork implements IGoogleLoginUnitOfWork {
+  constructor(private dataSource: DataSource) {}
+
+  async runInTransaction<T>(work: (repos: GoogleLoginRepositories) => Promise<T>): Promise<T> {
+    return this.dataSource.transaction((manager) =>
+      work({
+        userRepository: new UserTypeOrmRepository(manager),
+        refreshTokenRepository: new RefreshTokenTypeOrmRepository(manager),
+      }),
+    );
+  }
+}
+```
+
+Os repositórios dentro da transação recebem o `EntityManager` ao invés do `DataSource`.
+
+## Implementações de Serviços (`auth/services/`)
+
+Implementações concretas das interfaces definidas em `core/app/auth/services/`:
+
+| Classe | Implementa | Dependências |
+|---|---|---|
+| `JwtTokenService` | `IAuthTokenService` | `ConfigService` (lê JWT_SECRET, JWT_EXPIRATION_TIME, etc.) |
+| `GoogleAuthService` | `IGoogleAuthService` | `ConfigService` (lê GOOGLE_CLIENT_ID) |
+| `BcryptHashService` | `IHashService` | nenhuma |
 
 ## Interação com outras camadas
 
 - Importa `@domain/*` para tipos, entidades, interfaces de repositório e erros
-- Não importa `@app/*` nem `nest-modules/`
+- Importa `@app/*` apenas para interfaces de serviço e de unit-of-work
+- Não importa `nest-modules/`
 - A camada `nest-modules/` é responsável por instanciar os repositórios e injetá-los nos casos de uso
