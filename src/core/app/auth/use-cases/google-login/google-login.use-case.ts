@@ -24,7 +24,7 @@ export class GoogleLoginUseCase
     private unitOfWork: IGoogleLoginUnitOfWork,
     private authTokenService: IAuthTokenService,
     private googleAuthService: IGoogleAuthService,
-    private hashService: IHashService,
+    private hashTokenService: IHashService,
   ) {}
 
   async execute(input: GoogleLoginInput): Promise<GoogleLoginOutput> {
@@ -70,7 +70,7 @@ export class GoogleLoginUseCase
       name: user.name,
     });
 
-    const refreshTokenHash = await this.hashService.hash(
+    const refreshTokenHash = await this.hashTokenService.hash(
       generatedTokens.refreshToken,
     );
 

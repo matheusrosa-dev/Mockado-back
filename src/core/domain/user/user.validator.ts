@@ -2,6 +2,7 @@ import {
   IsBoolean,
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Length,
   Matches,
@@ -10,7 +11,13 @@ import { User } from "./user.entity";
 import { ClassValidatorFields } from "../shared/validators/class-validator-fields";
 import { Notification } from "../shared/notification";
 
-const userValidationGroups = ["googleId", "email", "name", "isActive"] as const;
+const userValidationGroups = [
+  "googleId",
+  "email",
+  "name",
+  "isActive",
+  "apiKeyHash",
+] as const;
 
 export type UserValidationGroup = (typeof userValidationGroups)[number];
 
@@ -38,6 +45,14 @@ class UserRules {
   @IsNotEmpty({ groups: ["isActive"] as UserValidationGroup[] })
   @IsBoolean({ groups: ["isActive"] as UserValidationGroup[] })
   _isActive: boolean;
+
+  @IsOptional({ groups: ["apiKeyHash"] as UserValidationGroup[] })
+  @IsString({ groups: ["apiKeyHash"] as UserValidationGroup[] })
+  @Matches(/^[a-f0-9]{64}$/, {
+    groups: ["apiKeyHash"] as UserValidationGroup[],
+    message: "apiKeyHash must be a 64-character hexadecimal string",
+  })
+  _apiKeyHash: string;
 
   constructor(entity: User) {
     Object.assign(this, entity);

@@ -16,12 +16,14 @@ describe("User Entity - Unit Tests", () => {
 
       const user = new User(userProps);
 
-      expect(user.userId.equals(userProps.userId)).toBeTruthy();
-      expect(user.googleId).toBe(userProps.googleId);
-      expect(user.email).toBe(userProps.email);
-      expect(user.name).toBe(userProps.name);
-      expect(user.isActive).toBe(userProps.isActive);
-      expect(user.createdAt).toEqual(userProps.createdAt);
+      expect(user.toJSON()).toEqual({
+        userId: userProps.userId.toString(),
+        googleId: userProps.googleId,
+        email: userProps.email,
+        name: userProps.name,
+        isActive: userProps.isActive,
+        createdAt: userProps.createdAt,
+      });
     });
   });
 
@@ -31,6 +33,29 @@ describe("User Entity - Unit Tests", () => {
       const user = UserFactory.fake().oneUser().withUserId(id).build();
 
       expect(user.entityId.equals(id)).toBe(true);
+    });
+  });
+
+  describe("changeApiKeyHash()", () => {
+    it("should change the apiKeyHash and validate", () => {
+      const user = UserFactory.fake().oneUser().build();
+      const spyValidate = jest.spyOn(user, "validate");
+
+      user.changeApiKeyHash("a".repeat(64));
+
+      expect(spyValidate).toHaveBeenCalled();
+      expect(user.apiKeyHash).toBe("a".repeat(64));
+    });
+
+    it("should add error to notification when apiKeyHash is invalid", () => {
+      const user = UserFactory.fake().oneUser().build();
+
+      user.changeApiKeyHash("invalid-apiKeyHash");
+
+      expect(user.notification.hasErrors()).toBe(true);
+      expect(user.notification.errors.get("apiKeyHash")).toContain(
+        "apiKeyHash must be a 64-character hexadecimal string",
+      );
     });
   });
 
@@ -124,6 +149,7 @@ describe("User Entity - Unit Tests", () => {
         googleId: user.googleId,
         email: user.email,
         name: user.name,
+        apiKeyHash: user.apiKeyHash,
         isActive: user.isActive,
         createdAt: user.createdAt,
       });
@@ -233,6 +259,19 @@ describe("User Entity - Unit Tests", () => {
       expect(user.notification.errors.size).toBe(1);
       expect(user.notification.errors.get("name")).toContain(
         "name should not be empty",
+      );
+    });
+
+    it("should add error when apiKeyHash is not a 64-character hexadecimal string", () => {
+      const user = UserFactory.fake()
+        .oneUser()
+        .withApiKeyHash("invalid-apiKeyHash")
+        .build();
+
+      expect(user.notification.hasErrors()).toBe(true);
+      expect(user.notification.errors.size).toBe(1);
+      expect(user.notification.errors.get("apiKeyHash")).toContain(
+        "apiKeyHash must be a 64-character hexadecimal string",
       );
     });
   });

@@ -6,12 +6,15 @@ describe("User Fake Builder - Unit Tests", () => {
     it("should instance a fake user with default values", () => {
       const fakeUser = UserFactory.fake().oneUser().build();
 
-      expect(fakeUser.userId.toString()).toBeDefined();
-      expect(fakeUser.googleId).toBeDefined();
-      expect(fakeUser.email).toBeDefined();
-      expect(fakeUser.name).toBeDefined();
-      expect(fakeUser.isActive).toBeDefined();
-      expect(fakeUser.createdAt).toBeDefined();
+      expect(fakeUser.toJSON()).toEqual({
+        userId: fakeUser.userId.toString(),
+        googleId: fakeUser.googleId,
+        email: fakeUser.email,
+        name: fakeUser.name,
+        apiKeyHash: fakeUser.apiKeyHash,
+        isActive: fakeUser.isActive,
+        createdAt: fakeUser.createdAt,
+      });
     });
 
     it("should instance a fake user with custom values", () => {
@@ -25,14 +28,18 @@ describe("User Fake Builder - Unit Tests", () => {
         .withName("Custom Name")
         .withIsActive(false)
         .withCreatedAt(new Date("2024-01-01"))
+        .withApiKeyHash("a".repeat(64))
         .build();
 
-      expect(fakeUser.userId.equals(id)).toBeTruthy();
-      expect(fakeUser.googleId).toBe("123456789012345678901");
-      expect(fakeUser.email).toBe("custom@email.com");
-      expect(fakeUser.name).toBe("Custom Name");
-      expect(fakeUser.isActive).toBe(false);
-      expect(fakeUser.createdAt).toEqual(new Date("2024-01-01"));
+      expect(fakeUser.toJSON()).toEqual({
+        userId: id.toString(),
+        googleId: "123456789012345678901",
+        email: "custom@email.com",
+        name: "Custom Name",
+        apiKeyHash: "a".repeat(64),
+        isActive: false,
+        createdAt: new Date("2024-01-01"),
+      });
     });
 
     it("should instance a fake user with factory functions as values", () => {
@@ -44,14 +51,18 @@ describe("User Fake Builder - Unit Tests", () => {
         .withName(() => "Factory Name")
         .withIsActive(() => true)
         .withCreatedAt(() => new Date("2025-06-15"))
+        .withApiKeyHash(() => "a".repeat(64))
         .build();
 
-      expect(fakeUser.userId.toString()).toBeDefined();
-      expect(fakeUser.googleId).toBe("987654321098765432109");
-      expect(fakeUser.email).toBe("factory@email.com");
-      expect(fakeUser.name).toBe("Factory Name");
-      expect(fakeUser.isActive).toBe(true);
-      expect(fakeUser.createdAt).toEqual(new Date("2025-06-15"));
+      expect(fakeUser.toJSON()).toEqual({
+        userId: fakeUser.userId.toString(),
+        googleId: fakeUser.googleId,
+        email: fakeUser.email,
+        name: fakeUser.name,
+        apiKeyHash: fakeUser.apiKeyHash,
+        isActive: fakeUser.isActive,
+        createdAt: fakeUser.createdAt,
+      });
     });
   });
 
@@ -62,12 +73,15 @@ describe("User Fake Builder - Unit Tests", () => {
 
       expect(fakeUsers).toHaveLength(amount);
       fakeUsers.forEach((user) => {
-        expect(user.userId.toString()).toBeDefined();
-        expect(user.googleId).toBeDefined();
-        expect(user.email).toBeDefined();
-        expect(user.name).toBeDefined();
-        expect(user.isActive).toBeDefined();
-        expect(user.createdAt).toBeDefined();
+        expect(user.toJSON()).toEqual({
+          userId: user.userId.toString(),
+          googleId: user.googleId,
+          email: user.email,
+          name: user.name,
+          apiKeyHash: user.apiKeyHash,
+          isActive: user.isActive,
+          createdAt: user.createdAt,
+        });
       });
     });
 
@@ -81,18 +95,22 @@ describe("User Fake Builder - Unit Tests", () => {
         .withGoogleId("123456789012345678901")
         .withEmail("custom@email.com")
         .withName("Custom Name")
+        .withApiKeyHash("a".repeat(64))
         .withIsActive(false)
         .withCreatedAt(new Date("2024-01-01"))
         .build();
 
       expect(fakeUsers).toHaveLength(amount);
       fakeUsers.forEach((user) => {
-        expect(user.userId.equals(id)).toBeTruthy();
-        expect(user.googleId).toBe("123456789012345678901");
-        expect(user.email).toBe("custom@email.com");
-        expect(user.name).toBe("Custom Name");
-        expect(user.isActive).toBe(false);
-        expect(user.createdAt).toEqual(new Date("2024-01-01"));
+        expect(user.toJSON()).toEqual({
+          userId: id.toString(),
+          googleId: "123456789012345678901",
+          email: "custom@email.com",
+          name: "Custom Name",
+          apiKeyHash: "a".repeat(64),
+          isActive: false,
+          createdAt: new Date("2024-01-01"),
+        });
       });
     });
 
@@ -106,15 +124,20 @@ describe("User Fake Builder - Unit Tests", () => {
         .withName(() => "Factory Name")
         .withIsActive(() => true)
         .withCreatedAt(() => new Date("2025-06-15"))
+        .withApiKeyHash(() => "a".repeat(64))
         .build();
 
       expect(fakeUsers).toHaveLength(amount);
       fakeUsers.forEach((user) => {
-        expect(user.googleId).toBe("987654321098765432109");
-        expect(user.email).toBe("factory@email.com");
-        expect(user.name).toBe("Factory Name");
-        expect(user.isActive).toBe(true);
-        expect(user.createdAt).toEqual(new Date("2025-06-15"));
+        expect(user.toJSON()).toEqual({
+          userId: user.userId.toString(),
+          googleId: user.googleId,
+          email: user.email,
+          name: user.name,
+          apiKeyHash: user.apiKeyHash,
+          isActive: user.isActive,
+          createdAt: user.createdAt,
+        });
       });
     });
   });

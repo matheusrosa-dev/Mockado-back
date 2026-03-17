@@ -8,6 +8,7 @@ type ConstructorProps = {
   googleId: string;
   email: string;
   name: string;
+  apiKeyHash?: string;
   isActive?: boolean;
   createdAt?: Date;
 };
@@ -18,6 +19,7 @@ export class User extends Entity {
   private _email: string;
   private _name: string;
   private _isActive: boolean;
+  private _apiKeyHash?: string;
   private _createdAt: Date;
 
   constructor(props: ConstructorProps) {
@@ -29,6 +31,16 @@ export class User extends Entity {
     this._name = props.name;
     this._isActive = props.isActive ?? true;
     this._createdAt = props.createdAt ?? new Date();
+
+    if (props.apiKeyHash) {
+      this._apiKeyHash = props.apiKeyHash;
+    }
+  }
+
+  changeApiKeyHash(apiKeyHash: string) {
+    this._apiKeyHash = apiKeyHash;
+
+    this.validate(["apiKeyHash"]);
   }
 
   changeName(name: string) {
@@ -85,6 +97,10 @@ export class User extends Entity {
     return this._isActive;
   }
 
+  get apiKeyHash() {
+    return this._apiKeyHash;
+  }
+
   get createdAt() {
     return this._createdAt;
   }
@@ -96,6 +112,7 @@ export class User extends Entity {
       isActive: this._isActive,
       email: this._email,
       name: this._name,
+      ...(this._apiKeyHash && { apiKeyHash: this._apiKeyHash }),
       createdAt: this._createdAt,
     };
   }

@@ -27,6 +27,15 @@ export class UserModel {
   })
   googleId: string;
 
+  @Column({
+    name: "api_key_hash",
+    type: "varchar",
+    length: 64,
+    nullable: true,
+    unique: true,
+  })
+  apiKeyHash: string | null;
+
   @Column({ type: "varchar", length: 255, nullable: false, unique: true })
   email: string;
 

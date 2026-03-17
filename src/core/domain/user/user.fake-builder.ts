@@ -10,6 +10,7 @@ export class UserFakeBuilder<TBuild = User | User[]> {
   private _userId?: PropOrFactory<Uuid>;
   private _googleId: PropOrFactory<string> = () =>
     this.chance.string({ length: 21, pool: "0123456789" });
+  private _apiKeyHash?: PropOrFactory<string>;
   private _email: PropOrFactory<string> = () => this.chance.email();
   private _name: PropOrFactory<string> = () => this.chance.name();
   private _isActive: PropOrFactory<boolean> = () => this.chance.bool();
@@ -40,6 +41,11 @@ export class UserFakeBuilder<TBuild = User | User[]> {
     return this;
   }
 
+  withApiKeyHash(valueOrFactory: PropOrFactory<string>) {
+    this._apiKeyHash = valueOrFactory;
+    return this;
+  }
+
   withName(valueOrFactory: PropOrFactory<string>) {
     this._name = valueOrFactory;
     return this;
@@ -63,6 +69,10 @@ export class UserFakeBuilder<TBuild = User | User[]> {
         googleId: this.callFactory(this._googleId),
         email: this.callFactory(this._email),
         name: this.callFactory(this._name),
+
+        ...(this._apiKeyHash && {
+          apiKeyHash: this.callFactory(this._apiKeyHash),
+        }),
 
         isActive:
           this._isActive === undefined
