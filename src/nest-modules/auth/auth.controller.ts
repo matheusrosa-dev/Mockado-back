@@ -99,13 +99,15 @@ export class AuthController {
 
     response.cookie("access_token", accessToken, {
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "none",
+      secure: true,
       maxAge: authConfig.jwtExpirationTime * 1000,
     });
 
     response.cookie("refresh_token", refreshToken, {
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "none",
+      secure: true,
       maxAge: authConfig.jwtRefreshExpirationTime * 1000,
       path: "/auth",
     });
