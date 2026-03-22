@@ -10,8 +10,6 @@ import { IDatabaseConfig } from "../configs/configs.interface";
       useFactory: (configService: ConfigService) => {
         const databaseConfig = configService.get<IDatabaseConfig>("database")!;
 
-        console.log("Database configuration:", databaseConfig);
-
         const entitiesPath = join(__dirname, "../../core/**/*.model{.ts,.js}");
 
         if (databaseConfig.type === "sqlite") {
