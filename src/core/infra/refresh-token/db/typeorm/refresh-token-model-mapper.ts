@@ -1,6 +1,6 @@
-import { LoadEntityError } from "@domain/shared/validators/validation.error";
-import { RefreshToken } from "@domain/refresh-token/refresh-token.entity";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { LoadEntityError } from "../../../../domain/shared/validators/validation.error";
+import { RefreshToken } from "../../../../domain/refresh-token/refresh-token.entity";
+import { Uuid } from "../../../../domain/shared/value-objects/uuid.vo";
 import { RefreshTokenModel } from "./refresh-token-typeorm.model";
 
 export class RefreshTokenModelMapper {

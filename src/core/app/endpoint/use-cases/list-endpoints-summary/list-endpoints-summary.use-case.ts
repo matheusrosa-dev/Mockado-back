@@ -1,7 +1,7 @@
 import { IUseCase } from "../../../shared/use-case.interface";
-import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
-import { HttpMethod } from "@domain/endpoint/endpoint.types";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { IEndpointRepository } from "../../../../domain/endpoint/endpoint.repository";
+import { HttpMethod } from "../../../../domain/endpoint/endpoint.types";
+import { Uuid } from "../../../../domain/shared/value-objects/uuid.vo";
 
 type Output = {
   id: string;

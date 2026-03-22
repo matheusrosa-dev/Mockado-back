@@ -80,7 +80,7 @@ Implementações concretas das interfaces definidas em `core/app/auth/services/`
 
 ## Interação com outras camadas
 
-- Importa `@domain/*` para tipos, entidades, interfaces de repositório e erros
-- Importa `@app/*` apenas para interfaces de serviço e de unit-of-work
+- Importa `domain` para tipos, entidades, interfaces de repositório e erros
+- Importa `app` apenas para interfaces de serviço e de unit-of-work
 - Não importa `nest-modules/`
 - A camada `nest-modules/` é responsável por instanciar os repositórios e injetá-los nos casos de uso

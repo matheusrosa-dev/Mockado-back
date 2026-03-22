@@ -1,4 +1,7 @@
-import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
+import {
+  HttpMethod,
+  ResponseBodyType,
+} from "../../../core/domain/endpoint/endpoint.types";
 import {
   IsEnum,
   IsInt,

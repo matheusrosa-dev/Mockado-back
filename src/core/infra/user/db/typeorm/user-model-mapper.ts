@@ -1,6 +1,6 @@
-import { LoadEntityError } from "@domain/shared/validators/validation.error";
-import { User } from "@domain/user/user.entity";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { LoadEntityError } from "../../../../domain/shared/validators/validation.error";
+import { User } from "../../../../domain/user/user.entity";
+import { Uuid } from "../../../../domain/shared/value-objects/uuid.vo";
 import { UserModel } from "./user-typeorm.model";
 
 export class UserModelMapper {

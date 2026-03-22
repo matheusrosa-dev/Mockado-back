@@ -1,11 +1,11 @@
-import { setupTypeOrm } from "@infra/shared/testing/helpers";
+import { setupTypeOrm } from "../../../../../infra/shared/testing/helpers";
 import { UserModel } from "../user-typeorm.model";
 import { UserTypeOrmRepository } from "../user-typeorm.repository";
-import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
-import { UserFactory } from "@domain/user/user.entity";
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
-import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { RefreshTokenModel } from "../../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { UserFactory } from "../../../../../domain/user/user.entity";
+import { NotFoundError } from "../../../../../domain/shared/errors/not-found.error";
+import { EndpointModel } from "../../../../../infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { Uuid } from "../../../../../domain/shared/value-objects/uuid.vo";
 
 describe("User TypeOrm Repository - Integration Tests", () => {
   const { dataSource } = setupTypeOrm({

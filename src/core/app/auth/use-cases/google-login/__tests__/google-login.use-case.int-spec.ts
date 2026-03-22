@@ -1,21 +1,21 @@
-import { IUserRepository } from "@domain/user/user.repository";
+import { IUserRepository } from "../../../../../domain/user/user.repository";
 import { GoogleLoginUseCase } from "../google-login.use-case";
-import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
-import { UserFactory } from "@domain/user/user.entity";
-import { setupTypeOrm } from "@infra/shared/testing/helpers";
-import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
-import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
-import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
-import { RefreshTokenTypeOrmRepository } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
-import { TypeOrmGoogleLoginUnitOfWork } from "@infra/auth/google-login/typeorm-google-login.unit-of-work";
-import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
-import { JwtTokenService } from "@infra/auth/services/jwt-token.service";
-import { IGoogleAuthService } from "@app/auth/services/google-auth.service";
-import { BcryptHashService } from "@infra/auth/services/bcrypt-hash.service";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
-import { AuthenticationError } from "@domain/shared/errors/authentication.error";
-import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
-import { EndpointTypeOrmRepository } from "@infra/endpoint/db/typeorm/endpoint-typeorm.repository";
+import { IRefreshTokenRepository } from "../../../../../domain/refresh-token/refresh-token.repository";
+import { UserFactory } from "../../../../../domain/user/user.entity";
+import { setupTypeOrm } from "../../../../../infra/shared/testing/helpers";
+import { RefreshTokenModel } from "../../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { UserModel } from "../../../../../infra/user/db/typeorm/user-typeorm.model";
+import { UserTypeOrmRepository } from "../../../../../infra/user/db/typeorm/user-typeorm.repository";
+import { RefreshTokenTypeOrmRepository } from "../../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
+import { TypeOrmGoogleLoginUnitOfWork } from "../../../../../infra/auth/google-login/typeorm-google-login.unit-of-work";
+import { EndpointModel } from "../../../../../infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { JwtTokenService } from "../../../../../infra/auth/services/jwt-token.service";
+import { IGoogleAuthService } from "../../../../../app/auth/services/google-auth.service";
+import { BcryptHashService } from "../../../../../infra/auth/services/bcrypt-hash.service";
+import { Uuid } from "../../../../../domain/shared/value-objects/uuid.vo";
+import { AuthenticationError } from "../../../../../domain/shared/errors/authentication.error";
+import { IEndpointRepository } from "../../../../../domain/endpoint/endpoint.repository";
+import { EndpointTypeOrmRepository } from "../../../../../infra/endpoint/db/typeorm/endpoint-typeorm.repository";
 
 class FakeGoogleAuthService implements IGoogleAuthService {
   verifyToken() {

@@ -1,18 +1,18 @@
-import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
+import { IEndpointRepository } from "../../../../../domain/endpoint/endpoint.repository";
 import { FindEndpointByIdUseCase } from "../find-endpoint-by-id.use-case";
-import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
-import { setupTypeOrm } from "@infra/shared/testing/helpers";
-import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
-import { EndpointTypeOrmRepository } from "@infra/endpoint/db/typeorm/endpoint-typeorm.repository";
-import { EndpointOutputMapper } from "@app/endpoint/use-cases/common/endpoint.output";
-import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
-import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
-import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
-import { IUserRepository } from "@domain/user/user.repository";
-import { UserFactory } from "@domain/user/user.entity";
-import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
+import { EndpointFactory } from "../../../../../domain/endpoint/endpoint.entity";
+import { Uuid } from "../../../../../domain/shared/value-objects/uuid.vo";
+import { NotFoundError } from "../../../../../domain/shared/errors/not-found.error";
+import { setupTypeOrm } from "../../../../../infra/shared/testing/helpers";
+import { EndpointModel } from "../../../../../infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { EndpointTypeOrmRepository } from "../../../../../infra/endpoint/db/typeorm/endpoint-typeorm.repository";
+import { EndpointOutputMapper } from "../../../../../app/endpoint/use-cases/common/endpoint.output";
+import { StatusCode } from "../../../../../domain/endpoint/value-objects/status-code.vo";
+import { UserModel } from "../../../../../infra/user/db/typeorm/user-typeorm.model";
+import { RefreshTokenModel } from "../../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { IUserRepository } from "../../../../../domain/user/user.repository";
+import { UserFactory } from "../../../../../domain/user/user.entity";
+import { UserTypeOrmRepository } from "../../../../../infra/user/db/typeorm/user-typeorm.repository";
 
 describe("Find Endpoint By Id Use Case - Integration Tests", () => {
   let useCase: FindEndpointByIdUseCase;

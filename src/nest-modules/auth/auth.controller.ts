@@ -9,9 +9,9 @@ import {
   CurrentSession,
   type ICurrentSession,
 } from "../shared/decorators/current-session.decorator";
-import { GoogleLoginUseCase } from "@app/auth/use-cases/google-login/google-login.use-case";
-import { LogoutUseCase } from "@app/auth/use-cases/logout/logout.use-case";
-import { ReplaceRefreshTokenUseCase } from "@app/auth/use-cases/replace-refresh-token/replace-refresh-token.use-case";
+import { GoogleLoginUseCase } from "../../core/app/auth/use-cases/google-login/google-login.use-case";
+import { LogoutUseCase } from "../../core/app/auth/use-cases/logout/logout.use-case";
+import { ReplaceRefreshTokenUseCase } from "../../core/app/auth/use-cases/replace-refresh-token/replace-refresh-token.use-case";
 
 @Controller("auth")
 export class AuthController {

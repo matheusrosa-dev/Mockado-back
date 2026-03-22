@@ -10,10 +10,10 @@ import {
 import { Public } from "../shared/decorators/public.decorator";
 import { ApiKeyGuard } from "../shared/guards/api-key.guard";
 import { ThrottlerGuard } from "@nestjs/throttler";
-import { MockEndpointUseCase } from "@app/endpoint/use-cases/mock-endpoint/mock-endpoint.use-case";
+import { MockEndpointUseCase } from "../../core/app/endpoint/use-cases/mock-endpoint/mock-endpoint.use-case";
 import type { Request, Response } from "express";
 import { MockEndpointDto } from "./dtos/mock-endpoint.dto";
-import { HttpMethod } from "@domain/endpoint/endpoint.types";
+import { HttpMethod } from "../../core/domain/endpoint/endpoint.types";
 
 @Controller("mock")
 export class MockController {

@@ -1,7 +1,7 @@
-import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
-import { ResponseBodyType } from "@domain/endpoint/endpoint.types";
+import { EndpointFactory } from "../../../../../domain/endpoint/endpoint.entity";
+import { ResponseBodyType } from "../../../../../domain/endpoint/endpoint.types";
 import { EndpointOutputMapper } from "../endpoint.output";
-import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
+import { StatusCode } from "../../../../../domain/endpoint/value-objects/status-code.vo";
 
 describe("Endpoint Output Mapper - Unit Tests", () => {
   describe("toOutput()", () => {

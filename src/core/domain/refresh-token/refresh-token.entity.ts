@@ -1,5 +1,5 @@
-import { Entity } from "@domain/shared/entity";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { Entity } from "../../domain/shared/entity";
+import { Uuid } from "../../domain/shared/value-objects/uuid.vo";
 import {
   RefreshTokenValidationGroup,
   RefreshTokenValidator,

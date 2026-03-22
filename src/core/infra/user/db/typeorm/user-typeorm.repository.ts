@@ -1,10 +1,10 @@
 import { DataSource, EntityManager, Repository } from "typeorm";
-import { User } from "@domain/user/user.entity";
-import { IUserRepository } from "@domain/user/user.repository";
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
+import { User } from "../../../../domain/user/user.entity";
+import { IUserRepository } from "../../../../domain/user/user.repository";
+import { NotFoundError } from "../../../../domain/shared/errors/not-found.error";
 import { UserModel } from "./user-typeorm.model";
 import { UserModelMapper } from "./user-model-mapper";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { Uuid } from "../../../../domain/shared/value-objects/uuid.vo";
 
 export class UserTypeOrmRepository implements IUserRepository {
   private repository: Repository<UserModel>;

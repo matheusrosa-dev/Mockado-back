@@ -1,4 +1,4 @@
-import { GenerateApiKeyUseCase } from "@app/me/use-cases/generate-api-key/generate-api-key.use-case";
+import { GenerateApiKeyUseCase } from "../../core/app/me/use-cases/generate-api-key/generate-api-key.use-case";
 import { Controller, Get } from "@nestjs/common";
 import {
   CurrentSession,

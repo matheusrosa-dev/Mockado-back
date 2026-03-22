@@ -1,14 +1,14 @@
-import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { RefreshTokenModel } from "../../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
 import { GenerateApiKeyUseCase } from "../generate-api-key.use-case";
-import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
-import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
-import { setupTypeOrm } from "@infra/shared/testing/helpers";
-import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
-import { IUserRepository } from "@domain/user/user.repository";
-import { UserFactory } from "@domain/user/user.entity";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
-import { CryptoApiKeyService } from "@infra/me/services/crypto-api-key.service";
+import { UserModel } from "../../../../../infra/user/db/typeorm/user-typeorm.model";
+import { EndpointModel } from "../../../../../infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { setupTypeOrm } from "../../../../../infra/shared/testing/helpers";
+import { UserTypeOrmRepository } from "../../../../../infra/user/db/typeorm/user-typeorm.repository";
+import { IUserRepository } from "../../../../../domain/user/user.repository";
+import { UserFactory } from "../../../../../domain/user/user.entity";
+import { Uuid } from "../../../../../domain/shared/value-objects/uuid.vo";
+import { NotFoundError } from "../../../../../domain/shared/errors/not-found.error";
+import { CryptoApiKeyService } from "../../../../../infra/me/services/crypto-api-key.service";
 
 describe("Generate Api Key Use Case - Integration Tests", () => {
   let useCase: GenerateApiKeyUseCase;

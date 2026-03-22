@@ -1,13 +1,13 @@
-import { setupTypeOrm } from "@infra/shared/testing/helpers";
+import { setupTypeOrm } from "../../../../../infra/shared/testing/helpers";
 import { RefreshTokenModel } from "../refresh-token-typeorm.model";
-import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
-import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
+import { UserModel } from "../../../../../infra/user/db/typeorm/user-typeorm.model";
+import { UserTypeOrmRepository } from "../../../../../infra/user/db/typeorm/user-typeorm.repository";
 import { RefreshTokenTypeOrmRepository } from "../refresh-token-typeorm.repository";
-import { UserFactory } from "@domain/user/user.entity";
-import { RefreshTokenFactory } from "@domain/refresh-token/refresh-token.entity";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
-import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { UserFactory } from "../../../../../domain/user/user.entity";
+import { RefreshTokenFactory } from "../../../../../domain/refresh-token/refresh-token.entity";
+import { Uuid } from "../../../../../domain/shared/value-objects/uuid.vo";
+import { NotFoundError } from "../../../../../domain/shared/errors/not-found.error";
+import { EndpointModel } from "../../../../../infra/endpoint/db/typeorm/endpoint-typeorm.model";
 
 describe("Refresh Token TypeOrm Repository - Integration Tests", () => {
   const { dataSource } = setupTypeOrm({

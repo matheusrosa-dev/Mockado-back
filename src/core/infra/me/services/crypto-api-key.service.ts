@@ -1,4 +1,4 @@
-import { IApiKeyService } from "@app/me/services/api-key.service";
+import { IApiKeyService } from "../../../app/me/services/api-key.service";
 import { randomBytes, createHash } from "node:crypto";
 
 export class CryptoApiKeyService implements IApiKeyService {

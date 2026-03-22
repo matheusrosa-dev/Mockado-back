@@ -1,4 +1,4 @@
-import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
+import { IRefreshTokenRepository } from "../../../../domain/refresh-token/refresh-token.repository";
 
 export const REPLACE_REFRESH_TOKEN_UNIT_OF_WORK =
   "REPLACE_REFRESH_TOKEN_UNIT_OF_WORK";

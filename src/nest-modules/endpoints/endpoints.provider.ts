@@ -1,13 +1,13 @@
-import { CreateEndpointUseCase } from "@app/endpoint/use-cases/create-endpoint/create-endpoint.use-case";
-import { UpdateEndpointUseCase } from "@app/endpoint/use-cases/update-endpoint/update-endpoint.use-case";
-import { FindEndpointByIdUseCase } from "@app/endpoint/use-cases/find-endpoint-by-id/find-endpoint-by-id.use-case";
-import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
-import { EndpointTypeOrmRepository } from "@infra/endpoint/db/typeorm/endpoint-typeorm.repository";
+import { CreateEndpointUseCase } from "../../core/app/endpoint/use-cases/create-endpoint/create-endpoint.use-case";
+import { UpdateEndpointUseCase } from "../../core/app/endpoint/use-cases/update-endpoint/update-endpoint.use-case";
+import { FindEndpointByIdUseCase } from "../../core/app/endpoint/use-cases/find-endpoint-by-id/find-endpoint-by-id.use-case";
+import { IEndpointRepository } from "../../core/domain/endpoint/endpoint.repository";
+import { EndpointTypeOrmRepository } from "../../core/infra/endpoint/db/typeorm/endpoint-typeorm.repository";
 import { FactoryProvider } from "@nestjs/common";
 import { DataSource } from "typeorm";
-import { ListEndpointsSummaryUseCase } from "@app/endpoint/use-cases/list-endpoints-summary/list-endpoints-summary.use-case";
-import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
-import { IUserRepository } from "@domain/user/user.repository";
+import { ListEndpointsSummaryUseCase } from "../../core/app/endpoint/use-cases/list-endpoints-summary/list-endpoints-summary.use-case";
+import { UserTypeOrmRepository } from "../../core/infra/user/db/typeorm/user-typeorm.repository";
+import { IUserRepository } from "../../core/domain/user/user.repository";
 
 const REPOSITORIES = {
   ENDPOINT: {

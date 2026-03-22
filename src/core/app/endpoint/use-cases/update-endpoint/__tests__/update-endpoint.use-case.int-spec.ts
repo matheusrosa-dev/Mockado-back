@@ -1,20 +1,23 @@
-import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
+import { IEndpointRepository } from "../../../../../domain/endpoint/endpoint.repository";
 import { UpdateEndpointUseCase } from "../update-endpoint.use-case";
-import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
-import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
-import { EntityValidationError } from "@domain/shared/validators/validation.error";
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
-import { EndpointOutputMapper } from "@app/endpoint/use-cases/common/endpoint.output";
-import { setupTypeOrm } from "@infra/shared/testing/helpers";
-import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
-import { EndpointTypeOrmRepository } from "@infra/endpoint/db/typeorm/endpoint-typeorm.repository";
-import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
-import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
-import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
-import { IUserRepository } from "@domain/user/user.repository";
-import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
-import { UserFactory } from "@domain/user/user.entity";
+import { EndpointFactory } from "../../../../../domain/endpoint/endpoint.entity";
+import {
+  HttpMethod,
+  ResponseBodyType,
+} from "../../../../../domain/endpoint/endpoint.types";
+import { EntityValidationError } from "../../../../../domain/shared/validators/validation.error";
+import { NotFoundError } from "../../../../../domain/shared/errors/not-found.error";
+import { Uuid } from "../../../../../domain/shared/value-objects/uuid.vo";
+import { EndpointOutputMapper } from "../../../../../app/endpoint/use-cases/common/endpoint.output";
+import { setupTypeOrm } from "../../../../../infra/shared/testing/helpers";
+import { EndpointModel } from "../../../../../infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { EndpointTypeOrmRepository } from "../../../../../infra/endpoint/db/typeorm/endpoint-typeorm.repository";
+import { StatusCode } from "../../../../../domain/endpoint/value-objects/status-code.vo";
+import { RefreshTokenModel } from "../../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { UserModel } from "../../../../../infra/user/db/typeorm/user-typeorm.model";
+import { IUserRepository } from "../../../../../domain/user/user.repository";
+import { UserTypeOrmRepository } from "../../../../../infra/user/db/typeorm/user-typeorm.repository";
+import { UserFactory } from "../../../../../domain/user/user.entity";
 
 describe("Update Endpoint Use Case - Integration Tests", () => {
   let useCase: UpdateEndpointUseCase;
@@ -203,7 +206,7 @@ describe("Update Endpoint Use Case - Integration Tests", () => {
         useCase.execute({
           id: endpoint.endpointId.toString(),
           userId: user.userId.toString(),
-          delay: 11, // Invalid: @Max(10) - triggers entity validation error
+          delay: 11, // Invalid: ../../../../../Max(10) - triggers entity validation error
         }),
       ).rejects.toThrow(EntityValidationError);
     });

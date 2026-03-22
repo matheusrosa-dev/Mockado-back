@@ -2,9 +2,9 @@ import { Controller, Get, INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { NotFoundErrorFilter } from "../not-found-error.filter";
 import request from "supertest";
-import { Entity } from "@domain/shared/entity";
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { Entity } from "../../../../core/domain/shared/entity";
+import { NotFoundError } from "../../../../core/domain/shared/errors/not-found.error";
+import { Uuid } from "../../../../core/domain/shared/value-objects/uuid.vo";
 
 class StubEntity extends Entity {
   entityId: Uuid;

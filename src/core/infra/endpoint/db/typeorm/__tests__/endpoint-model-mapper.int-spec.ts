@@ -1,6 +1,6 @@
-import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
+import { EndpointFactory } from "../../../../../domain/endpoint/endpoint.entity";
 import { EndpointModelMapper } from "../endpoint-model-mapper";
-import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
+import { StatusCode } from "../../../../../domain/endpoint/value-objects/status-code.vo";
 
 describe("Endpoint Model Mapper - Integration Tests", () => {
   describe("toModel()", () => {

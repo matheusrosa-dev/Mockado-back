@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { JwtTokenService } from "../jwt-token.service";
-import type { AuthTokenPayload } from "@app/auth/services/auth-token.service";
+import type { AuthTokenPayload } from "../../../../app/auth/services/auth-token.service";
 
 const config = {
   jwtSecret: "access-secret",

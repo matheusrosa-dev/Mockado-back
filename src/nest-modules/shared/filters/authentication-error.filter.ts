@@ -1,4 +1,4 @@
-import { AuthenticationError } from "@domain/shared/errors/authentication.error";
+import { AuthenticationError } from "../../../core/domain/shared/errors/authentication.error";
 import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
 import { Response } from "express";
 

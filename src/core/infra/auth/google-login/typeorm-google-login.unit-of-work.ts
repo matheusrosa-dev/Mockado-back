@@ -1,10 +1,10 @@
 import {
   GoogleLoginRepositories,
   IGoogleLoginUnitOfWork,
-} from "@app/auth/use-cases/google-login/google-login.unit-of-work";
-import { EndpointTypeOrmRepository } from "@infra/endpoint/db/typeorm/endpoint-typeorm.repository";
-import { RefreshTokenTypeOrmRepository } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
-import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
+} from "../../../app/auth/use-cases/google-login/google-login.unit-of-work";
+import { EndpointTypeOrmRepository } from "../../../infra/endpoint/db/typeorm/endpoint-typeorm.repository";
+import { RefreshTokenTypeOrmRepository } from "../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
+import { UserTypeOrmRepository } from "../../../infra/user/db/typeorm/user-typeorm.repository";
 import { DataSource } from "typeorm";
 
 export class TypeOrmGoogleLoginUnitOfWork implements IGoogleLoginUnitOfWork {

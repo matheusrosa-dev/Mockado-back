@@ -1,16 +1,16 @@
-import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
+import { IRefreshTokenRepository } from "../../../../../domain/refresh-token/refresh-token.repository";
 import { RefreshTokenExistsValidator } from "../refresh-token-exists.validator";
-import { RefreshTokenFactory } from "@domain/refresh-token/refresh-token.entity";
-import { RefreshTokenTypeOrmRepository } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
-import { setupTypeOrm } from "@infra/shared/testing/helpers";
-import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
-import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
-import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
-import { UserFactory } from "@domain/user/user.entity";
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
-import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
-import { BcryptHashService } from "@infra/auth/services/bcrypt-hash.service";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { RefreshTokenFactory } from "../../../../../domain/refresh-token/refresh-token.entity";
+import { RefreshTokenTypeOrmRepository } from "../../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
+import { setupTypeOrm } from "../../../../../infra/shared/testing/helpers";
+import { RefreshTokenModel } from "../../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { UserModel } from "../../../../../infra/user/db/typeorm/user-typeorm.model";
+import { UserTypeOrmRepository } from "../../../../../infra/user/db/typeorm/user-typeorm.repository";
+import { UserFactory } from "../../../../../domain/user/user.entity";
+import { NotFoundError } from "../../../../../domain/shared/errors/not-found.error";
+import { EndpointModel } from "../../../../../infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { BcryptHashService } from "../../../../../infra/auth/services/bcrypt-hash.service";
+import { Uuid } from "../../../../../domain/shared/value-objects/uuid.vo";
 
 describe("Refresh Token Exists Validator - Integration Tests", () => {
   const { dataSource } = setupTypeOrm({

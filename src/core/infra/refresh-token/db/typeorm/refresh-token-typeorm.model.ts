@@ -7,7 +7,7 @@ import {
   PrimaryColumn,
   type Relation,
 } from "typeorm";
-import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
+import { UserModel } from "../../../user/db/typeorm/user-typeorm.model";
 
 @Entity({ name: "refresh_tokens" })
 export class RefreshTokenModel {

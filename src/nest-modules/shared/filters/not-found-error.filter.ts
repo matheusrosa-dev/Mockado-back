@@ -1,4 +1,4 @@
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
+import { NotFoundError } from "../../../core/domain/shared/errors/not-found.error";
 import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
 import { Response } from "express";
 

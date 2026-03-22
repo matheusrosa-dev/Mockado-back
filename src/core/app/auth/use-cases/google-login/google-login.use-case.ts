@@ -1,21 +1,24 @@
-import { IUseCase } from "@app/shared/use-case.interface";
-import { RefreshTokenFactory } from "@domain/refresh-token/refresh-token.entity";
-import { User, UserFactory } from "@domain/user/user.entity";
-import { EntityValidationError } from "@domain/shared/validators/validation.error";
+import { IUseCase } from "../../../../app/shared/use-case.interface";
+import { RefreshTokenFactory } from "../../../../domain/refresh-token/refresh-token.entity";
+import { User, UserFactory } from "../../../../domain/user/user.entity";
+import { EntityValidationError } from "../../../../domain/shared/validators/validation.error";
 import { IGoogleLoginUnitOfWork } from "./google-login.unit-of-work";
-import { IUserRepository } from "@domain/user/user.repository";
-import { IAuthTokenService } from "@app/auth/services/auth-token.service";
+import { IUserRepository } from "../../../../domain/user/user.repository";
+import { IAuthTokenService } from "../../../../app/auth/services/auth-token.service";
 import {
   GoogleUser,
   IGoogleAuthService,
-} from "@app/auth/services/google-auth.service";
-import { IHashService } from "@app/auth/services/hash.service";
-import { AuthenticationError } from "@domain/shared/errors/authentication.error";
-import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
-import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
-import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
-import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
-import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
+} from "../../../../app/auth/services/google-auth.service";
+import { IHashService } from "../../../../app/auth/services/hash.service";
+import { AuthenticationError } from "../../../../domain/shared/errors/authentication.error";
+import { IRefreshTokenRepository } from "../../../../domain/refresh-token/refresh-token.repository";
+import { IEndpointRepository } from "../../../../domain/endpoint/endpoint.repository";
+import { EndpointFactory } from "../../../../domain/endpoint/endpoint.entity";
+import {
+  HttpMethod,
+  ResponseBodyType,
+} from "../../../../domain/endpoint/endpoint.types";
+import { StatusCode } from "../../../../domain/endpoint/value-objects/status-code.vo";
 
 export class GoogleLoginUseCase
   implements IUseCase<GoogleLoginInput, GoogleLoginOutput>

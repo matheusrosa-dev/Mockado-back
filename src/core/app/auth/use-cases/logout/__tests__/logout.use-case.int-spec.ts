@@ -1,15 +1,15 @@
-import { IUserRepository } from "@domain/user/user.repository";
-import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
-import { UserFactory } from "@domain/user/user.entity";
-import { RefreshTokenFactory } from "@domain/refresh-token/refresh-token.entity";
-import { setupTypeOrm } from "@infra/shared/testing/helpers";
-import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
-import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
-import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
-import { RefreshTokenTypeOrmRepository } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
-import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { IUserRepository } from "../../../../../domain/user/user.repository";
+import { IRefreshTokenRepository } from "../../../../../domain/refresh-token/refresh-token.repository";
+import { UserFactory } from "../../../../../domain/user/user.entity";
+import { RefreshTokenFactory } from "../../../../../domain/refresh-token/refresh-token.entity";
+import { setupTypeOrm } from "../../../../../infra/shared/testing/helpers";
+import { RefreshTokenModel } from "../../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { UserModel } from "../../../../../infra/user/db/typeorm/user-typeorm.model";
+import { UserTypeOrmRepository } from "../../../../../infra/user/db/typeorm/user-typeorm.repository";
+import { RefreshTokenTypeOrmRepository } from "../../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
+import { EndpointModel } from "../../../../../infra/endpoint/db/typeorm/endpoint-typeorm.model";
 import { LogoutUseCase } from "../logout.use-case";
-import { BcryptHashService } from "@infra/auth/services/bcrypt-hash.service";
+import { BcryptHashService } from "../../../../../infra/auth/services/bcrypt-hash.service";
 
 describe("Logout Use Case - Integration Tests", () => {
   let useCase: LogoutUseCase;

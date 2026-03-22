@@ -1,12 +1,12 @@
-import { IHashService } from "@app/auth/services/hash.service";
-import { RefreshToken } from "@domain/refresh-token/refresh-token.entity";
+import { IHashService } from "../../../../app/auth/services/hash.service";
+import { RefreshToken } from "../../../../domain/refresh-token/refresh-token.entity";
 import {
   FindManyByUserIdResponse,
   IRefreshTokenRepository,
-} from "@domain/refresh-token/refresh-token.repository";
-import { Either } from "@domain/shared/either";
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+} from "../../../../domain/refresh-token/refresh-token.repository";
+import { Either } from "../../../../domain/shared/either";
+import { NotFoundError } from "../../../../domain/shared/errors/not-found.error";
+import { Uuid } from "../../../../domain/shared/value-objects/uuid.vo";
 
 type RefreshTokenExistsValidatorResponse = Either<
   FindManyByUserIdResponse,

@@ -1,4 +1,4 @@
-import { ValueObject } from "@domain/shared/value-objects/value-object";
+import { ValueObject } from "../../../domain/shared/value-objects/value-object";
 
 export class InvalidStatusCodeError extends Error {
   constructor(message?: string) {

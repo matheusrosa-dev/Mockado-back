@@ -1,6 +1,6 @@
-import { IGoogleAuthService } from "@app/auth/services/google-auth.service";
+import { IGoogleAuthService } from "../../../app/auth/services/google-auth.service";
 import { OAuth2Client, TokenPayload } from "google-auth-library";
-import { AuthenticationError } from "@domain/shared/errors/authentication.error";
+import { AuthenticationError } from "../../../domain/shared/errors/authentication.error";
 
 export class GoogleAuthService implements IGoogleAuthService {
   private client: OAuth2Client;

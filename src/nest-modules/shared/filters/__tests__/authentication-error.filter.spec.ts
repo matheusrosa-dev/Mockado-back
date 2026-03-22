@@ -2,7 +2,7 @@ import { Controller, Get, INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { AuthenticationErrorFilter } from "../authentication-error.filter";
 import request from "supertest";
-import { AuthenticationError } from "@domain/shared/errors/authentication.error";
+import { AuthenticationError } from "../../../../core/domain/shared/errors/authentication.error";
 
 const errorMessage = "Invalid credentials";
 

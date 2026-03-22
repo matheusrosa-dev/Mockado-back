@@ -1,4 +1,4 @@
-import { EntityValidationError } from "@domain/shared/validators/validation.error";
+import { EntityValidationError } from "../../../core/domain/shared/validators/validation.error";
 import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
 import { Response } from "express";
 

@@ -1,19 +1,22 @@
-import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
-import { IUserRepository } from "@domain/user/user.repository";
-import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
-import { EndpointTypeOrmRepository } from "@infra/endpoint/db/typeorm/endpoint-typeorm.repository";
-import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
-import { setupTypeOrm } from "@infra/shared/testing/helpers";
-import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
-import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
+import { IEndpointRepository } from "../../../../../domain/endpoint/endpoint.repository";
+import { IUserRepository } from "../../../../../domain/user/user.repository";
+import { EndpointModel } from "../../../../../infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { EndpointTypeOrmRepository } from "../../../../../infra/endpoint/db/typeorm/endpoint-typeorm.repository";
+import { RefreshTokenModel } from "../../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { setupTypeOrm } from "../../../../../infra/shared/testing/helpers";
+import { UserModel } from "../../../../../infra/user/db/typeorm/user-typeorm.model";
+import { UserTypeOrmRepository } from "../../../../../infra/user/db/typeorm/user-typeorm.repository";
 import { MockEndpointUseCase } from "../mock-endpoint.use-case";
-import { UserFactory } from "@domain/user/user.entity";
-import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
-import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
-import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
-import { CryptoApiKeyService } from "@infra/me/services/crypto-api-key.service";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { UserFactory } from "../../../../../domain/user/user.entity";
+import { EndpointFactory } from "../../../../../domain/endpoint/endpoint.entity";
+import { StatusCode } from "../../../../../domain/endpoint/value-objects/status-code.vo";
+import { NotFoundError } from "../../../../../domain/shared/errors/not-found.error";
+import {
+  HttpMethod,
+  ResponseBodyType,
+} from "../../../../../domain/endpoint/endpoint.types";
+import { CryptoApiKeyService } from "../../../../../infra/me/services/crypto-api-key.service";
+import { Uuid } from "../../../../../domain/shared/value-objects/uuid.vo";
 
 describe("Mock Endpoint Use Case - Integration Tests", () => {
   let useCase: MockEndpointUseCase;

@@ -1,12 +1,12 @@
-import { RefreshTokenFactory } from "@domain/refresh-token/refresh-token.entity";
-import { setupTypeOrm } from "@infra/shared/testing/helpers";
-import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
-import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
+import { RefreshTokenFactory } from "../../../../domain/refresh-token/refresh-token.entity";
+import { setupTypeOrm } from "../../../../infra/shared/testing/helpers";
+import { RefreshTokenModel } from "../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { UserModel } from "../../../../infra/user/db/typeorm/user-typeorm.model";
 import { TypeOrmReplaceRefreshTokenUnitOfWork } from "../typeorm-replace-refresh-token.unit-of-work";
-import { UserFactory } from "@domain/user/user.entity";
-import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
-import { RefreshTokenTypeOrmRepository } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
-import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { UserFactory } from "../../../../domain/user/user.entity";
+import { UserTypeOrmRepository } from "../../../../infra/user/db/typeorm/user-typeorm.repository";
+import { RefreshTokenTypeOrmRepository } from "../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
+import { EndpointModel } from "../../../../infra/endpoint/db/typeorm/endpoint-typeorm.model";
 
 describe("TypeOrm Replace Refresh Token Unit Of Work - Integration Tests", () => {
   const { dataSource } = setupTypeOrm({

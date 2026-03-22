@@ -1,4 +1,4 @@
-import { RefreshTokenFactory } from "@domain/refresh-token/refresh-token.entity";
+import { RefreshTokenFactory } from "../../../../../domain/refresh-token/refresh-token.entity";
 import { RefreshTokenModelMapper } from "../refresh-token-model-mapper";
 
 describe("RefreshToken Model Mapper - Integration Tests", () => {

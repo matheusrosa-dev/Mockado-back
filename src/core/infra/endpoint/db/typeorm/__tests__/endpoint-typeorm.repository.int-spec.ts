@@ -1,13 +1,13 @@
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
-import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
+import { Uuid } from "../../../../../domain/shared/value-objects/uuid.vo";
+import { EndpointFactory } from "../../../../../domain/endpoint/endpoint.entity";
 import { setupTypeOrm } from "../../../../shared/testing/helpers";
 import { EndpointModel } from "../endpoint-typeorm.model";
 import { EndpointTypeOrmRepository } from "../endpoint-typeorm.repository";
-import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
-import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
-import { UserFactory } from "@domain/user/user.entity";
-import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
-import { CryptoApiKeyService } from "@infra/me/services/crypto-api-key.service";
+import { UserModel } from "../../../../../infra/user/db/typeorm/user-typeorm.model";
+import { RefreshTokenModel } from "../../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { UserFactory } from "../../../../../domain/user/user.entity";
+import { UserTypeOrmRepository } from "../../../../../infra/user/db/typeorm/user-typeorm.repository";
+import { CryptoApiKeyService } from "../../../../../infra/me/services/crypto-api-key.service";
 
 describe("Endpoint TypeOrm Repository - Integration Tests", () => {
   const { dataSource } = setupTypeOrm({

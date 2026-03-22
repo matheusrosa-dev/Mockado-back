@@ -17,16 +17,6 @@ core/
 - **`app/`**: Contém os casos de uso que orquestram operações de domínio. Depende apenas de `domain/`. Não contém lógica HTTP, nem de banco de dados.
 - **`infra/`**: Contém as implementações concretas dos repositórios (TypeORM), modelos ORM, mappers, unit-of-works e serviços externos (JWT, Google Auth, bcrypt). Depende de `domain/` e de `app/` (para interfaces de serviço e de unit-of-work), além de bibliotecas externas.
 
-## Path aliases
-
-O `tsconfig.json` define os seguintes aliases apontando para este diretório:
-
-| Alias       | Destino                  |
-|-------------|--------------------------|
-| `@domain/*` | `src/core/domain/*`      |
-| `@app/*`    | `src/core/app/*`         |
-| `@infra/*`  | `src/core/infra/*`       |
-
 ## Isolamento de framework
 
 Nenhum arquivo dentro de `core/` importa ou utiliza decoradores, módulos ou qualquer primitiva do NestJS. Todo o acoplamento com o framework é feito na camada `nest-modules/`.

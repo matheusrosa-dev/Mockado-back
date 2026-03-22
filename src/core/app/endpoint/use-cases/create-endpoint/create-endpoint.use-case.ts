@@ -1,17 +1,20 @@
-import { EntityValidationError } from "@domain/shared/validators/validation.error";
-import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
+import { EntityValidationError } from "../../../../domain/shared/validators/validation.error";
+import { EndpointFactory } from "../../../../domain/endpoint/endpoint.entity";
 import { IUseCase } from "../../../shared/use-case.interface";
 import {
   EndpointOutput,
   EndpointOutputMapper,
 } from "../common/endpoint.output";
-import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
-import { StatusCode } from "@domain/endpoint/value-objects/status-code.vo";
-import { IUserRepository } from "@domain/user/user.repository";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
-import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
-import { User } from "@domain/user/user.entity";
+import { IEndpointRepository } from "../../../../domain/endpoint/endpoint.repository";
+import { StatusCode } from "../../../../domain/endpoint/value-objects/status-code.vo";
+import { IUserRepository } from "../../../../domain/user/user.repository";
+import { Uuid } from "../../../../domain/shared/value-objects/uuid.vo";
+import {
+  HttpMethod,
+  ResponseBodyType,
+} from "../../../../domain/endpoint/endpoint.types";
+import { NotFoundError } from "../../../../domain/shared/errors/not-found.error";
+import { User } from "../../../../domain/user/user.entity";
 
 export class CreateEndpointUseCase
   implements IUseCase<CreateEndpointInput, EndpointOutput>

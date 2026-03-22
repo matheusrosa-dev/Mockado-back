@@ -1,15 +1,15 @@
-import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
+import { IEndpointRepository } from "../../../../../domain/endpoint/endpoint.repository";
 import { ListEndpointsSummaryUseCase } from "../list-endpoints-summary.use-case";
-import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
-import { setupTypeOrm } from "@infra/shared/testing/helpers";
-import { EndpointTypeOrmRepository } from "@infra/endpoint/db/typeorm/endpoint-typeorm.repository";
-import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
-import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
-import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
-import { IUserRepository } from "@domain/user/user.repository";
-import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
-import { UserFactory } from "@domain/user/user.entity";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { EndpointFactory } from "../../../../../domain/endpoint/endpoint.entity";
+import { setupTypeOrm } from "../../../../../infra/shared/testing/helpers";
+import { EndpointTypeOrmRepository } from "../../../../../infra/endpoint/db/typeorm/endpoint-typeorm.repository";
+import { EndpointModel } from "../../../../../infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { UserModel } from "../../../../../infra/user/db/typeorm/user-typeorm.model";
+import { RefreshTokenModel } from "../../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { IUserRepository } from "../../../../../domain/user/user.repository";
+import { UserTypeOrmRepository } from "../../../../../infra/user/db/typeorm/user-typeorm.repository";
+import { UserFactory } from "../../../../../domain/user/user.entity";
+import { Uuid } from "../../../../../domain/shared/value-objects/uuid.vo";
 
 describe("List Endpoints Summary Use Case - Integration Tests", () => {
   let useCase: ListEndpointsSummaryUseCase;

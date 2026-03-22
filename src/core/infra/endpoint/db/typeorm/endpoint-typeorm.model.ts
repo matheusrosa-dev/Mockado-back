@@ -7,8 +7,11 @@ import {
   PrimaryColumn,
   type Relation,
 } from "typeorm";
-import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
-import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
+import {
+  HttpMethod,
+  ResponseBodyType,
+} from "../../../../domain/endpoint/endpoint.types";
+import { UserModel } from "../../../../infra/user/db/typeorm/user-typeorm.model";
 
 @Entity({ name: "endpoints" })
 export class EndpointModel {

@@ -1,10 +1,10 @@
 import { DataSource } from "typeorm";
 import { FactoryProvider } from "@nestjs/common";
-import { EndpointTypeOrmRepository } from "@infra/endpoint/db/typeorm/endpoint-typeorm.repository";
-import { MockEndpointUseCase } from "@app/endpoint/use-cases/mock-endpoint/mock-endpoint.use-case";
-import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
-import { CryptoApiKeyService } from "@infra/me/services/crypto-api-key.service";
-import { IApiKeyService } from "@app/me/services/api-key.service";
+import { EndpointTypeOrmRepository } from "../../core/infra/endpoint/db/typeorm/endpoint-typeorm.repository";
+import { MockEndpointUseCase } from "../../core/app/endpoint/use-cases/mock-endpoint/mock-endpoint.use-case";
+import { IEndpointRepository } from "../../core/domain/endpoint/endpoint.repository";
+import { CryptoApiKeyService } from "../../core/infra/me/services/crypto-api-key.service";
+import { IApiKeyService } from "../../core/app/me/services/api-key.service";
 
 const REPOSITORIES = {
   ENDPOINT: {

@@ -1,7 +1,7 @@
 import { setupTypeOrm } from "../../../../shared/testing/helpers";
-import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { RefreshTokenModel } from "../../../../refresh-token/db/typeorm/refresh-token-typeorm.model";
 import { UserModel } from "../user-typeorm.model";
-import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { EndpointModel } from "../../../../endpoint/db/typeorm/endpoint-typeorm.model";
 
 describe("User Model - Integration Tests", () => {
   const { dataSource } = setupTypeOrm({

@@ -1,14 +1,14 @@
-import { RefreshTokenFactory } from "@domain/refresh-token/refresh-token.entity";
-import { setupTypeOrm } from "@infra/shared/testing/helpers";
-import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
-import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
+import { RefreshTokenFactory } from "../../../../domain/refresh-token/refresh-token.entity";
+import { setupTypeOrm } from "../../../../infra/shared/testing/helpers";
+import { RefreshTokenModel } from "../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { UserModel } from "../../../../infra/user/db/typeorm/user-typeorm.model";
 import { TypeOrmGoogleLoginUnitOfWork } from "../typeorm-google-login.unit-of-work";
-import { UserFactory } from "@domain/user/user.entity";
-import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
-import { RefreshTokenTypeOrmRepository } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
-import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
-import { EndpointFactory } from "@domain/endpoint/endpoint.entity";
-import { EndpointTypeOrmRepository } from "@infra/endpoint/db/typeorm/endpoint-typeorm.repository";
+import { UserFactory } from "../../../../domain/user/user.entity";
+import { UserTypeOrmRepository } from "../../../../infra/user/db/typeorm/user-typeorm.repository";
+import { RefreshTokenTypeOrmRepository } from "../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
+import { EndpointModel } from "../../../../infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { EndpointFactory } from "../../../../domain/endpoint/endpoint.entity";
+import { EndpointTypeOrmRepository } from "../../../../infra/endpoint/db/typeorm/endpoint-typeorm.repository";
 
 describe("TypeOrm Google Login Unit Of Work - Integration Tests", () => {
   const { dataSource } = setupTypeOrm({

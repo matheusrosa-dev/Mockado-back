@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import {
   AuthTokenPayload,
   IAuthTokenService,
-} from "@app/auth/services/auth-token.service";
+} from "../../../app/auth/services/auth-token.service";
 
 type Config = {
   jwtSecret: string;

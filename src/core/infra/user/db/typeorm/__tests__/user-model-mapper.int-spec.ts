@@ -1,4 +1,4 @@
-import { UserFactory } from "@domain/user/user.entity";
+import { UserFactory } from "../../../../../domain/user/user.entity";
 import { UserModelMapper } from "../user-model-mapper";
 
 describe("User Model Mapper - Integration Tests", () => {

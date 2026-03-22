@@ -1,18 +1,18 @@
-import { IUserRepository } from "@domain/user/user.repository";
-import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
-import { UserFactory } from "@domain/user/user.entity";
+import { IUserRepository } from "../../../../../domain/user/user.repository";
+import { IRefreshTokenRepository } from "../../../../../domain/refresh-token/refresh-token.repository";
+import { UserFactory } from "../../../../../domain/user/user.entity";
 import { ReplaceRefreshTokenUseCase } from "../replace-refresh-token.use-case";
-import { RefreshTokenFactory } from "@domain/refresh-token/refresh-token.entity";
-import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
-import { RefreshTokenTypeOrmRepository } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
-import { setupTypeOrm } from "@infra/shared/testing/helpers";
-import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
-import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
-import { EndpointModel } from "@infra/endpoint/db/typeorm/endpoint-typeorm.model";
-import { BcryptHashService } from "@infra/auth/services/bcrypt-hash.service";
-import { JwtTokenService } from "@infra/auth/services/jwt-token.service";
-import { AuthenticationError } from "@domain/shared/errors/authentication.error";
-import { TypeOrmReplaceRefreshTokenUnitOfWork } from "@infra/auth/replace-refresh-token/typeorm-replace-refresh-token.unit-of-work";
+import { RefreshTokenFactory } from "../../../../../domain/refresh-token/refresh-token.entity";
+import { UserTypeOrmRepository } from "../../../../../infra/user/db/typeorm/user-typeorm.repository";
+import { RefreshTokenTypeOrmRepository } from "../../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
+import { setupTypeOrm } from "../../../../../infra/shared/testing/helpers";
+import { RefreshTokenModel } from "../../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { UserModel } from "../../../../../infra/user/db/typeorm/user-typeorm.model";
+import { EndpointModel } from "../../../../../infra/endpoint/db/typeorm/endpoint-typeorm.model";
+import { BcryptHashService } from "../../../../../infra/auth/services/bcrypt-hash.service";
+import { JwtTokenService } from "../../../../../infra/auth/services/jwt-token.service";
+import { AuthenticationError } from "../../../../../domain/shared/errors/authentication.error";
+import { TypeOrmReplaceRefreshTokenUnitOfWork } from "../../../../../infra/auth/replace-refresh-token/typeorm-replace-refresh-token.unit-of-work";
 
 describe("Replace Refresh Token Use Case - Integration Tests", () => {
   let useCase: ReplaceRefreshTokenUseCase;

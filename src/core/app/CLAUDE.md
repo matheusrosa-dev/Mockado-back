@@ -110,5 +110,5 @@ if (error) throw new AuthenticationError(...);
 
 ## Dependências permitidas
 
-- Apenas `@domain/*` pode ser importado dentro de `core/app/`
-- Sem importações de `@infra/*` ou do NestJS
+- Apenas `domain` pode ser importado dentro de `core/app/`
+- Sem importações de `infra` ou do NestJS

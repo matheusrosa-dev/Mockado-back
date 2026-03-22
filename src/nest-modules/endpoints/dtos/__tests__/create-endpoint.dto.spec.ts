@@ -1,7 +1,10 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <It has to allow any in tests> */
 import { validateSync } from "class-validator";
-import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import {
+  HttpMethod,
+  ResponseBodyType,
+} from "../../../../core/domain/endpoint/endpoint.types";
+import { Uuid } from "../../../../core/domain/shared/value-objects/uuid.vo";
 import { CreateEndpointDto } from "../create-endpoint.dto";
 
 function validate(props: any) {

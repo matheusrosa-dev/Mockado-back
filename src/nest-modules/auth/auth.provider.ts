@@ -1,29 +1,29 @@
 import { DataSource } from "typeorm";
-import { UserTypeOrmRepository } from "@infra/user/db/typeorm/user-typeorm.repository";
-import { RefreshTokenTypeOrmRepository } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
-import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
-import { GoogleLoginUseCase } from "@app/auth/use-cases/google-login/google-login.use-case";
-import { FactoryProvider } from "@nestjs/common";
-import { ReplaceRefreshTokenUseCase } from "@app/auth/use-cases/replace-refresh-token/replace-refresh-token.use-case";
+import { UserTypeOrmRepository } from "../../core/infra/user/db/typeorm/user-typeorm.repository";
+import { RefreshTokenTypeOrmRepository } from "../../core/infra/refresh-token/db/typeorm/refresh-token-typeorm.repository";
+import { IRefreshTokenRepository } from "../../core/domain/refresh-token/refresh-token.repository";
+import { GoogleLoginUseCase } from "../../core/app/auth/use-cases/google-login/google-login.use-case";
+import { ReplaceRefreshTokenUseCase } from "../../core/app/auth/use-cases/replace-refresh-token/replace-refresh-token.use-case";
 import {
   GOOGLE_LOGIN_UNIT_OF_WORK,
   IGoogleLoginUnitOfWork,
-} from "@app/auth/use-cases/google-login/google-login.unit-of-work";
-import { TypeOrmGoogleLoginUnitOfWork } from "@infra/auth/google-login/typeorm-google-login.unit-of-work";
-import { JwtTokenService } from "@infra/auth/services/jwt-token.service";
-import { ConfigService } from "@nestjs/config";
+} from "../../core/app/auth/use-cases/google-login/google-login.unit-of-work";
+import { TypeOrmGoogleLoginUnitOfWork } from "../../core/infra/auth/google-login/typeorm-google-login.unit-of-work";
+import { JwtTokenService } from "../../core/infra/auth/services/jwt-token.service";
 import { IAuthConfig } from "../configs/configs.interface";
-import { IGoogleAuthService } from "@app/auth/services/google-auth.service";
-import { IHashService } from "@app/auth/services/hash.service";
-import { GoogleAuthService } from "@infra/auth/services/google-auth.service";
-import { IAuthTokenService } from "@app/auth/services/auth-token.service";
-import { BcryptHashService } from "@infra/auth/services/bcrypt-hash.service";
-import { LogoutUseCase } from "@app/auth/use-cases/logout/logout.use-case";
+import { IGoogleAuthService } from "../../core/app/auth/services/google-auth.service";
+import { IHashService } from "../../core/app/auth/services/hash.service";
+import { GoogleAuthService } from "../../core/infra/auth/services/google-auth.service";
+import { IAuthTokenService } from "../../core/app/auth/services/auth-token.service";
+import { BcryptHashService } from "../../core/infra/auth/services/bcrypt-hash.service";
+import { LogoutUseCase } from "../../core/app/auth/use-cases/logout/logout.use-case";
 import {
   IReplaceRefreshTokenUnitOfWork,
   REPLACE_REFRESH_TOKEN_UNIT_OF_WORK,
-} from "@app/auth/use-cases/replace-refresh-token/replace-refresh-token.unit-of-work";
-import { TypeOrmReplaceRefreshTokenUnitOfWork } from "@infra/auth/replace-refresh-token/typeorm-replace-refresh-token.unit-of-work";
+} from "../../core/app/auth/use-cases/replace-refresh-token/replace-refresh-token.unit-of-work";
+import { TypeOrmReplaceRefreshTokenUnitOfWork } from "../../core/infra/auth/replace-refresh-token/typeorm-replace-refresh-token.unit-of-work";
+import { ConfigService } from "@nestjs/config";
+import { FactoryProvider } from "@nestjs/common";
 
 const REPOSITORIES = {
   USER: {

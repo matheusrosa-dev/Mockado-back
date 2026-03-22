@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <It has to allow any in tests> */
 import { validateSync } from "class-validator";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { Uuid } from "../../../../core/domain/shared/value-objects/uuid.vo";
 import { FindEndpointByIdDto } from "../find-endpoint-by-id.dto";
 
 function validate(props: any) {

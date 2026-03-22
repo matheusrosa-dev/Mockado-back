@@ -1,8 +1,8 @@
-import { IHashService } from "@app/auth/services/hash.service";
-import { RefreshTokenExistsValidator } from "@app/auth/validations/refresh-token-exists/refresh-token-exists.validator";
-import { IUseCase } from "@app/shared/use-case.interface";
-import { IRefreshTokenRepository } from "@domain/refresh-token/refresh-token.repository";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { IHashService } from "../../../../app/auth/services/hash.service";
+import { RefreshTokenExistsValidator } from "../../../../app/auth/validations/refresh-token-exists/refresh-token-exists.validator";
+import { IUseCase } from "../../../../app/shared/use-case.interface";
+import { IRefreshTokenRepository } from "../../../../domain/refresh-token/refresh-token.repository";
+import { Uuid } from "../../../../domain/shared/value-objects/uuid.vo";
 
 export class LogoutUseCase implements IUseCase<LogoutInput, LogoutOutput> {
   private refreshTokenExistsValidator: RefreshTokenExistsValidator;

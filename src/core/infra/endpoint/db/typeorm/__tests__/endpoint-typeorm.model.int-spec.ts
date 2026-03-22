@@ -1,8 +1,11 @@
-import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
+import {
+  HttpMethod,
+  ResponseBodyType,
+} from "../../../../../domain/endpoint/endpoint.types";
 import { setupTypeOrm } from "../../../../shared/testing/helpers";
 import { EndpointModel } from "../endpoint-typeorm.model";
-import { UserModel } from "@infra/user/db/typeorm/user-typeorm.model";
-import { RefreshTokenModel } from "@infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
+import { UserModel } from "../../../../../infra/user/db/typeorm/user-typeorm.model";
+import { RefreshTokenModel } from "../../../../../infra/refresh-token/db/typeorm/refresh-token-typeorm.model";
 
 describe("Endpoint Model - Integration Tests", () => {
   const { dataSource } = setupTypeOrm({

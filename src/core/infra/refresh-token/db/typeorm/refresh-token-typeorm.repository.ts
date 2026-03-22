@@ -1,13 +1,13 @@
 import { DataSource, EntityManager, Repository } from "typeorm";
-import { RefreshToken } from "@domain/refresh-token/refresh-token.entity";
+import { RefreshToken } from "../../../../domain/refresh-token/refresh-token.entity";
 import {
   FindManyByUserIdResponse,
   IRefreshTokenRepository,
-} from "@domain/refresh-token/refresh-token.repository";
+} from "../../../../domain/refresh-token/refresh-token.repository";
 import { RefreshTokenModel } from "./refresh-token-typeorm.model";
 import { RefreshTokenModelMapper } from "./refresh-token-model-mapper";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
+import { Uuid } from "../../../../domain/shared/value-objects/uuid.vo";
+import { NotFoundError } from "../../../../domain/shared/errors/not-found.error";
 
 export class RefreshTokenTypeOrmRepository implements IRefreshTokenRepository {
   private repository: Repository<RefreshTokenModel>;

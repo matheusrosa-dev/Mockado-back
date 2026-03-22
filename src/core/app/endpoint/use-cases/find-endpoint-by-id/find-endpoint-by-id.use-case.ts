@@ -1,12 +1,12 @@
 import { IUseCase } from "../../../shared/use-case.interface";
-import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { IEndpointRepository } from "../../../../domain/endpoint/endpoint.repository";
+import { Uuid } from "../../../../domain/shared/value-objects/uuid.vo";
 import {
   EndpointOutput,
   EndpointOutputMapper,
 } from "../common/endpoint.output";
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
-import { Endpoint } from "@domain/endpoint/endpoint.entity";
+import { NotFoundError } from "../../../../domain/shared/errors/not-found.error";
+import { Endpoint } from "../../../../domain/endpoint/endpoint.entity";
 
 export class FindEndpointByIdUseCase
   implements IUseCase<FindEndpointByIdInput, EndpointOutput>

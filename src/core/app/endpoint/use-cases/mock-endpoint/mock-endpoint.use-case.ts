@@ -1,12 +1,15 @@
-import { Endpoint } from "@domain/endpoint/endpoint.entity";
+import { Endpoint } from "../../../../domain/endpoint/endpoint.entity";
 import { IUseCase } from "../../../shared/use-case.interface";
-import { IEndpointRepository } from "@domain/endpoint/endpoint.repository";
-import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
-import { NotFoundError } from "@domain/shared/errors/not-found.error";
-import { Uuid } from "@domain/shared/value-objects/uuid.vo";
+import { IEndpointRepository } from "../../../../domain/endpoint/endpoint.repository";
+import {
+  HttpMethod,
+  ResponseBodyType,
+} from "../../../../domain/endpoint/endpoint.types";
+import { NotFoundError } from "../../../../domain/shared/errors/not-found.error";
+import { Uuid } from "../../../../domain/shared/value-objects/uuid.vo";
 
-// mover isso para common
-import { IApiKeyService } from "@app/me/services/api-key.service";
+// TODO: mover isso para common
+import { IApiKeyService } from "../../../../app/me/services/api-key.service";
 
 export class MockEndpointUseCase
   implements IUseCase<MockEndpointInput, MockEndpointOutput>
