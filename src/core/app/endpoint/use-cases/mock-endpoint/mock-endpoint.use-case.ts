@@ -5,7 +5,6 @@ import { HttpMethod, ResponseBodyType } from "@domain/endpoint/endpoint.types";
 import { NotFoundError } from "@domain/shared/errors/not-found.error";
 import { Uuid } from "@domain/shared/value-objects/uuid.vo";
 
-// mover isso para common
 import { IApiKeyService } from "@app/me/services/api-key.service";
 
 export class MockEndpointUseCase
