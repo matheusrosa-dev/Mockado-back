@@ -1,0 +1,6 @@
+services:
+  app:
+    container_name: mockado-app
+    build:
+      context: .
+      dockerfile: Dockerfile.prod

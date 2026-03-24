@@ -1,5 +1,4 @@
 services:
-
   db:
     container_name: mockado_dev-db
     image: postgres:18

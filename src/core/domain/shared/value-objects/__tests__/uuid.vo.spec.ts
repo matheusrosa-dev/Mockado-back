@@ -5,6 +5,10 @@ import { validate as validateUuid } from "uuid";
 describe("Uuid - Unit Tests", () => {
   const validateSpy = jest.spyOn(Uuid.prototype as any, "validate");
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("should create a valid uuid", () => {
     const uuid = new Uuid();
     expect(validateUuid(uuid.id)).toBe(true);

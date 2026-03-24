@@ -1,0 +1,12 @@
+.git/
+.github/
+.docker/
+.husky/
+dist/
+node_modules/
+docker-compose*.yml
+Dockerfile*
+*.md
+.gitignore
+.biome.json
+.env*

@@ -51,7 +51,11 @@ export const validationSchema = Joi.object({
     otherwise: Joi.optional(),
   }),
   DB_DATABASE: Joi.string().required(),
-  DB_MIGRATIONS_AUTO_RUN: Joi.boolean().required(),
+  DB_MIGRATIONS_AUTO_RUN: Joi.boolean().when("DB_TYPE", {
+    is: "postgres",
+    then: Joi.required(),
+    otherwise: Joi.optional(),
+  }),
 
   GOOGLE_CLIENT_ID: Joi.string().required(),
   JWT_SECRET: Joi.string().required(),
