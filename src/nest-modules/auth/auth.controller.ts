@@ -12,8 +12,11 @@ import {
 import { GoogleLoginUseCase } from "@app/auth/use-cases/google-login/google-login.use-case";
 import { LogoutUseCase } from "@app/auth/use-cases/logout/logout.use-case";
 import { ReplaceRefreshTokenUseCase } from "@app/auth/use-cases/replace-refresh-token/replace-refresh-token.use-case";
+import { Serialize } from "../shared/interceptors/serialize.interceptor";
+import { AuthSerializeDto } from "./dtos/auth-serialize.dto";
 
 @Controller("auth")
+@Serialize(AuthSerializeDto)
 export class AuthController {
   constructor(
     private configService: ConfigService,
@@ -38,8 +41,6 @@ export class AuthController {
       accessToken,
       refreshToken,
     });
-
-    // TODO: ADICIONAR AQUELES TRANSFORM PRA LIMITAR CAMPOS A SEREM RETORNADOS
 
     return {
       user,

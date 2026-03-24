@@ -13,8 +13,11 @@ import {
   CurrentSession,
   type ICurrentSession,
 } from "../shared/decorators/current-session.decorator";
+import { Serialize } from "../shared/interceptors/serialize.interceptor";
+import { EndpointSerializeDto } from "./dtos/endpoint-serialize.dto";
 
 @Controller("endpoints")
+@Serialize(EndpointSerializeDto)
 export class EndpointsController {
   constructor(
     private listEndpointsSummaryUseCase: ListEndpointsSummaryUseCase,
