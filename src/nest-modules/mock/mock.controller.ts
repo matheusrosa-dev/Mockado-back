@@ -19,6 +19,8 @@ export class MockController {
 
     @Param() params: MockEndpointDto,
   ) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+
     const output = await this.mockEndpointUseCase.execute({
       endpointId: params.endpointId,
       method: req.method as HttpMethod,
